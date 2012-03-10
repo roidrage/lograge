@@ -5,7 +5,7 @@ module Lograge
   class Railtie < Rails::Railtie
     initializer :lograge do |app|
       Lograge.remove_existing_log_subscriptions
-      Lograge::LogSubscriber.attach_to 
+      Lograge::LogSubscriber.attach_to :action_controller
     end
   end
 end
