@@ -3,18 +3,28 @@ Lograge - Taming Rails' Default Request Logging
 
 Lograge is an attempt to bring sanity to Rails' noisy and unusable, unparsable
 and, in the context of running multiple processes and servers, unreadable
-default logging output.
+default logging output. Rails' default approach to log everything is great
+during development, it's terrible when running it in production. It pretty much
+renders Rails logs useless to me.
 
 Instead of trying solving the problem of having multiple lines per request by
 switching Rails' logger for something that outputs syslog lines or adds a
 request token, Lograge replaces Rails' request logging entirely, reducing the
 output per request to a single line with all the important information, removing
 all that clutter Rails likes to include and that gets mingled up so nicely when
-multiple processes dump their output into a single file
+multiple processes dump their output into a single file.
 
 Instead of having an unparsable amount of logging output like this:
 
 ```
+Started GET "/" for 127.0.0.1 at 2012-03-10 14:28:14 +0100
+Processing by HomeController#index as HTML
+  Rendered text template within layouts/application (0.0ms)
+  Rendered layouts/_assets.html.erb (2.0ms)
+  Rendered layouts/_top.html.erb (2.6ms)
+  Rendered layouts/_about.html.erb (0.3ms)
+  Rendered layouts/_google_analytics.html.erb (0.4ms)
+Completed 200 OK in 79ms (Views: 78.8ms | ActiveRecord: 0.0ms)
 ```
 
 you get a single line with all the important information, like this:
@@ -25,22 +35,33 @@ GET /jobs/833552.json format=json action=jobs#show status=200 duration=58.33 vie
 
 The second line is easy to grasp with a single glance and still includes all the
 relevant information as simple key-value pairs. The syntax is heavily inspired
-by the log output of the Heroku router.
+by the log output of the Heroku router. It doesn't include any timestamp by
+default, instead it assumes you use a proper log formatter instead.
+
+**Installation**
+
+In your Gemfile
+
+```ruby
+gem "lograge"
+```
+
+Done.
 
 **Internals**
 
 Thanks to the notification system that was introduced in Rails 3, replacing the
 logging is easy. Lograge unhooks all subscriptions from
 `ActionController::LogSubscriber` and `ActionView::LogSubscriber`, and hooks in
-its own log subscription, but only listening for two events: `process\_action`
-and `redirect\_to`. It makes sure that only subscriptions from those two classes
+its own log subscription, but only listening for two events: `process_action`
+and `redirect_to`. It makes sure that only subscriptions from those two classes
 are removed. If you happened to hook in your own, they'll be safe.
 
 Unfortunately, when a redirect is triggered by your application's code,
 ActionController fires two events. One for the redirect itself, and another one
 when the request is finished. Unfortunately the final event doesn't include the
 redirect, so Lograge stores the redirect URL as a thread-local attribute and
-refers to it in `process\_action`.
+refers to it in `process_action`.
 
 The event itself contains most of the relevant information to build up the log
 line, including view processing and database access times.
