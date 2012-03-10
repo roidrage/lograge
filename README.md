@@ -46,6 +46,15 @@ In your Gemfile
 gem "lograge"
 ```
 
+Enable it for the relevant environments, e.g. production:
+
+```
+# config/environments/production.rb
+MyApp::Application.configure do
+  config.lograge.enabled = true 
+end
+```
+
 Done.
 
 **Internals**
@@ -76,7 +85,7 @@ Both are independent of the LogSubscribers, and both need to be shut up using
 different means.
 
 For the first one, the starting line of every Rails request log, Lograge removes
-the Rails::Rack::Logger middleware from the stack. This may look like a drastic
+the `Rails::Rack::Logger` middleware from the stack. This may look like a drastic
 means, but all the middleware does is log that useless line, log exceptions, and
 create a request transaction id (Rails 3.2). A future version may replace with
 its own middleware, that simply removes the log line.
@@ -93,4 +102,11 @@ Lograge removes ActionView logging, which also includes rendering times for
 partials. If you're into those, Lograge is probably not for you. In my honest
 opinion, those rendering times don't belong in the log file, they should be
 collected in a system like New Relic, Librato Metrics or some other metrics
-service that allows graphing rendering percentiles.
+service that allows graphing rendering percentiles. I assume this for everything
+that represents a moving target. That kind of data is better off being
+visualized in graphs than dumped (and ignored) in a log file.
+
+**License**
+
+MIT. Code extracted from [Travis CI](http://travis-ci.org).
+(c) 2012 Mathias Meyer
