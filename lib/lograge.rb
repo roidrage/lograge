@@ -25,4 +25,4 @@ module Lograge
   end
 end
 
-require 'lograge/railtie' if defined? Rails::Railtie
+require 'lograge/railtie' if defined?(Rails)

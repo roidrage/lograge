@@ -2,7 +2,7 @@ require 'active_support/core_ext/class/attribute'
 require 'active_support/log_subscriber'
 
 module Lograge
-  class LogSubscriber < ActiveSupport::LogSubscriber
+  class RequestLogSubscriber < ActiveSupport::LogSubscriber
     class_attribute :logger
 
     def initialize
