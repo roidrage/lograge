@@ -93,6 +93,11 @@ describe Lograge::RequestLogSubscriber do
         Thread.current[:lograge_location].should == nil
       end
     end
+    
+    it "should not include a location by default" do
+      subscriber.process_action(event)
+      log_output.string.should_not =~ /location=/
+    end
   end
 
   describe "when processing a redirect" do
