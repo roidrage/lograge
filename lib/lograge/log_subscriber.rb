@@ -3,12 +3,6 @@ require 'active_support/log_subscriber'
 
 module Lograge
   class RequestLogSubscriber < ActiveSupport::LogSubscriber
-    class_attribute :logger
-
-    def initialize
-      self.logger ||= ActionController::Base.logger
-    end
-
     def process_action(event)
       payload = event.payload
       message = "#{payload[:method]} #{payload[:path]} format=#{payload[:format]} action=#{payload[:params]['controller']}##{payload[:params]['action']}"

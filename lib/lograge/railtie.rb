@@ -7,7 +7,6 @@ module Lograge
 
     initializer :lograge do |app|
       Lograge.setup(app) if app.config.lograge.enabled
-
     end
   end
 end
