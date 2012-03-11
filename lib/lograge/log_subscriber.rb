@@ -8,7 +8,12 @@ module Lograge
       message = "#{payload[:method]} #{payload[:path]} format=#{payload[:format]} action=#{payload[:params]['controller']}##{payload[:params]['action']}"
       message << extract_status(payload)
       message << runtimes(event)
+      message << location(event)
       logger.info(message)
+    end
+
+    def redirect_to(event)
+      Thread.current[:lograge_location] = event.payload[:location]
     end
 
     private
@@ -31,5 +36,14 @@ module Lograge
       end
       message
     end
+
+    def location(event)
+      if location = Thread.current[:lograge_location]
+        Thread.current[:lograge_location] = nil
+        "location=#{location}"
+      else
+        ""
+      end
+    end  
   end
 end

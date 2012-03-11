@@ -77,5 +77,28 @@ describe Lograge::RequestLogSubscriber do
       log_output.string.should =~ /status=500/
       log_output.string.should =~ /error='AbstractController::ActionNotFound:Route not found'/
     end
+
+    describe "with a redirect" do
+      before do
+        Thread.current[:lograge_location] = "http://www.example.com"
+      end
+
+      it "should add the location to the log line" do
+        subscriber.process_action(event)
+        log_output.string.should =~ %r{location=http://www.example.com}
+      end
+
+      it "should remove the thread local variable" do
+        subscriber.process_action(event)
+        Thread.current[:lograge_location].should == nil
+      end
+    end
+  end
+
+  describe "when processing a redirect" do
+    it "should store the location in a thread local variable" do
+      subscriber.redirect_to(redirect)
+      Thread.current[:lograge_location].should == "http://example.com"
+    end
   end
 end
