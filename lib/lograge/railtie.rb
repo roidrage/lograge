@@ -1,4 +1,6 @@
 require 'rails/railtie'
+require 'action_view/log_subscriber'
+require 'action_controller/log_subscriber'
 
 module Lograge
   class Railtie < Rails::Railtie
