@@ -1,0 +1,18 @@
+module Rails
+  module Rack
+    # Overwrites defaults of Rails::Rack::Logger that cause
+    # unnecessary logging.
+    class Logger
+      # Overwrites Rails 3.2 code that logs new requests
+      def call_app(env)
+        @app.call(env)
+      ensure
+        ActiveSupport::LogSubscriber.flush_all!
+      end
+
+      # Overwrites Rails 3.0/3.1 code that logs new requests
+      def before_dispatch(env)
+      end
+    end
+  end
+end
