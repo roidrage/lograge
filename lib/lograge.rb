@@ -1,6 +1,8 @@
 require 'lograge/version'
+require 'lograge/log_subscriber'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
+require 'active_support/ordered_options'
 
 module Lograge
   mattr_accessor :logger  
@@ -22,6 +24,13 @@ module Lograge
         ActiveSupport::Notifications.unsubscribe listener
       end
     end
+  end
+
+  def self.setup(app)
+    app.config.action_dispatch.rack_cache[:verbose] = false
+    require 'lograge/rails_ext/rack/logger'
+    Lograge.remove_existing_log_subscriptions
+    Lograge::RequestLogSubscriber.attach_to :action_controller
   end
 end
 
