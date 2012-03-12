@@ -7,6 +7,10 @@ default logging output. Rails' default approach to log everything is great
 during development, it's terrible when running it in production. It pretty much
 renders Rails logs useless to me.
 
+Lograge is a work in progress. I appreciate constructive feedback and criticism.
+My main goal is to improve Rails' logging and to show people that they don't
+need to stick with its defaults anymore if they don't want to.
+
 Instead of trying solving the problem of having multiple lines per request by
 switching Rails' logger for something that outputs syslog lines or adds a
 request token, Lograge replaces Rails' request logging entirely, reducing the
