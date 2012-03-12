@@ -123,7 +123,10 @@ debugging, but if you need them for debugging in error cases, your app should
 know what those cases are and then log appropriately. There's no point to log
 everything all the time. When there's a problem, log it, including all the
 information relevant to the issue. If there's an error, log it to an exception
-tracking service, that will already include all the relevant data.
+tracking service, that will already include all the relevant data. But, and
+here's the kicker, if you can come up with a reasonable way to include the
+parameters in the log output, let me know. This is something I'm actively
+contemplating.
 
 **License**
 
