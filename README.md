@@ -106,6 +106,9 @@ There, a single line per request. Beautiful.
 
 **What it doesn't do**
 
+Lograge is opinionated, very opinionated. If the stuff below doesn't suit your
+needs, it may not be for you.
+
 Lograge removes ActionView logging, which also includes rendering times for
 partials. If you're into those, Lograge is probably not for you. In my honest
 opinion, those rendering times don't belong in the log file, they should be
@@ -113,6 +116,14 @@ collected in a system like New Relic, Librato Metrics or some other metrics
 service that allows graphing rendering percentiles. I assume this for everything
 that represents a moving target. That kind of data is better off being
 visualized in graphs than dumped (and ignored) in a log file.
+
+Lograge also removes logging of all request parameters to the log. Why?
+Because they're clutter. I know you're going to say they're useful for
+debugging, but if you need them for debugging in error cases, your app should
+know what those cases are and then log appropriately. There's no point to log
+everything all the time. When there's a problem, log it, including all the
+information relevant to the issue. If there's an error, log it to an exception
+tracking service, that will already include all the relevant data.
 
 **License**
 
