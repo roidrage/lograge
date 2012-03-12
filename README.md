@@ -79,16 +79,24 @@ While the LogSubscribers encapsulate most logging pretty nicely, there are still
 two lines that show up no matter what. The first line that's output for every
 Rails request, you know, this one:
 
+```
+Started GET "/" for 127.0.0.1 at 2012-03-12 17:10:10 +0100
+```
+
 And the verbose output coming from rack-cache:
+
+```
+cache: [GET /] miss 
+```
 
 Both are independent of the LogSubscribers, and both need to be shut up using
 different means.
 
-For the first one, the starting line of every Rails request log, Lograge removes
-the `Rails::Rack::Logger` middleware from the stack. This may look like a drastic
-means, but all the middleware does is log that useless line, log exceptions, and
-create a request transaction id (Rails 3.2). A future version may replace with
-its own middleware, that simply removes the log line.
+For the first one, the starting line of every Rails request log, Lograge
+replaces code in `Rails::Rack::Logger` to remove that particular log line. It's
+not great, but it's just another unnecessary output and would still clutter the
+log files. Maybe a future version of Rails will make this log line an event as
+well.
 
 To remove rack-cache's output (which is only enabled if caching in Rails is
 enabled), Lograge disables verbosity for rack-cache, which is unfortunately
