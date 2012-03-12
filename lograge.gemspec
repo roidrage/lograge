@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Lograge::VERSION
   s.authors     = ["Mathias Meyer"]
   s.email       = ["meyer@paperplanes.de"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/mattmatt/lograge"
   s.summary     = %q{Tame Rails' multi-line logging into a single line per request}
   s.description = %q{Tame Rails' multi-line logging into a single line per request}
 
