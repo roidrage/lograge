@@ -34,7 +34,7 @@ Completed 200 OK in 79ms (Views: 78.8ms | ActiveRecord: 0.0ms)
 you get a single line with all the important information, like this:
 
 ```
-GET /jobs/833552.json format=json action=jobs#show status=200 duration=58.33 view=40.43 db=15.26
+method=get path="/jobs/833552.json" format=json action=jobs#show status=200 duration=58.33 view=40.43 db=15.26
 ```
 
 The second line is easy to grasp with a single glance and still includes all the
