@@ -9,6 +9,7 @@ module Lograge
       message << extract_status(payload)
       message << runtimes(event)
       message << location(event)
+      message << custom_options(event)
       logger.info(message)
     end
 
@@ -27,6 +28,14 @@ module Lograge
       end
     end
 
+    def custom_options(event)
+      message = ""
+      (Lograge.custom_options(event) || {}).each do |name, value|
+        message << " #{name}=#{value}"
+      end
+      message
+    end
+
     def runtimes(event)
       message = ""
       {:duration => event.duration,
@@ -40,10 +49,10 @@ module Lograge
     def location(event)
       if location = Thread.current[:lograge_location]
         Thread.current[:lograge_location] = nil
-        "location=#{location}"
+        " location=#{location}"
       else
         ""
       end
-    end  
+    end
   end
 end
