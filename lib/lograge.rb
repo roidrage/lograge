@@ -19,7 +19,7 @@ module Lograge
     end
 
     %w{render_template render_partial render_collection}.each do |event|
-      unsubscribe_from_event(:action_view, event) 
+      unsubscribe_from_event(:action_view, event)
     end
   end
 
@@ -33,7 +33,7 @@ module Lograge
   end
 
   def self.setup(app)
-    app.config.action_dispatch.rack_cache[:verbose] = false
+    app.config.action_dispatch.rack_cache[:verbose] = false if app.config.action_dispatch.rack_cache
     require 'lograge/rails_ext/rack/logger'
     Lograge.remove_existing_log_subscriptions
     Lograge::RequestLogSubscriber.attach_to :action_controller
