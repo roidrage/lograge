@@ -55,7 +55,20 @@ Enable it for the relevant environments, e.g. production:
 ```
 # config/environments/production.rb
 MyApp::Application.configure do
-  config.lograge.enabled = true 
+  config.lograge.enabled = true
+end
+```
+
+You can also add a hook for own custom data
+
+```
+# config/environments/staging.rb
+MyApp::Application.configure do
+  config.lograge.enabled = true
+  config.lograge.extra = lambda do |event|
+    # some custom details
+    " custom data like GC stats"
+  end
 end
 ```
 
@@ -90,7 +103,7 @@ Started GET "/" for 127.0.0.1 at 2012-03-12 17:10:10 +0100
 And the verbose output coming from rack-cache:
 
 ```
-cache: [GET /] miss 
+cache: [GET /] miss
 ```
 
 Both are independent of the LogSubscribers, and both need to be shut up using

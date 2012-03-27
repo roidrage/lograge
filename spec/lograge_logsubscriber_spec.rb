@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'lograge'
 require 'lograge/log_subscriber'
 require 'active_support/notifications'
 require 'active_support/core_ext/string'
@@ -85,7 +86,7 @@ describe Lograge::RequestLogSubscriber do
 
       it "should add the location to the log line" do
         subscriber.process_action(event)
-        log_output.string.should =~ %r{location=http://www.example.com}
+        log_output.string.should =~ %r{ location=http://www.example.com}
       end
 
       it "should remove the thread local variable" do
@@ -93,10 +94,23 @@ describe Lograge::RequestLogSubscriber do
         Thread.current[:lograge_location].should == nil
       end
     end
-    
+
     it "should not include a location by default" do
       subscriber.process_action(event)
       log_output.string.should_not =~ /location=/
+    end
+  end
+
+  describe "with an extra_logger configured" do
+    it "should add the extra logger output to the logfile" do
+      Lograge.extra = lambda {|event| "extra_data"}
+      subscriber.process_action(event)
+      log_output.string.should =~ /extra_data/
+    end
+    it "should work if the method returns nil" do
+      Lograge.extra = lambda {|event| nil}
+      subscriber.process_action(event)
+      log_output.string.should be_present
     end
   end
 

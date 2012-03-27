@@ -5,7 +5,13 @@ require 'active_support/core_ext/string/inflections'
 require 'active_support/ordered_options'
 
 module Lograge
-  mattr_accessor :logger  
+  mattr_accessor :logger
+
+  mattr_accessor :extra
+
+  def self.extra_info(event)
+    extra.call(event) if self.extra
+  end
 
   def self.remove_existing_log_subscriptions
     %w(redirect_to process_action start_processing send_data write_fragment exist_fragment? send_file).each do |event|
@@ -31,6 +37,7 @@ module Lograge
     require 'lograge/rails_ext/rack/logger'
     Lograge.remove_existing_log_subscriptions
     Lograge::RequestLogSubscriber.attach_to :action_controller
+    Lograge.extra = app.config.lograge.extra
   end
 end
 
