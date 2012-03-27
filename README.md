@@ -65,9 +65,12 @@ You can also add a hook for own custom data
 # config/environments/staging.rb
 MyApp::Application.configure do
   config.lograge.enabled = true
-  config.lograge.extra = lambda do |event|
-    # some custom details
-    " custom data like GC stats"
+
+  # custom_options can be a lambda or hash
+  # if it's a lambda then it must return a hash
+  config.lograge.custom_options = lambda do |event|
+    # capture some specific timing values you are interested in
+    {:name => "value", :name => "%2f" % float}
   end
 end
 ```

@@ -7,10 +7,21 @@ require 'active_support/ordered_options'
 module Lograge
   mattr_accessor :logger
 
-  mattr_accessor :extra
+  # Custom options that will be appended to log line
+  #
+  # Currently supported formats are:
+  #  - Hash
+  #  - Any object that responds to call and returns a hash
+  #
+  mattr_writer :custom_options
+  self.custom_options = nil
 
-  def self.extra_info(event)
-    extra.call(event) if self.extra
+  def self.custom_options(event)
+    if @@custom_options.respond_to?(:call)
+      @@custom_options.call(event)
+    else
+      @@custom_options
+    end
   end
 
   def self.remove_existing_log_subscriptions
@@ -37,7 +48,7 @@ module Lograge
     require 'lograge/rails_ext/rack/logger'
     Lograge.remove_existing_log_subscriptions
     Lograge::RequestLogSubscriber.attach_to :action_controller
-    Lograge.extra = app.config.lograge.extra
+    Lograge.custom_options = app.config.lograge.custom_options
   end
 end
 

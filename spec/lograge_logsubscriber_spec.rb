@@ -15,7 +15,7 @@ describe Lograge::RequestLogSubscriber do
     logger
   }
   before do
-    Lograge::RequestLogSubscriber.logger = logger    
+    Lograge::RequestLogSubscriber.logger = logger
   end
 
   let(:subscriber) {Lograge::RequestLogSubscriber.new}
@@ -45,7 +45,7 @@ describe Lograge::RequestLogSubscriber do
       subscriber.process_action(event)
       log_output.string.starts_with?('GET').should == true
     end
-    
+
     it "should include the status code" do
       subscriber.process_action(event)
       log_output.string.should include('status=200')
@@ -101,14 +101,19 @@ describe Lograge::RequestLogSubscriber do
     end
   end
 
-  describe "with an extra_logger configured" do
-    it "should add the extra logger output to the logfile" do
-      Lograge.extra = lambda {|event| "extra_data"}
+  describe "with custom_options configured" do
+    it "should combine the hash properly for the output" do
+      Lograge.custom_options = {:data => "value"}
       subscriber.process_action(event)
-      log_output.string.should =~ /extra_data/
+      log_output.string.should =~ / data=value/
+    end
+    it "should combine the output of a lambda properly" do
+      Lograge.custom_options = lambda {|event| {:data => "value"}}
+      subscriber.process_action(event)
+      log_output.string.should =~ / data=value/
     end
     it "should work if the method returns nil" do
-      Lograge.extra = lambda {|event| nil}
+      Lograge.custom_options = lambda {|event| nil}
       subscriber.process_action(event)
       log_output.string.should be_present
     end

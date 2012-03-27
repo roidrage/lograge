@@ -9,7 +9,7 @@ module Lograge
       message << extract_status(payload)
       message << runtimes(event)
       message << location(event)
-      message << extra_info(event)
+      message << custom_options(event)
       logger.info(message)
     end
 
@@ -28,8 +28,12 @@ module Lograge
       end
     end
 
-    def extra_info(event)
-      Lograge.extra_info(event).to_s
+    def custom_options(event)
+      message = ""
+      (Lograge.custom_options(event) || {}).each do |name, value|
+        message << " #{name}=#{value}"
+      end
+      message
     end
 
     def runtimes(event)
@@ -49,6 +53,6 @@ module Lograge
       else
         ""
       end
-    end  
+    end
   end
 end
