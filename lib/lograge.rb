@@ -5,15 +5,32 @@ require 'active_support/core_ext/string/inflections'
 require 'active_support/ordered_options'
 
 module Lograge
-  mattr_accessor :logger  
+  mattr_accessor :logger
+
+  # Custom options that will be appended to log line
+  #
+  # Currently supported formats are:
+  #  - Hash
+  #  - Any object that responds to call and returns a hash
+  #
+  mattr_writer :custom_options
+  self.custom_options = nil
+
+  def self.custom_options(event)
+    if @@custom_options.respond_to?(:call)
+      @@custom_options.call(event)
+    else
+      @@custom_options
+    end
+  end
 
   def self.remove_existing_log_subscriptions
-    %w(redirect_to process_action start_processing send_data write_fragment exist_fragment? send_file).each do |event|
+    %w(redirect_to process_action start_processing send_data send_file write_fragment read_fragment exist_fragment? expire_fragment expire_page write_page).each do |event|
       unsubscribe_from_event(:action_controller, event)
     end
 
     %w{render_template render_partial render_collection}.each do |event|
-      unsubscribe_from_event(:action_view, event) 
+      unsubscribe_from_event(:action_view, event)
     end
   end
 
@@ -27,10 +44,11 @@ module Lograge
   end
 
   def self.setup(app)
-    app.config.action_dispatch.rack_cache[:verbose] = false
+    app.config.action_dispatch.rack_cache[:verbose] = false if app.config.action_dispatch.rack_cache
     require 'lograge/rails_ext/rack/logger'
     Lograge.remove_existing_log_subscriptions
     Lograge::RequestLogSubscriber.attach_to :action_controller
+    Lograge.custom_options = app.config.lograge.custom_options
   end
 end
 
