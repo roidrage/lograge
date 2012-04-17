@@ -25,6 +25,8 @@ module Lograge
       elsif payload[:exception]
         exception, message = payload[:exception]
         " status=500 error='#{exception}:#{message}'"
+      else
+        " status=unknown"
       end
     end
 
