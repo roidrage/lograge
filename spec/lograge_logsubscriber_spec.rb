@@ -79,6 +79,13 @@ describe Lograge::RequestLogSubscriber do
       log_output.string.should =~ /error='AbstractController::ActionNotFound:Route not found'/
     end
 
+    it "should return an unknown status when no status or exception is found" do
+      event.payload[:status] = nil
+      event.payload[:exception] = nil
+      subscriber.process_action(event)
+      log_output.string.should =~ /status=unknown/
+    end
+
     describe "with a redirect" do
       before do
         Thread.current[:lograge_location] = "http://www.example.com"
