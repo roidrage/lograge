@@ -25,7 +25,7 @@ module Lograge
   end
 
   def self.remove_existing_log_subscriptions
-    %w(redirect_to process_action start_processing send_data send_file write_fragment read_fragment exist_fragment? expire_fragment expire_page write_page).each do |event|
+    %w(redirect_to process_action halted_callback start_processing send_data send_file write_fragment read_fragment exist_fragment? expire_fragment expire_page write_page).each do |event|
       unsubscribe_from_event(:action_controller, event)
     end
 
