@@ -25,20 +25,23 @@ module Lograge
   end
 
   def self.remove_existing_log_subscriptions
-    %w(redirect_to process_action start_processing send_data send_file write_fragment read_fragment exist_fragment? expire_fragment expire_page write_page).each do |event|
-      unsubscribe_from_event(:action_controller, event)
-    end
-
-    %w{render_template render_partial render_collection}.each do |event|
-      unsubscribe_from_event(:action_view, event)
+    ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
+      case subscriber
+      when ActionView::LogSubscriber
+        unsubscribe(:action_view, subscriber)
+      when ActionController::LogSubscriber
+        unsubscribe(:action_controller, subscriber)
+      end
     end
   end
 
-  def self.unsubscribe_from_event(component, event)
-    delegate_type = component.to_s.classify
-    ActiveSupport::Notifications.notifier.listeners_for("#{event}.#{component}").each do |listener|
-      if listener.inspect =~ /delegate[^a-z]+#{delegate_type}/
-        ActiveSupport::Notifications.unsubscribe listener
+  def self.unsubscribe(component, subscriber)
+    events = subscriber.public_methods(false).reject{ |method| method.to_s == 'call' }
+    events.each do |event|
+      ActiveSupport::Notifications.notifier.listeners_for("#{event}.#{component}").each do |listener|
+        if listener.instance_variable_get('@delegate') == subscriber
+          ActiveSupport::Notifications.unsubscribe listener
+        end
       end
     end
   end
