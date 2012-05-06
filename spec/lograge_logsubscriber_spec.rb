@@ -83,7 +83,7 @@ describe Lograge::RequestLogSubscriber do
       event.payload[:status] = nil
       event.payload[:exception] = nil
       subscriber.process_action(event)
-      log_output.string.should =~ /status=unknown/
+      log_output.string.should =~ /status=0/
     end
 
     describe "with a redirect" do
