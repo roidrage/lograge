@@ -5,7 +5,7 @@ module Lograge
   class RequestLogSubscriber < ActiveSupport::LogSubscriber
     def process_action(event)
       payload = event.payload
-      message = "method=#{payload[:method]} path=#{payload[:path]} format=#{extract_format(payload)} controller=#{payload[:params]['controller']} action=#{payload[:params]['action']}"
+      message =  extract_request(payload)
       message << extract_status(payload)
       message << runtimes(event)
       message << location(event)
@@ -18,6 +18,10 @@ module Lograge
     end
 
     private
+
+    def extract_request(payload)
+      "method=#{payload[:method]} path=#{payload[:path]} format=#{extract_format(payload)} controller=#{payload[:params]['controller']} action=#{payload[:params]['action']}"
+    end
 
     def extract_format(payload)
       if ::ActionPack::VERSION::MINOR == 0
