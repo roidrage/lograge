@@ -20,7 +20,15 @@ module Lograge
     private
 
     def extract_request(payload)
-      "#{payload[:method]} #{payload[:path]} format=#{payload[:format]} action=#{payload[:params]['controller']}##{payload[:params]['action']}"
+      "#{payload[:method]} #{payload[:path]} format=#{extract_format(payload)} action=#{payload[:params]['controller']}##{payload[:params]['action']}"
+    end
+
+    def extract_format(payload)
+      if ::ActionPack::VERSION::MINOR == 0
+        payload[:formats].first
+      else
+        payload[:format]
+      end
     end
 
     def extract_status(payload)
