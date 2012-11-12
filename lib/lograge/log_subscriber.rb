@@ -20,7 +20,7 @@ module Lograge
     private
 
     def extract_request(payload)
-      "#{payload[:method]} #{payload[:path]} format=#{extract_format(payload)} action=#{payload[:params]['controller']}##{payload[:params]['action']}"
+      "method=#{payload[:method]} path=#{payload[:path]} format=#{extract_format(payload)} controller=#{payload[:params]['controller']} action=#{payload[:params]['action']}"
     end
 
     def extract_format(payload)
