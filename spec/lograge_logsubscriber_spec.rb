@@ -43,7 +43,7 @@ describe Lograge::RequestLogSubscriber do
 
     it "should start the log line with the HTTP method" do
       subscriber.process_action(event)
-      log_output.string.starts_with?('GET').should == true
+      log_output.string.starts_with?('method=GET').should == true
     end
 
     it "should include the status code" do
@@ -53,7 +53,7 @@ describe Lograge::RequestLogSubscriber do
 
     it "should include the controller and action" do
       subscriber.process_action(event)
-      log_output.string.should include('action=home#index')
+      log_output.string.should include('controller=home action=index')
     end
 
     it "should include the duration" do
