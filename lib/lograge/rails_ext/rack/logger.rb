@@ -9,7 +9,8 @@ module Rails
     # Started GET / for 192.168.2.1...
     class Logger
       # Overwrites Rails 3.2 code that logs new requests
-      def call_app(env)
+      def call_app(*args)
+        env = args.last
         @app.call(env)
       ensure
         ActiveSupport::LogSubscriber.flush_all!
