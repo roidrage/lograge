@@ -24,6 +24,14 @@ module Lograge
     end
   end
 
+  # The emitted log format
+  #
+  # Currently supported formats are>
+  #  - :lograge - The custom tense lograge format
+  #  - :logstash - JSON formatted as a Logstash Event.
+  mattr_accessor :log_format
+  self.log_format = :lograge
+
   def self.remove_existing_log_subscriptions
     ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
       case subscriber
@@ -52,6 +60,12 @@ module Lograge
     Lograge.remove_existing_log_subscriptions
     Lograge::RequestLogSubscriber.attach_to :action_controller
     Lograge.custom_options = app.config.lograge.custom_options
+    Lograge.log_format = app.config.lograge.log_format || :lograge
+    case Lograge.log_format.to_s
+    when "logstash"
+      # Use the gem for creating Logstash events
+      require "logstash-event"
+    end
   end
 end
 
