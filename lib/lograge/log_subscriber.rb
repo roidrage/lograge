@@ -24,7 +24,7 @@ module Lograge
     end
 
     def extract_format(payload)
-      if ::ActionPack::VERSION::MINOR == 0
+      if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR == 0
         payload[:formats].first
       else
         payload[:format]
