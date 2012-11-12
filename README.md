@@ -70,8 +70,19 @@ MyApp::Application.configure do
   # if it's a lambda then it must return a hash
   config.lograge.custom_options = lambda do |event|
     # capture some specific timing values you are interested in
-    {:name => "value", :name => "%2f" % float}
+    {:name => "value", :timing => some_float.round(2)}
   end
+end
+```
+
+Lograge supports multiple output formats. The most common is the default
+lograge format described above. Alternatively, you can also generate JSON
+logs in the json_event format used by [Logstash](http://logstash.net/).
+
+```
+# config/environments/production.rb
+MyApp::Application.configure do
+  config.lograge.log_format = :logstash
 end
 ```
 
