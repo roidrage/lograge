@@ -47,12 +47,12 @@ describe Lograge::RequestLogSubscriber do
 
     it "should start the log line with the HTTP method" do
       subscriber.process_action(event)
-      log_output.string.starts_with?('method=GET').should == true
+      log_output.string.starts_with?('method=GET ').should == true
     end
 
     it "should include the status code" do
       subscriber.process_action(event)
-      log_output.string.should include('status=200')
+      log_output.string.should include('status=200 ')
     end
 
     it "should include the controller and action" do
@@ -62,12 +62,12 @@ describe Lograge::RequestLogSubscriber do
 
     it "should include the duration" do
       subscriber.process_action(event)
-      log_output.string.should =~ /duration=[\.0-9]{4,4}/
+      log_output.string.should =~ /duration=[\.0-9]{4,4} /
     end
 
     it "should include the view rendering time" do
       subscriber.process_action(event)
-      log_output.string.should =~ /view=0.01/
+      log_output.string.should =~ /view=0.01 /
     end
 
     it "should include the database rendering time" do
@@ -79,15 +79,15 @@ describe Lograge::RequestLogSubscriber do
       event.payload[:status] = nil
       event.payload[:exception] = ['AbstractController::ActionNotFound', 'Route not found']
       subscriber.process_action(event)
-      log_output.string.should =~ /status=500/
-      log_output.string.should =~ /error='AbstractController::ActionNotFound:Route not found'/
+      log_output.string.should =~ /status=500 /
+      log_output.string.should =~ /error='AbstractController::ActionNotFound:Route not found' /
     end
 
     it "should return an unknown status when no status or exception is found" do
       event.payload[:status] = nil
       event.payload[:exception] = nil
       subscriber.process_action(event)
-      log_output.string.should =~ /status=0/
+      log_output.string.should =~ /status=0 /
     end
 
     describe "with a redirect" do
