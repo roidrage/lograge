@@ -23,5 +23,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency "guard-rspec"
   s.add_runtime_dependency "activesupport"
   s.add_runtime_dependency "actionpack"
-  s.add_runtime_dependency "logstash-event"
 end

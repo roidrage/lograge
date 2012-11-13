@@ -86,6 +86,13 @@ MyApp::Application.configure do
 end
 ```
 
+*Note:* When using the logstash output, you need to add the additional gem
+`logstash-event`. You can simply add it to your Gemfile like this
+
+```ruby
+gem "logstash-event"
+```
+
 Done.
 
 **Internals**

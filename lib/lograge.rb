@@ -63,8 +63,12 @@ module Lograge
     Lograge.log_format = app.config.lograge.log_format || :lograge
     case Lograge.log_format.to_s
     when "logstash"
-      # Use the gem for creating Logstash events
-      require "logstash-event"
+      begin
+        require "logstash-event"
+      rescue LoadError
+        puts "You need to install the logstash-event gem to use the logstash output."
+        raise
+      end
     end
   end
 end
