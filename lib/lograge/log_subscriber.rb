@@ -30,7 +30,7 @@ module Lograge
         # a single quote
         data[key] = "'#{data[key]}'" if key == :error
         # Ensure that we always have exactly two decimals
-        data[key] = "%.2f" % data[key] if data[key].is_a? Numeric
+        data[key] = "%.2f" % data[key] if data[key].is_a? Float
 
         message << "#{key}=#{data[key]}"
         message
