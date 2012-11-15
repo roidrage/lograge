@@ -12,7 +12,8 @@ module Lograge
       data.merge! location(event)
       data.merge! custom_options(event)
 
-      logger.info send(:"process_action_#{Lograge.log_format}", data)
+      line = send(:"process_action_#{Lograge.log_format}", data)
+      logger.send(Lograge.log_level, line)
     end
 
     LOGRAGE_FIELDS = [
