@@ -22,8 +22,8 @@ describe Lograge::RequestLogSubscriber do
   let(:event) {
     ActiveSupport::Notifications::Event.new(
       'process_action.action_controller', Time.now, Time.now, 2, {
-        status: 200, format: 'application/json', method: 'GET', path: '/home', params: {
-          'controller' => 'home', 'action' => 'index'
+        status: 200, format: 'application/json', method: 'GET', path: '/home?foo=bar', params: {
+          'controller' => 'home', 'action' => 'index', 'foo' => 'bar'
         }, db_runtime: 0.02, view_runtime: 0.01
       }
     )
@@ -43,6 +43,11 @@ describe Lograge::RequestLogSubscriber do
     it "should include the URL in the log output" do
       subscriber.process_action(event)
       log_output.string.should include('/home')
+    end
+
+    it "should not include the query string in the url" do
+      subscriber.process_action(event)
+      log_output.string.should_not include('?foo=bar')
     end
 
     it "should start the log line with the HTTP method" do
@@ -112,7 +117,7 @@ describe Lograge::RequestLogSubscriber do
     end
   end
 
-    describe "when processing an action with logstash output" do
+  describe "when processing an action with logstash output" do
     before do
       require 'logstash-event'
       Lograge::log_format = :logstash
