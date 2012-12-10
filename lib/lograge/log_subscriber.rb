@@ -52,11 +52,15 @@ module Lograge
     def extract_request(payload)
       {
         :method => payload[:method],
-        :path => payload[:path],
+        :path => extract_path(payload),
         :format => extract_format(payload),
         :controller => payload[:params]['controller'],
         :action => payload[:params]['action']
       }
+    end
+
+    def extract_path(payload)
+      payload[:path].split("?").first
     end
 
     def extract_format(payload)
