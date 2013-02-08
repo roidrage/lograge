@@ -52,7 +52,7 @@ gem "lograge"
 
 Enable it for the relevant environments, e.g. production:
 
-```
+```ruby
 # config/environments/production.rb
 MyApp::Application.configure do
   config.lograge.enabled = true
@@ -61,7 +61,7 @@ end
 
 You can also add a hook for own custom data
 
-```
+```ruby
 # config/environments/staging.rb
 MyApp::Application.configure do
   config.lograge.enabled = true
@@ -79,7 +79,7 @@ Lograge supports multiple output formats. The most common is the default
 lograge format described above. Alternatively, you can also generate JSON
 logs in the json_event format used by [Logstash](http://logstash.net/).
 
-```
+```ruby
 # config/environments/production.rb
 MyApp::Application.configure do
   config.lograge.log_format = :logstash
