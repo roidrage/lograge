@@ -95,6 +95,17 @@ describe Lograge::RequestLogSubscriber do
       log_output.string.should =~ /status=0 /
     end
 
+    describe "with custom options" do
+      before do
+        Lograge::custom_options = {:params => {:password => "asdfasdf"}}
+      end
+
+      it "should filter out specified parameters when custom parameters are passed" do
+        subscriber.process_action(event)
+        log_output.string.should =~ /[FILTERED]/
+      end
+    end
+
     describe "with a redirect" do
       before do
         Thread.current[:lograge_location] = "http://www.example.com"

@@ -3,6 +3,7 @@ require 'lograge/log_subscriber'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/ordered_options'
+require 'action_dispatch'
 
 module Lograge
   mattr_accessor :logger
@@ -32,6 +33,17 @@ module Lograge
   mattr_accessor :log_format
   self.log_format = :lograge
 
+  # Configure sensitive parameters which will be filtered from the log file.
+  mattr_accessor :filter_parameters
+  self.filter_parameters = [:password]
+
+  # The parameter filterer used to filter out parameters specified in @@filter_parameters
+  mattr_writer :param_filter
+  self.param_filter = nil
+  def self.param_filter
+    @@param_filter ||= ActionDispatch::Http::ParameterFilter.new(Lograge.filter_parameters)
+  end
+
   def self.remove_existing_log_subscriptions
     ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
       case subscriber
@@ -60,6 +72,7 @@ module Lograge
     Lograge.remove_existing_log_subscriptions
     Lograge::RequestLogSubscriber.attach_to :action_controller
     Lograge.custom_options = app.config.lograge.custom_options
+    Lograge.filter_parameters = app.config.filter_parameters || [:password]
     Lograge.log_format = app.config.lograge.log_format || :lograge
     case Lograge.log_format.to_s
     when "logstash"

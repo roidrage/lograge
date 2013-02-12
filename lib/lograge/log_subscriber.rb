@@ -97,7 +97,7 @@ module Lograge
     end
 
     def custom_options(event)
-      Lograge.custom_options(event) || {}
+      filter_params(Lograge.custom_options(event) || {})
     end
 
     def runtimes(event)
@@ -118,6 +118,10 @@ module Lograge
       else
         {}
       end
+    end
+
+    def filter_params(params)
+      Lograge.param_filter.filter(params)
     end
   end
 end
