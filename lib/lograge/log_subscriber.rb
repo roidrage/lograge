@@ -16,8 +16,8 @@ module Lograge
     end
 
     LOGRAGE_FIELDS = [
-      :method, :path, :format, :controller, :action, :status, :error,
-      :duration, :view, :db, :location, :params
+      :method, :path, :params, :format, :controller, :action, :status, :error,
+      :duration, :view, :db, :location
     ]
     def process_action_lograge(data)
       fields  = LOGRAGE_FIELDS
