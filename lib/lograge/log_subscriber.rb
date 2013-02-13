@@ -17,7 +17,7 @@ module Lograge
 
     LOGRAGE_FIELDS = [
       :method, :path, :format, :controller, :action, :status, :error,
-      :duration, :view, :db, :location
+      :duration, :view, :db, :location, :params
     ]
     def process_action_lograge(data)
       fields  = LOGRAGE_FIELDS
@@ -31,6 +31,8 @@ module Lograge
         data[key] = "'#{data[key]}'" if key == :error
         # Ensure that we always have exactly two decimals
         data[key] = "%.2f" % data[key] if data[key].is_a? Float
+        # Params processing
+        data[key] = data[key].gsub('=',':') if key == :params
 
         message << "#{key}=#{data[key]}"
         message
@@ -67,10 +69,19 @@ module Lograge
       {
         :method => payload[:method],
         :path => extract_path(payload),
+        :params => extract_params(payload),
         :format => extract_format(payload),
         :controller => payload[:params]['controller'],
         :action => payload[:params]['action']
       }
+    end
+
+    def extract_params(payload)
+      params = payload[:params].dup
+      params.delete('controller')
+      params.delete('action')
+
+      params.map {|k,v|"#{k}:#{v}"}.join(',')
     end
 
     def extract_path(payload)

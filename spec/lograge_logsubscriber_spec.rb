@@ -22,8 +22,8 @@ describe Lograge::RequestLogSubscriber do
   let(:event) {
     ActiveSupport::Notifications::Event.new(
       'process_action.action_controller', Time.now, Time.now, 2, {
-        status: 200, format: 'application/json', method: 'GET', path: '/home?foo=bar', params: {
-          'controller' => 'home', 'action' => 'index', 'foo' => 'bar'
+        status: 200, format: 'application/json', method: 'GET', path: '/home?foo=bar&baz=yay', params: {
+          'controller' => 'home', 'action' => 'index', 'foo' => 'bar', 'baz' => 'yay'
         }, db_runtime: 0.02, view_runtime: 0.01
       }
     )
@@ -45,9 +45,9 @@ describe Lograge::RequestLogSubscriber do
       log_output.string.should include('/home')
     end
 
-    it "should not include the query string in the url" do
+    it "should include the query string in the url" do
       subscriber.process_action(event)
-      log_output.string.should_not include('?foo=bar')
+      log_output.string.should include('params=foo:bar,baz:yay')
     end
 
     it "should start the log line with the HTTP method" do
