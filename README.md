@@ -75,6 +75,18 @@ MyApp::Application.configure do
 end
 ```
 
+You can then add custom variables to the event to be used in custom_options
+
+```ruby
+# app/controllers/application_controller.rb
+class ApplicationController < ActionController::Base
+  def append_info_to_payload(payload)
+    super
+    payload["host"] = request.host
+  end
+end
+```
+
 Lograge supports multiple output formats. The most common is the default
 lograge format described above. Alternatively, you can also generate JSON
 logs in the json_event format used by [Logstash](http://logstash.net/).
