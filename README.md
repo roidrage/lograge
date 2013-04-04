@@ -70,7 +70,7 @@ MyApp::Application.configure do
   # if it's a lambda then it must return a hash
   config.lograge.custom_options = lambda do |event|
     # capture some specific timing values you are interested in
-    {:name => "value", :timing => some_float.round(2)}
+    {:name => "value", :timing => some_float.round(2), :host => event.payload[:host]}
   end
 end
 ```
@@ -82,7 +82,7 @@ You can then add custom variables to the event to be used in custom_options
 class ApplicationController < ActionController::Base
   def append_info_to_payload(payload)
     super
-    payload["host"] = request.host
+    payload[:host] = request.host
   end
 end
 ```
