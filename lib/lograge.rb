@@ -24,6 +24,10 @@ module Lograge
     end
   end
 
+  # Loglines are emitted with this log level
+  mattr_accessor :log_level
+  self.log_level = :info
+
   # The emitted log format
   #
   # Currently supported formats are>
@@ -60,6 +64,7 @@ module Lograge
     Lograge.remove_existing_log_subscriptions
     Lograge::RequestLogSubscriber.attach_to :action_controller
     Lograge.custom_options = app.config.lograge.custom_options
+    Lograge.log_level = app.config.lograge.log_level || :info
     Lograge.log_format = app.config.lograge.log_format || :lograge
     case Lograge.log_format.to_s
     when "logstash"
