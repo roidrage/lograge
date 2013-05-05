@@ -41,7 +41,7 @@ module Lograge
 
     def process_action_logstash(data)
       event = LogStash::Event.new("@fields" => data)
-      event.message = "#{data[:method]} #{data[:path]} #{data[:status} #{data[:duration]}s #{data[:controller]}##{data[:action]}"
+      event.message = "[#{data[:status]}] #{data[:method]} #{data[:path]} (#{data[:controller]}##{data[:action]})"
       event.to_json
     end
 
