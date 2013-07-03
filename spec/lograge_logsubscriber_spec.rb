@@ -344,44 +344,64 @@ describe Lograge::RequestLogSubscriber do
   describe "with ignore configured" do
     before do
       Lograge::log_format = :lograge
+      Lograge::ignore_nothing # clear the old ignores before each test
     end
 
     it "should not log ignored controller actions given a single ignored action" do
-      Lograge.ignore = 'home#index'
+      Lograge.ignore_actions 'home#index'
+      subscriber.process_action(event)
+      log_output.string.should be_blank
+    end
+
+    it "should not log ignored controller actions given a single ignored action after a custom ignore" do
+      Lograge.ignore(lambda {|event| false})
+      Lograge.ignore_actions 'home#index'
       subscriber.process_action(event)
       log_output.string.should be_blank
     end
 
     it "should log non-ignored controller actions given a single ignored action" do
-      Lograge.ignore = 'foo#bar'
+      Lograge.ignore_actions 'foo#bar'
       subscriber.process_action(event)
       log_output.string.should_not be_blank
     end
 
     it "should not log ignored controller actions given multiple ignored actions" do
-      Lograge.ignore = ['foo#bar', 'home#index', 'bar#foo']
+      Lograge.ignore_actions ['foo#bar', 'home#index', 'bar#foo']
       subscriber.process_action(event)
       log_output.string.should be_blank
     end
 
     it "should log non-ignored controller actions given multiple ignored actions" do
-      Lograge.ignore = ['foo#bar', 'bar#foo']
+      Lograge.ignore_actions ['foo#bar', 'bar#foo']
       subscriber.process_action(event)
       log_output.string.should_not be_blank
     end
 
     it "should not log ignored events" do
-      Lograge.ignore = lambda do |event|
+      Lograge.ignore(lambda do |event|
         'GET' == event.payload[:method]
-      end
+      end)
       subscriber.process_action(event)
       log_output.string.should be_blank
     end
 
     it "should log non-ignored events" do
-      Lograge.ignore = lambda do |event|
+      Lograge.ignore(lambda do |event|
         'foo' == event.payload[:method]
-      end
+      end)
+      subscriber.process_action(event)
+      log_output.string.should_not be_blank
+    end
+
+    it "should not choke on nil ignore_actions input" do
+      Lograge.ignore_actions nil
+      subscriber.process_action(event)
+      log_output.string.should_not be_blank
+    end
+
+    it "should not choke on nil ignore input" do
+      Lograge.ignore nil
       subscriber.process_action(event)
       log_output.string.should_not be_blank
     end

@@ -31,26 +31,32 @@ module Lograge
   #  - An array of strings representing controller actions
   #  - An object that responds to call with an event argument and returns
   #    true iff the event should be ignored.
-  @@ignore = nil
+  #
+  # The action ignores are given to 'ignore_actions'. The callable ignores 
+  # are given to 'ignore'.  Both methods can be called multiple times, which
+  # just adds more ignore conditions to a list that is checked before logging.
 
-  def self.ignore=(ignore)
-    @@ignore = ignore
-    @@ignore_test = nil
+  def self.ignore_actions(actions)
+    ignore(lambda do |event|
+      params = event.payload[:params]
+      Array(actions).include?("#{params['controller']}##{params['action']}")
+    end)
+  end
+
+  def self.ignore_tests
+    @@ignore_tests ||= []
+  end
+
+  def self.ignore(test)
+    ignore_tests.push(test) if test
+  end
+
+  def self.ignore_nothing
+    @@ignore_tests = []
   end
 
   def self.ignore?(event)
-    return if @@ignore.nil?
-
-    @@ignore_test ||= 
-      @@ignore.respond_to?(:call) ?
-      @@ignore :
-      lambda do |event|
-        params = event.payload[:params]
-        controller_action = "#{params['controller']}##{params['action']}"
-        Array(@@ignore).include?(controller_action)
-      end
-
-    @@ignore_test.call(event)
+    ignore_tests.any?{|ignore_test| ignore_test.call(event)}
   end
 
   # Loglines are emitted with this log level
@@ -95,7 +101,8 @@ module Lograge
     Lograge.custom_options = app.config.lograge.custom_options
     Lograge.log_level = app.config.lograge.log_level || :info
     Lograge.log_format = app.config.lograge.log_format || :lograge
-    Lograge.ignore = app.config.lograge.ignore
+    Lograge.ignore_actions(app.config.lograge.ignore_actions)
+    Lograge.ignore(app.config.lograge.ignore_custom)
     case Lograge.log_format.to_s
     when "logstash"
       begin
