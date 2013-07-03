@@ -4,15 +4,19 @@ require 'active_support/log_subscriber'
 module Lograge
   class RequestLogSubscriber < ActiveSupport::LogSubscriber
     def process_action(event)
+      return if Lograge.ignore?(event)
+
       payload = event.payload
 
       data      = extract_request(payload)
+
       data.merge! extract_status(payload)
       data.merge! runtimes(event)
       data.merge! location(event)
       data.merge! custom_options(event)
 
       line = send(:"process_action_#{Lograge.log_format}", data)
+
       logger.send(Lograge.log_level, line)
     end
 

@@ -24,6 +24,35 @@ module Lograge
     end
   end
 
+  # Set conditions for events that should be ignored
+  #
+  # Currently supported formats are:
+  #  - A single string representing a controller action, e.g. 'users#sign_in'
+  #  - An array of strings representing controller actions
+  #  - An object that responds to call with an event argument and returns
+  #    true iff the event should be ignored.
+  @@ignore = nil
+
+  def self.ignore=(ignore)
+    @@ignore = ignore
+    @@ignore_test = nil
+  end
+
+  def self.ignore?(event)
+    return if @@ignore.nil?
+
+    @@ignore_test ||= 
+      @@ignore.respond_to?(:call) ?
+      @@ignore :
+      lambda do |event|
+        params = event.payload[:params]
+        controller_action = "#{params['controller']}##{params['action']}"
+        Array(@@ignore).include?(controller_action)
+      end
+
+    @@ignore_test.call(event)
+  end
+
   # Loglines are emitted with this log level
   mattr_accessor :log_level
   self.log_level = :info
@@ -66,6 +95,7 @@ module Lograge
     Lograge.custom_options = app.config.lograge.custom_options
     Lograge.log_level = app.config.lograge.log_level || :info
     Lograge.log_format = app.config.lograge.log_format || :lograge
+    Lograge.ignore = app.config.lograge.ignore
     case Lograge.log_format.to_s
     when "logstash"
       begin

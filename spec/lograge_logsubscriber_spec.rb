@@ -15,7 +15,7 @@ describe Lograge::RequestLogSubscriber do
     logger
   }
   before do
-    Lograge::RequestLogSubscriber.logger = logger
+    ActiveSupport::LogSubscriber.logger = logger
   end
 
   let(:subscriber) {Lograge::RequestLogSubscriber.new}
@@ -338,6 +338,52 @@ describe Lograge::RequestLogSubscriber do
       Lograge.custom_options = lambda {|event| nil}
       subscriber.process_action(event)
       log_output.string.should be_present
+    end
+  end
+
+  describe "with ignore configured" do
+    before do
+      Lograge::log_format = :lograge
+    end
+
+    it "should not log ignored controller actions given a single ignored action" do
+      Lograge.ignore = 'home#index'
+      subscriber.process_action(event)
+      log_output.string.should be_blank
+    end
+
+    it "should log non-ignored controller actions given a single ignored action" do
+      Lograge.ignore = 'foo#bar'
+      subscriber.process_action(event)
+      log_output.string.should_not be_blank
+    end
+
+    it "should not log ignored controller actions given multiple ignored actions" do
+      Lograge.ignore = ['foo#bar', 'home#index', 'bar#foo']
+      subscriber.process_action(event)
+      log_output.string.should be_blank
+    end
+
+    it "should log non-ignored controller actions given multiple ignored actions" do
+      Lograge.ignore = ['foo#bar', 'bar#foo']
+      subscriber.process_action(event)
+      log_output.string.should_not be_blank
+    end
+
+    it "should not log ignored events" do
+      Lograge.ignore = lambda do |event|
+        'GET' == event.payload[:method]
+      end
+      subscriber.process_action(event)
+      log_output.string.should be_blank
+    end
+
+    it "should log non-ignored events" do
+      Lograge.ignore = lambda do |event|
+        'foo' == event.payload[:method]
+      end
+      subscriber.process_action(event)
+      log_output.string.should_not be_blank
     end
   end
 
