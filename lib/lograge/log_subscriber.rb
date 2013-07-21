@@ -1,3 +1,5 @@
+require 'json'
+
 require 'active_support/core_ext/class/attribute'
 require 'active_support/log_subscriber'
 
@@ -57,6 +59,10 @@ module Lograge
       my.keys.each { |k| my["_#{k}".to_sym] = my[k]; my.delete(k) }
 
       my.merge(base)
+    end
+
+    def process_action_cee(data)
+      "@cee: #{JSON.dump(data)}"
     end
 
     def redirect_to(event)
