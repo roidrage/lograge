@@ -65,6 +65,10 @@ module Lograge
       "@cee: #{JSON.dump(data)}"
     end
 
+    def process_action_raw(data)
+      data
+    end
+
     def redirect_to(event)
       Thread.current[:lograge_location] = event.payload[:location]
     end
