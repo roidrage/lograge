@@ -14,9 +14,7 @@ describe Lograge::RequestLogSubscriber do
     }
     logger
   }
-  before do
-    Lograge::RequestLogSubscriber.logger = logger
-  end
+  before { ActiveSupport::LogSubscriber.logger = logger }
 
   let(:subscriber) {Lograge::RequestLogSubscriber.new}
   let(:event) {
