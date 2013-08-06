@@ -88,13 +88,13 @@ end
 ```
 
 Lograge supports multiple output formats. The most common is the default
-lograge format described above. Alternatively, you can also generate JSON
-logs in the json_event format used by [Logstash](http://logstash.net/).
+lograge key-value format described above. Alternatively, you can also generate
+JSON logs in the json_event format used by [Logstash](http://logstash.net/).
 
 ```ruby
 # config/environments/production.rb
 MyApp::Application.configure do
-  config.lograge.log_format = :logstash
+  config.lograge.formatter = Lograge::Formatters::Logstash.new
 end
 ```
 
@@ -106,6 +106,26 @@ gem "logstash-event"
 ```
 
 Done.
+
+The available formatters are:
+
+```ruby
+  Lograge::Formatters::Cee.new
+  Lograge::Formatters::Graylog2.new
+  Lograge::Formatters::KeyValue.new  # default lograge format
+  Lograge::Formatters::Logstash.new
+  Lograge::Formatters::Raw.new       # Returns a ruby hash object
+```
+
+In addition to the formatters, you can manipulate the data your self by passing
+an object which responds to #call:
+
+```ruby
+# config/environments/production.rb
+MyApp::Application.configure do
+  config.lograge.formatter = ->(data) { "Called #{data[:contoller]}" } # data is a ruby hash
+end
+```
 
 **Internals**
 

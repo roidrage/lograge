@@ -1,8 +1,14 @@
 require 'lograge/version'
+require 'lograge/formatters/cee'
+require 'lograge/formatters/graylog2'
+require 'lograge/formatters/key_value'
+require 'lograge/formatters/logstash'
+require 'lograge/formatters/raw'
 require 'lograge/log_subscriber'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/ordered_options'
+
 
 module Lograge
   mattr_accessor :logger
@@ -33,8 +39,7 @@ module Lograge
   # Currently supported formats are>
   #  - :lograge - The custom tense lograge format
   #  - :logstash - JSON formatted as a Logstash Event.
-  mattr_accessor :log_format
-  self.log_format = :lograge
+  mattr_accessor :formatter
 
   def self.remove_existing_log_subscriptions
     ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
@@ -65,15 +70,16 @@ module Lograge
     Lograge::RequestLogSubscriber.attach_to :action_controller
     Lograge.custom_options = app.config.lograge.custom_options
     Lograge.log_level = app.config.lograge.log_level || :info
-    Lograge.log_format = app.config.lograge.log_format || :lograge
-    case Lograge.log_format.to_s
-    when "logstash"
-      begin
-        require "logstash-event"
-      rescue LoadError
-        puts "You need to install the logstash-event gem to use the logstash output."
-        raise
-      end
+    self.support_deprecated_config(app) # TODO: Remove with version 1.0
+    Lograge.formatter = app.config.lograge.formatter || Lograge::Formatters::KeyValue.new
+  end
+
+  # TODO: Remove with version 1.0
+  def self.support_deprecated_config(app)
+    if legacy_log_format = app.config.lograge.log_format
+      ActiveSupport::Deprecation.warn 'config.lograge.log_format is deprecated. Use config.lograge.formatter instead.', caller
+      legacy_log_format = :key_value if legacy_log_format == :lograge
+      app.config.lograge.formatter = "Lograge::Formatters::#{legacy_log_format.to_s.classify}".constantize.new
     end
   end
 end

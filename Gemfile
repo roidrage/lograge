@@ -4,6 +4,6 @@ source "http://rubygems.org"
 gemspec
 
 group :test do
-  gem 'actionpack', '~> 3'
+  gem 'actionpack'
   gem 'logstash-event'
 end
