@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   s.add_development_dependency "rspec"
   s.add_development_dependency "guard-rspec"
-  s.add_development_dependency "debugger"
   s.add_runtime_dependency "activesupport", '>= 3'
   s.add_runtime_dependency "actionpack", '>= 3'
   s.add_runtime_dependency "railties", '>= 3'
