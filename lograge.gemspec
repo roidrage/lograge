@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "debugger"
   s.add_runtime_dependency "activesupport", '>= 3'
   s.add_runtime_dependency "actionpack", '>= 3'
+  s.add_runtime_dependency "railties", '>= 3'
 end
