@@ -1,3 +1,4 @@
+require 'active_support/concern'
 require 'rails/rack/logger'
 
 module Rails
