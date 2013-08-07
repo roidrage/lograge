@@ -30,6 +30,41 @@ module Lograge
     end
   end
 
+  # Set conditions for events that should be ignored
+  #
+  # Currently supported formats are:
+  #  - A single string representing a controller action, e.g. 'users#sign_in'
+  #  - An array of strings representing controller actions
+  #  - An object that responds to call with an event argument and returns
+  #    true iff the event should be ignored.
+  #
+  # The action ignores are given to 'ignore_actions'. The callable ignores 
+  # are given to 'ignore'.  Both methods can be called multiple times, which
+  # just adds more ignore conditions to a list that is checked before logging.
+
+  def self.ignore_actions(actions)
+    ignore(lambda do |event|
+      params = event.payload[:params]
+      Array(actions).include?("#{params['controller']}##{params['action']}")
+    end)
+  end
+
+  def self.ignore_tests
+    @@ignore_tests ||= []
+  end
+
+  def self.ignore(test)
+    ignore_tests.push(test) if test
+  end
+
+  def self.ignore_nothing
+    @@ignore_tests = []
+  end
+
+  def self.ignore?(event)
+    ignore_tests.any?{|ignore_test| ignore_test.call(event)}
+  end
+
   # Loglines are emitted with this log level
   mattr_accessor :log_level
   self.log_level = :info
@@ -72,6 +107,8 @@ module Lograge
     Lograge.log_level = app.config.lograge.log_level || :info
     self.support_deprecated_config(app) # TODO: Remove with version 1.0
     Lograge.formatter = app.config.lograge.formatter || Lograge::Formatters::KeyValue.new
+    Lograge.ignore_actions(app.config.lograge.ignore_actions)
+    Lograge.ignore(app.config.lograge.ignore_custom)
   end
 
   # TODO: Remove with version 1.0
