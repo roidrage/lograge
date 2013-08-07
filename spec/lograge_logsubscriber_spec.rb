@@ -8,15 +8,8 @@ require 'logger'
 describe Lograge::RequestLogSubscriber do
   let(:log_output) {StringIO.new}
   let(:logger) {
-    logger = Logger.new(log_output)
-    logger.formatter = ->(_, _, _, msg) {
-      msg
-    }
-    logger
+    Logger.new(log_output).tap {|logger| logger.formatter = ->(_, _, _, msg) { msg } }
   }
-  before do
-    ActiveSupport::LogSubscriber.logger = logger
-  end
 
   let(:subscriber) {Lograge::RequestLogSubscriber.new}
   let(:event) {
@@ -28,16 +21,46 @@ describe Lograge::RequestLogSubscriber do
       }
     )
   }
-
   let(:redirect) {
     ActiveSupport::Notifications::Event.new(
       'redirect_to.action_controller', Time.now, Time.now, 1, location: 'http://example.com', status: 302
     )
   }
 
+  before { ActiveSupport::LogSubscriber.logger = logger }
+
+  describe "with custom_options configured for cee output" do
+    before do
+      Lograge::formatter = ->(data) { "My test: #{data}" }
+    end
+
+    it "should combine the hash properly for the output" do
+      Lograge.custom_options = {:data => "value"}
+      subscriber.process_action(event)
+      log_output.string.should =~ /^My test: {.*:data=>"value"/
+    end
+    it "should combine the output of a lambda properly" do
+      Lograge.custom_options = lambda {|event| {:data => "value"}}
+      subscriber.process_action(event)
+      log_output.string.should =~ /^My test: {.*:data=>"value"/
+    end
+    it "should work if the method returns nil" do
+      Lograge.custom_options = lambda {|event| nil}
+      subscriber.process_action(event)
+      log_output.string.should be_present
+    end
+  end
+
+  describe "when processing a redirect" do
+    it "should store the location in a thread local variable" do
+      subscriber.redirect_to(redirect)
+      Thread.current[:lograge_location].should == "http://example.com"
+    end
+  end
+
   describe "when processing an action with lograge output" do
     before do
-      Lograge::log_format = :lograge
+      Lograge.formatter = Lograge::Formatters::KeyValue.new
     end
 
     it "should include the URL in the log output" do
@@ -117,189 +140,9 @@ describe Lograge::RequestLogSubscriber do
     end
   end
 
-  describe "when processing an action with logstash output" do
-    before do
-      require 'logstash-event'
-      Lograge::log_format = :logstash
-    end
-
-    it "should include the URL in the log output" do
-      subscriber.process_action(event)
-      log_output.string.should include('/home')
-    end
-
-    it "should start include the HTTP method" do
-      subscriber.process_action(event)
-      log_output.string.should include('"method":"GET"')
-    end
-
-    it "should include the status code" do
-      subscriber.process_action(event)
-      log_output.string.should include('"status":200')
-    end
-
-    it "should include the controller and action" do
-      subscriber.process_action(event)
-      log_output.string.should include('"controller":"home"')
-      log_output.string.should include('"action":"index"')
-    end
-
-    it "should include the duration" do
-      subscriber.process_action(event)
-      log_output.string.should =~ /"duration":\d+\.\d{0,2}/
-    end
-
-    it "should include the view rendering time" do
-      subscriber.process_action(event)
-      log_output.string.should =~ /"view":0.01/
-    end
-
-    it "should include the database rendering time" do
-      subscriber.process_action(event)
-      log_output.string.should =~ /"db":0.02/
-    end
-
-    it "should add a 500 status when an exception occurred" do
-      event.payload[:status] = nil
-      event.payload[:exception] = ['AbstractController::ActionNotFound', 'Route not found']
-      subscriber.process_action(event)
-      log_output.string.should =~ /"status":500/
-      log_output.string.should =~ /"error":"AbstractController::ActionNotFound:Route not found"/
-    end
-
-    it "should return an unknown status when no status or exception is found" do
-      event.payload[:status] = nil
-      event.payload[:exception] = nil
-      subscriber.process_action(event)
-      log_output.string.should =~ /"status":0/
-    end
-
-    describe "with a redirect" do
-      before do
-        Thread.current[:lograge_location] = "http://www.example.com"
-      end
-
-      it "should add the location to the log line" do
-        subscriber.process_action(event)
-        log_output.string.should =~ %r{"location":"http://www.example.com"}
-      end
-
-      it "should remove the thread local variable" do
-        subscriber.process_action(event)
-        Thread.current[:lograge_location].should == nil
-      end
-    end
-
-    it "should not include a location by default" do
-      subscriber.process_action(event)
-      log_output.string.should_not =~ /"location":/
-    end
-  end
-
-  describe "when processing an action with graylog2 output" do
-    before do
-      Lograge::log_format = :graylog2
-    end
-
-    it "should include the URL in the log output" do
-      subscriber.process_action(event)
-      log_output.string.should include(':_path=>"/home"')
-    end
-
-    it "should start include the HTTP method" do
-      subscriber.process_action(event)
-      log_output.string.should include(':_method=>"GET"')
-    end
-
-    it "should include the status code" do
-      subscriber.process_action(event)
-      log_output.string.should include(':_status=>200')    end
-
-    it "should include the controller and action" do
-      subscriber.process_action(event)
-      log_output.string.should include(':_controller=>"home"')
-      log_output.string.should include(':_action=>"index"')
-    end
-
-    it "should include the duration" do
-      subscriber.process_action(event)
-      log_output.string.should =~ /:_duration=>\d+\.\d{0,2}/
-    end
-
-    it "should include the view rendering time" do
-      subscriber.process_action(event)
-      log_output.string.should include(':_view=>0.01')
-    end
-
-    it "should include the database rendering time" do
-      subscriber.process_action(event)
-      log_output.string.should include(':_db=>0.02')
-    end
-
-    it "should add a 500 status when an exception occurred" do
-      event.payload[:status] = nil
-      event.payload[:exception] = ['AbstractController::ActionNotFound', 'Route not found']
-      subscriber.process_action(event)
-      log_output.string.should include(':_status=>500')
-      log_output.string.should include(':_error=>"AbstractController::ActionNotFound:Route not found"')
-    end
-
-    it "should return an unknown status when no status or exception is found" do
-      event.payload[:status] = nil
-      event.payload[:exception] = nil
-      subscriber.process_action(event)
-      log_output.string.should include(':_status=>0')
-    end
-
-    describe "with a redirect" do
-      before do
-        Thread.current[:lograge_location] = "http://www.example.com"
-      end
-
-      it "should add the location to the log line" do
-        subscriber.process_action(event)
-        log_output.string.should include(':_location=>"http://www.example.com"')
-      end
-
-      it "should remove the thread local variable" do
-        subscriber.process_action(event)
-        Thread.current[:lograge_location].should == nil
-      end
-    end
-
-    it "should not include a location by default" do
-      subscriber.process_action(event)
-      log_output.string.should_not =~ /"location":/
-    end
-  end
-
-  describe "with custom_options configured for graylog2 output" do
-    before do
-      Lograge::log_format = :graylog2
-    end
-
-    it "should combine the hash properly for the output" do
-      Lograge.custom_options = {:data => "value"}
-      subscriber.process_action(event)
-      log_output.string.should include(':_data=>"value"')
-    end
-
-    it "should combine the output of a lambda properly" do
-      Lograge.custom_options = lambda {|event| {:data => "value"}}
-      subscriber.process_action(event)
-      log_output.string.should include(':_data=>"value"')
-    end
-
-    it "should work if the method returns nil" do
-      Lograge.custom_options = lambda {|event| nil}
-      subscriber.process_action(event)
-      log_output.string.should be_present
-    end
-  end
-
   describe "with custom_options configured for lograge output" do
     before do
-      Lograge::log_format = :lograge
+      Lograge.formatter = Lograge::Formatters::KeyValue.new
     end
 
     it "should combine the hash properly for the output" do
@@ -311,28 +154,6 @@ describe Lograge::RequestLogSubscriber do
       Lograge.custom_options = lambda {|event| {:data => "value"}}
       subscriber.process_action(event)
       log_output.string.should =~ / data=value/
-    end
-    it "should work if the method returns nil" do
-      Lograge.custom_options = lambda {|event| nil}
-      subscriber.process_action(event)
-      log_output.string.should be_present
-    end
-  end
-
-  describe "with custom_options configured for logstash output" do
-    before do
-      Lograge::log_format = :logstash
-    end
-
-    it "should combine the hash properly for the output" do
-      Lograge.custom_options = {:data => "value"}
-      subscriber.process_action(event)
-      log_output.string.should =~ /"data":"value"/
-    end
-    it "should combine the output of a lambda properly" do
-      Lograge.custom_options = lambda {|event| {:data => "value"}}
-      subscriber.process_action(event)
-      log_output.string.should =~ /"data":"value"/
     end
     it "should work if the method returns nil" do
       Lograge.custom_options = lambda {|event| nil}
@@ -343,14 +164,14 @@ describe Lograge::RequestLogSubscriber do
 
   describe "with ignore configured" do
     before do
-      Lograge::log_format = :lograge
+      # Lograge::log_format = :lograge
       Lograge::ignore_nothing # clear the old ignores before each test
     end
 
     it "should not log ignored controller actions given a single ignored action" do
       Lograge.ignore_actions 'home#index'
       subscriber.process_action(event)
-      log_output.string.should be_blank
+      log_output.string.should  be_blank
     end
 
     it "should not log ignored controller actions given a single ignored action after a custom ignore" do
@@ -404,13 +225,6 @@ describe Lograge::RequestLogSubscriber do
       Lograge.ignore nil
       subscriber.process_action(event)
       log_output.string.should_not be_blank
-    end
-  end
-
-  describe "when processing a redirect" do
-    it "should store the location in a thread local variable" do
-      subscriber.redirect_to(redirect)
-      Thread.current[:lograge_location].should == "http://example.com"
     end
   end
 end

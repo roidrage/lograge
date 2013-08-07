@@ -37,4 +37,48 @@ describe Lograge do
       listeners.size.should > 0
     end
   end
+
+  describe 'deprecated log_format interpreter' do
+    let(:app_config) do
+      double(config:
+        ActiveSupport::OrderedOptions.new.tap do |config|
+          config.action_dispatch = double(rack_cache: false)
+          config.lograge = ActiveSupport::OrderedOptions.new
+          config.lograge.log_format = format
+        end
+      )
+    end
+    before { ActiveSupport::Deprecation.silence { Lograge.setup(app_config) } }
+    subject { Lograge.formatter }
+
+    context ':cee' do
+      let(:format) { :cee }
+      it { should be_instance_of(Lograge::Formatters::Cee) }
+    end
+
+    context ':raw' do
+      let(:format) { :raw }
+      it { should be_instance_of(Lograge::Formatters::Raw) }
+    end
+
+    context ':logstash' do
+      let(:format) { :logstash }
+      it { should be_instance_of(Lograge::Formatters::Logstash) }
+    end
+
+    context ':graylog2' do
+      let(:format) { :graylog2 }
+      it { should be_instance_of(Lograge::Formatters::Graylog2) }
+    end
+
+    context ':lograge' do
+      let(:format) { :lograge }
+      it { should be_instance_of(Lograge::Formatters::KeyValue) }
+    end
+
+    context 'default' do
+      let(:format) { nil }
+      it { should be_instance_of(Lograge::Formatters::KeyValue) }
+    end
+  end
 end
