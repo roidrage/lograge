@@ -6,6 +6,8 @@ require 'active_support/log_subscriber'
 module Lograge
   class RequestLogSubscriber < ActiveSupport::LogSubscriber
     def process_action(event)
+      return if Lograge.ignore?(event)
+      
       payload = event.payload
 
       data      = extract_request(payload)
