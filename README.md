@@ -139,7 +139,7 @@ an object which responds to #call:
 ```ruby
 # config/environments/production.rb
 MyApp::Application.configure do
-  config.lograge.formatter = ->(data) { "Called #{data[:contoller]}" } # data is a ruby hash
+  config.lograge.formatter = ->(data) { "Called #{data[:controller]}" } # data is a ruby hash
 end
 ```
 
