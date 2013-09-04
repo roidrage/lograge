@@ -27,7 +27,7 @@ describe Lograge::RequestLogSubscriber do
     )
   }
 
-  before { ActiveSupport::LogSubscriber.logger = logger }
+  before { Lograge.logger = logger }
 
   describe "with custom_options configured for cee output" do
     before do
@@ -226,5 +226,15 @@ describe Lograge::RequestLogSubscriber do
       subscriber.process_action(event)
       log_output.string.should_not be_blank
     end
+  end
+
+  it "should fallback to ActiveSupport's logger if one isn't configured" do
+    Lograge.formatter = Lograge::Formatters::KeyValue.new
+    Lograge.logger = nil
+    ActiveSupport::LogSubscriber.logger = logger
+
+    subscriber.process_action(event)
+
+    log_output.string.should be_present
   end
 end
