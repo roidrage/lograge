@@ -26,6 +26,10 @@ module Lograge
 
     private
 
+    def logger
+      Lograge.logger.presence or super
+    end
+
     def extract_request(payload)
       {
         :method => payload[:method],
