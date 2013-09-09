@@ -5,5 +5,5 @@ gemspec
 
 group :test do
   gem 'actionpack'
-  gem 'logstash-event'
+  gem 'logstash-event', '1.1.5'
 end
