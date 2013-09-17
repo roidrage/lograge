@@ -24,11 +24,11 @@ module Lograge
       Thread.current[:lograge_location] = event.payload[:location]
     end
 
-    private
-
     def logger
       Lograge.logger.presence or super
     end
+
+    private
 
     def extract_request(payload)
       {
