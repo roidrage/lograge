@@ -7,22 +7,31 @@ module Lograge
       ]
 
       def call(data)
-        fields  = LOGRAGE_FIELDS
-        fields += (data.keys - LOGRAGE_FIELDS)
+        fields = fields_to_display(data)
 
         event = fields.inject([]) do |message, key|
           next message unless data.has_key?(key)
-          # Exactly preserve the previous output
-          # Parsing this can be ambigious if the error messages contains
-          # a single quote
-          data[key] = "'#{data[key]}'" if key == :error
-          # Ensure that we always have exactly two decimals
-          data[key] = "%.2f" % data[key] if data[key].is_a? Float
 
-          message << "#{key}=#{data[key]}"
+          message << format(key, data[key])
           message
         end
         event.join(" ")
+      end
+
+      def fields_to_display(data)
+        LOGRAGE_FIELDS + (data.keys - LOGRAGE_FIELDS)
+      end
+
+      def format(key, value)
+        # Exactly preserve the previous output
+        # Parsing this can be ambigious if the error messages contains
+        # a single quote
+        value = "'#{value}'" if key == :error
+
+        # Ensure that we always have exactly two decimals
+        value = "%.2f" % value if value.is_a? Float
+
+        "#{key}=#{value}"
       end
     end
   end
