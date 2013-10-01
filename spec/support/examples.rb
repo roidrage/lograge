@@ -15,8 +15,6 @@ shared_examples_for "a key value formatter" do
 
   it { should include('method=GET') }
   it { should include('path=/') }
-  it { should include('controller=welcome') }
-  it { should include('action=index') }
   it { should include('status=200') }
   it { should include('custom=data') }
 end

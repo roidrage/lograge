@@ -8,7 +8,7 @@ describe Lograge::Formatters::L2met do
       status: 200,
       method: 'GET',
       path: '/',
-      controller: 'welcome',
+      controller: 'admin/welcome',
       action: 'index',
       db: 20.00,
       view: 10.00, 
@@ -21,6 +21,9 @@ describe Lograge::Formatters::L2met do
 
   subject { described_class.new.call(payload) }
 
+  it { should include('source=admin/welcome#index') }
+  it { should_not include('controller=admin/welcome') }
+  it { should_not include('action=index') }
   it { should include('measure#page.duration=30.00') }
   it { should include('measure#page.view=10.00') }
   it { should include('measure#page.db=20.00') }
