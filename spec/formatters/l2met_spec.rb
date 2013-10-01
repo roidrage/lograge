@@ -21,7 +21,7 @@ describe Lograge::Formatters::L2met do
 
   subject { described_class.new.call(payload) }
 
-  it { should include('source=admin/welcome:index') }
+  it { should include('source=admin-welcome:index') }
   it { should_not include('controller=admin/welcome') }
   it { should_not include('action=index') }
   it { should include('measure#page.duration=30.00') }

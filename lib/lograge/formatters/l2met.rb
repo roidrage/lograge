@@ -24,10 +24,14 @@ module Lograge
 
       def modify_payload(data)
         if data[:controller] && data[:action]
-          data[:source] = "#{data[:controller]}:#{data[:action]}"
+          data[:source] = source_field(data)
         end
 
         data
+      end
+
+      def source_field(data)
+        "#{data[:controller].to_s.gsub('/','-')}:#{data[:action]}"
       end
     end
   end
