@@ -24,7 +24,7 @@ module Lograge
 
       def modify_payload(data)
         if data[:controller] && data[:action]
-          data[:source] = "#{data[:controller]}##{data[:action]}"
+          data[:source] = "#{data[:controller]}:#{data[:action]}"
         end
 
         data
