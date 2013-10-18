@@ -75,6 +75,19 @@ MyApp::Application.configure do
 end
 ```
 
+Or you can add a timestamp:
+
+```ruby
+MyApp::Application.configure do
+  config.lograge.enabled = true
+
+  # add time to lograge
+  config.lograge.custom_options = lambda do |event|
+    {:time => event.time}
+  end
+end
+```
+
 You can then add custom variables to the event to be used in custom_options
 
 ```ruby
