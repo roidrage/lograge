@@ -13,9 +13,6 @@ describe Lograge::Formatters::Logstash do
     }
   end
   subject { described_class.new.call(payload) }
-  it { should match(/"@source":"unknown"/) }
-  it { should match(/"@tags":\[\]/) }
-  it { should match(/"@fields":{/) }
   it { should match(/"custom":"data"/) }
   it { should match(/"status":200/) }
   it { should match(/"method":"GET"/) }

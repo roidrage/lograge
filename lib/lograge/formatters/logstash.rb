@@ -3,7 +3,8 @@ module Lograge
     class Logstash
       def call(data)
         load_dependencies
-        event = LogStash::Event.new("@fields" => data)
+        event = LogStash::Event.new(data)
+  
         event.message = "[#{data[:status]}] #{data[:method]} #{data[:path]} (#{data[:controller]}##{data[:action]})"
         event.to_json
       end
