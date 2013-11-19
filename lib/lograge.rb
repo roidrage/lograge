@@ -1,5 +1,6 @@
 require 'lograge/version'
 require 'lograge/formatters/cee'
+require 'lograge/formatters/json'
 require 'lograge/formatters/graylog2'
 require 'lograge/formatters/key_value'
 require 'lograge/formatters/l2met'
@@ -39,7 +40,7 @@ module Lograge
   #  - An object that responds to call with an event argument and returns
   #    true iff the event should be ignored.
   #
-  # The action ignores are given to 'ignore_actions'. The callable ignores 
+  # The action ignores are given to 'ignore_actions'. The callable ignores
   # are given to 'ignore'.  Both methods can be called multiple times, which
   # just adds more ignore conditions to a list that is checked before logging.
 
