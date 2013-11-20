@@ -78,6 +78,9 @@ module Lograge
   #  - :logstash - JSON formatted as a Logstash Event.
   mattr_accessor :formatter
 
+  # The used subscriber. Defaults to RequestLogSubscriber.
+  mattr_accessor :subscriber
+
   def self.remove_existing_log_subscriptions
     ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
       case subscriber
@@ -104,7 +107,8 @@ module Lograge
     app.config.action_dispatch.rack_cache[:verbose] = false if app.config.action_dispatch.rack_cache
     require 'lograge/rails_ext/rack/logger'
     Lograge.remove_existing_log_subscriptions
-    Lograge::RequestLogSubscriber.attach_to :action_controller
+    Lograge.subscriber = app.config.lograge.subscriber || Lograge::RequestLogSubscriber
+    Lograge.subscriber.attach_to :action_controller
     Lograge.custom_options = app.config.lograge.custom_options
     Lograge.log_level = app.config.lograge.log_level || :info
     self.support_deprecated_config(app) # TODO: Remove with version 1.0
