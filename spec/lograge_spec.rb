@@ -39,6 +39,25 @@ describe Lograge do
     end
   end
 
+  describe 'keep_original_rails_log option' do
+    context 'when keep_original_rails_log is true' do
+      let(:app_config) do
+        double(config:
+          ActiveSupport::OrderedOptions.new.tap do |config|
+            config.action_dispatch = double(rack_cache: false)
+            config.lograge = ActiveSupport::OrderedOptions.new
+            config.lograge.keep_original_rails_log = true
+          end
+        )
+      end
+
+      it "does not remove Rails' subscribers" do
+        expect(Lograge).to_not receive(:remove_existing_log_subscriptions)
+        Lograge.setup(app_config)
+      end
+    end
+  end
+
   describe 'deprecated log_format interpreter' do
     let(:app_config) do
       double(config:
