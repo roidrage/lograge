@@ -224,7 +224,7 @@ add it in manually using custom_options:
 
 ```ruby
 config.lograge.custom_options = lambda do |event|
-  {params: payload[:params].except('controller', 'action', 'format')} #exclude redundant params
+  {params: event.payload[:params].except('controller', 'action', 'format')} #exclude redundant params
 end
 ```
 
