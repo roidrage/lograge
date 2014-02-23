@@ -81,4 +81,48 @@ describe Lograge do
       it { should be_instance_of(Lograge::Formatters::KeyValue) }
     end
   end
+
+  describe '#setup' do
+    let(:app_config) do
+      double(config:
+        ActiveSupport::OrderedOptions.new.tap do |config|
+          config.action_dispatch = double(rack_cache: false)
+          config.lograge = ActiveSupport::OrderedOptions.new
+          config.lograge.enable_rack_logger = enable_rack_logger
+        end
+      )
+    end
+
+    context 'when app.config.enable_rack_logger is set to true' do
+      let(:enable_rack_logger) { true }
+      it 'should not require "lograge/rails_ext/rack/logger" ' do
+        Lograge.should_not_receive(:require).with('lograge/rails_ext/rack/logger')
+        Lograge.setup(app_config)
+      end
+    end
+
+    context 'when app.config.enable_rack_logger is set to false' do
+      let(:enable_rack_logger) { false }
+      it 'should require "lograge/rails_ext/rack/logger" ' do
+        Lograge.should_receive(:require).with('lograge/rails_ext/rack/logger')
+        Lograge.setup(app_config)
+      end
+    end
+
+    context 'when app.config.enable_rack_logger is not specified' do
+      let(:app_config) do
+        double(config:
+          ActiveSupport::OrderedOptions.new.tap do |config|
+            config.action_dispatch = double(rack_cache: false)
+            config.lograge = ActiveSupport::OrderedOptions.new
+          end
+        )
+      end
+      it 'should require "lograge/rails_ext/rack/logger" ' do
+        Lograge.should_receive(:require).with('lograge/rails_ext/rack/logger')
+        Lograge.setup(app_config)
+      end
+    end
+
+  end
 end
