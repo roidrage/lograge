@@ -32,6 +32,18 @@ module Lograge
     end
   end
 
+  # Before format allows you to change the structure of the output.
+  # You've to pass in something callable
+  #
+  mattr_writer :before_format
+  self.before_format = nil
+
+  def self.before_format(data, payload)
+    result = nil
+    result = @@before_format.call(data, payload) if @@before_format
+    result || data
+  end
+
   # Set conditions for events that should be ignored
   #
   # Currently supported formats are:
@@ -106,6 +118,7 @@ module Lograge
     Lograge.remove_existing_log_subscriptions
     Lograge::RequestLogSubscriber.attach_to :action_controller
     Lograge.custom_options = app.config.lograge.custom_options
+    Lograge.before_format = app.config.lograge.before_format
     Lograge.log_level = app.config.lograge.log_level || :info
     self.support_deprecated_config(app) # TODO: Remove with version 1.0
     Lograge.formatter = app.config.lograge.formatter || Lograge::Formatters::KeyValue.new

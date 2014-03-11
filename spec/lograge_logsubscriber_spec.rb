@@ -162,6 +162,27 @@ describe Lograge::RequestLogSubscriber do
     end
   end
 
+  describe "with before_format configured for lograge output" do
+    before do
+      Lograge.formatter = Lograge::Formatters::KeyValue.new
+      Lograge.before_format = nil
+    end
+
+    it "should output correctly" do
+      Lograge.before_format = lambda { |data, payload|
+        Hash[*data.first].merge(Hash[*payload.first])
+      }
+      subscriber.process_action(event)
+      log_output.string.should include("method=GET")
+      log_output.string.should include("status=200")
+    end
+    it "should work if the method returns nil" do
+      Lograge.before_format = lambda {|data, payload| nil}
+      subscriber.process_action(event)
+      log_output.string.should be_present
+    end
+  end
+
   describe "with ignore configured" do
     before do
       # Lograge::log_format = :lograge

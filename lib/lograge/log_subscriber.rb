@@ -7,7 +7,7 @@ module Lograge
   class RequestLogSubscriber < ActiveSupport::LogSubscriber
     def process_action(event)
       return if Lograge.ignore?(event)
-      
+
       payload = event.payload
 
       data      = extract_request(payload)
@@ -16,6 +16,7 @@ module Lograge
       data.merge! location(event)
       data.merge! custom_options(event)
 
+      data = before_format(data, payload)
       formatted_message = Lograge.formatter.call(data)
       logger.send(Lograge.log_level, formatted_message)
     end
@@ -65,6 +66,10 @@ module Lograge
 
     def custom_options(event)
       Lograge.custom_options(event) || {}
+    end
+
+    def before_format(data, payload)
+      Lograge.before_format(data, payload)
     end
 
     def runtimes(event)
