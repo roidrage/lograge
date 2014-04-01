@@ -88,7 +88,7 @@ MyApp::Application.configure do
 end
 ```
 
-You can then add custom variables to the event to be used in custom_options
+You can then add custom variables to the event to be used in custom_options (available in the event.payload[] array)
 
 ```ruby
 # app/controllers/application_controller.rb
