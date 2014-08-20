@@ -3,4 +3,8 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.0
+gemfile:
+  - Gemfile
+  - gemfiles/Gemfile.actionpack3.2
+  - gemfiles/Gemfile.actionpack4.0
 script: bundle exec rspec
