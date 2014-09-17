@@ -234,6 +234,7 @@ YourApp::Application.configure do
 
     { "params" => params }
   end
+end
 ```
 
 **Changes**
