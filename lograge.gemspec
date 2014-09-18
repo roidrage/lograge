@@ -11,8 +11,6 @@ Gem::Specification.new do |s|
   s.description = "Tame Rails' multi-line logging into a single line per request"
   s.license     = 'MIT'
 
-  s.rubyforge_project = 'lograge'
-
   s.files         = `git ls-files lib`.split("\n")
 
   # specify any dependencies here; for example:
