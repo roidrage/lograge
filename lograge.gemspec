@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path('../lib', __FILE__)
-require 'lograge/version'
+require './lib/lograge/version'
 
 Gem::Specification.new do |s|
   s.name        = 'lograge'
@@ -14,10 +13,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = 'lograge'
 
-  s.files         = `git ls-files`.split('\n')
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split('\n')
-  s.executables   = `git ls-files -- bin/*`.split('\n').map{ |f| File.basename(f) }
-  s.require_paths = ['lib']
+  s.files         = `git ls-files lib`.split("\n")
 
   # specify any dependencies here; for example:
   s.add_development_dependency 'rspec'

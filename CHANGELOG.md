@@ -1,8 +1,12 @@
 # Change Log
 
+## Added
+* LICENSE.txt
+
 ### Other
 * Add documentation on how to enable param logging #68
 * Add missing JSON formatter to README #77
+* Cleaning up gemspec
 
 ## 0.3.0 - 2014-03-11
 
