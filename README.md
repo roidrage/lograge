@@ -249,4 +249,7 @@ end
 **License**
 
 MIT. Code extracted from [Travis CI](http://travis-ci.org).
-(c) 2012 Mathias Meyer
+
+(c) 2014 Mathias Meyer
+
+See `LICENSE.txt` for details.
