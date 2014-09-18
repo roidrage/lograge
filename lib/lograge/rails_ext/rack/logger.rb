@@ -18,7 +18,7 @@ module Rails
       end
 
       # Overwrites Rails 3.0/3.1 code that logs new requests
-      def before_dispatch(env)
+      def before_dispatch(_env)
       end
     end
   end

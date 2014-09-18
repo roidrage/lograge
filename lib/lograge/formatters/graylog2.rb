@@ -6,7 +6,7 @@ module Lograge
         my = data.clone
 
         base = {
-          :short_message => "[#{my[:status]}] #{my[:method]} #{my[:path]} (#{my[:controller]}##{my[:action]})"
+          short_message: "[#{my[:status]}] #{my[:method]} #{my[:path]} (#{my[:controller]}##{my[:action]})"
         }
 
         # Add underscore to every key to follow GELF additional field syntax.

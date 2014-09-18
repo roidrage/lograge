@@ -11,7 +11,6 @@ require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/ordered_options'
 
-
 module Lograge
   mattr_accessor :logger
 
@@ -76,7 +75,7 @@ module Lograge
   end
 
   def self.ignore?(event)
-    ignore_tests.any?{|ignore_test| ignore_test.call(event)}
+    ignore_tests.any? { |ignore_test| ignore_test.call(event) }
   end
 
   # Loglines are emitted with this log level
@@ -102,7 +101,7 @@ module Lograge
   end
 
   def self.unsubscribe(component, subscriber)
-    events = subscriber.public_methods(false).reject{ |method| method.to_s == 'call' }
+    events = subscriber.public_methods(false).reject { |method| method.to_s == 'call' }
     events.each do |event|
       ActiveSupport::Notifications.notifier.listeners_for("#{event}.#{component}").each do |listener|
         if listener.instance_variable_get('@delegate') == subscriber
@@ -120,7 +119,7 @@ module Lograge
     Lograge.custom_options = app.config.lograge.custom_options
     Lograge.before_format = app.config.lograge.before_format
     Lograge.log_level = app.config.lograge.log_level || :info
-    self.support_deprecated_config(app) # TODO: Remove with version 1.0
+    support_deprecated_config(app) # TODO: Remove with version 1.0
     Lograge.formatter = app.config.lograge.formatter || Lograge::Formatters::KeyValue.new
     Lograge.ignore_actions(app.config.lograge.ignore_actions)
     Lograge.ignore(app.config.lograge.ignore_custom)
