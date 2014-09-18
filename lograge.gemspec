@@ -1,22 +1,12 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "lograge/version"
+require "./lib/lograge/version"
 
-Gem::Specification.new do |s|
-  s.name        = "lograge"
-  s.version     = Lograge::VERSION
+Gem::Specification.new "lograge", Lograge::VERSION do |s|
   s.authors     = ["Mathias Meyer"]
   s.email       = ["meyer@paperplanes.de"]
   s.homepage    = "https://github.com/roidrage/lograge"
-  s.summary     = %q{Tame Rails' multi-line logging into a single line per request}
-  s.description = %q{Tame Rails' multi-line logging into a single line per request}
-
-  s.rubyforge_project = "lograge"
-
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = ["lib"]
+  s.summary     = s.description = "Tame Rails' multi-line logging into a single line per request"
+  s.license     = "MIT"
+  s.files         = `git ls-files lib`.split("\n")
 
   # specify any dependencies here; for example:
   s.add_development_dependency "rspec"
