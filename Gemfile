@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
 # Specify your gem's dependencies in lograge.gemspec
 gemspec
@@ -6,4 +6,5 @@ gemspec
 group :test do
   gem 'actionpack'
   gem 'logstash-event', '1.1.5'
+  gem 'rubocop'
 end

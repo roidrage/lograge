@@ -14,25 +14,25 @@ describe Lograge do
       ActionView::LogSubscriber.attach_to :action_view
     end
 
-    it "should remove subscribers for controller events" do
-      expect {
+    it 'should remove subscribers for controller events' do
+      expect do
         Lograge.remove_existing_log_subscriptions
-      }.to change {
+      end.to change {
         ActiveSupport::Notifications.notifier.listeners_for('process_action.action_controller')
       }
     end
 
-    it "should remove subscribers for all events" do
-      expect {
+    it 'should remove subscribers for all events' do
+      expect do
         Lograge.remove_existing_log_subscriptions
-      }.to change {
+      end.to change {
         ActiveSupport::Notifications.notifier.listeners_for('render_template.action_view')
       }
     end
 
     it "shouldn't remove subscribers that aren't from Rails" do
       blk = -> {}
-      ActiveSupport::Notifications.subscribe("process_action.action_controller", &blk)
+      ActiveSupport::Notifications.subscribe('process_action.action_controller', &blk)
       Lograge.remove_existing_log_subscriptions
       listeners = ActiveSupport::Notifications.notifier.listeners_for('process_action.action_controller')
       listeners.size.should > 0

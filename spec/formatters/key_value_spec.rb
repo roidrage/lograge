@@ -18,5 +18,5 @@ describe Lograge::Formatters::KeyValue do
   it { should include('controller=welcome') }
   it { should include('action=index') }
 
-  it_behaves_like "a key value formatter"
+  it_behaves_like 'a key value formatter'
 end

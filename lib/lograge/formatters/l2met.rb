@@ -13,7 +13,7 @@ module Lograge
       end
 
       def format(key, value)
-        key = "measure#page.#{key}" if value.kind_of?(Float)
+        key = "measure#page.#{key}" if value.is_a?(Float)
 
         super(key, value)
       end
@@ -31,7 +31,7 @@ module Lograge
       end
 
       def source_field(data)
-        "#{data[:controller].to_s.gsub('/','-')}:#{data[:action]}"
+        "#{data[:controller].to_s.gsub('/', '-')}:#{data[:action]}"
       end
     end
   end
