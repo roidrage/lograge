@@ -1,0 +1,11 @@
+inherit_from: .rubocop_todo.yml
+
+LineLength:
+  Max: 120
+
+Documentation:
+  Enabled: false
+
+AllCops:
+  Exclude:
+    - 'Guardfile'

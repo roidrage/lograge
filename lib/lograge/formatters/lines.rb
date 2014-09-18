@@ -8,9 +8,9 @@ module Lograge
       end
 
       def load_dependencies
-        require "lines"
+        require 'lines'
       rescue LoadError
-        puts "You need to install the lines gem to use this output."
+        puts 'You need to install the lines gem to use this output.'
         raise
       end
     end

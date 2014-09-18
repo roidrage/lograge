@@ -9,4 +9,4 @@ RuboCop::RakeTask.new
 desc 'Run specs, rubocop and reek'
 task ci: %w(spec rubocop)
 
-task default: :spec
+task default: :ci

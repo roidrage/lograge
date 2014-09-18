@@ -55,7 +55,7 @@ describe Lograge do
     context ':cee' do
       let(:format) { :cee }
 
-      it "is an instance of Lograge::Formatters::Cee" do
+      it 'is an instance of Lograge::Formatters::Cee' do
         expect(subject).to be_instance_of(Lograge::Formatters::Cee)
       end
     end
@@ -63,7 +63,7 @@ describe Lograge do
     context ':raw' do
       let(:format) { :raw }
 
-      it "is an instance of Lograge::Formatters::Raw" do
+      it 'is an instance of Lograge::Formatters::Raw' do
         expect(subject).to be_instance_of(Lograge::Formatters::Raw)
       end
     end
@@ -71,7 +71,7 @@ describe Lograge do
     context ':logstash' do
       let(:format) { :logstash }
 
-      it "is an instance of Lograge::Formatters::Logstash" do
+      it 'is an instance of Lograge::Formatters::Logstash' do
         expect(subject).to be_instance_of(Lograge::Formatters::Logstash)
       end
     end
@@ -79,7 +79,7 @@ describe Lograge do
     context ':graylog2' do
       let(:format) { :graylog2 }
 
-      it "is an instance of Lograge::Formatters::Graylog2" do
+      it 'is an instance of Lograge::Formatters::Graylog2' do
         expect(subject).to be_instance_of(Lograge::Formatters::Graylog2)
       end
     end
@@ -87,7 +87,7 @@ describe Lograge do
     context ':lograge' do
       let(:format) { :lograge }
 
-      it "is an instance of Lograge::Formatters::KeyValue" do
+      it 'is an instance of Lograge::Formatters::KeyValue' do
         expect(subject).to be_instance_of(Lograge::Formatters::KeyValue)
       end
     end
@@ -95,7 +95,7 @@ describe Lograge do
     context 'default' do
       let(:format) { nil }
 
-      it "is an instance of Lograge::Formatters::KeyValue" do
+      it 'is an instance of Lograge::Formatters::KeyValue' do
         expect(subject).to be_instance_of(Lograge::Formatters::KeyValue)
       end
     end

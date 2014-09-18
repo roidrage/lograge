@@ -84,7 +84,9 @@ module Lograge
     end
 
     def location(_event)
-      if location = Thread.current[:lograge_location]
+      location = Thread.current[:lograge_location]
+
+      if location
         Thread.current[:lograge_location] = nil
         { location: location }
       else

@@ -23,9 +23,7 @@ module Lograge
       end
 
       def modify_payload(data)
-        if data[:controller] && data[:action]
-          data[:source] = source_field(data)
-        end
+        data[:source] = source_field(data) if data[:controller] && data[:action]
 
         data
       end

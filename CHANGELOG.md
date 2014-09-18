@@ -1,5 +1,8 @@
 # Change Log
 
+## Fixed
+* Make rubocop pass
+
 ## Added
 * Add formatter for lines (<https://github.com/zimbatm/lines>) #35
 * Rubocop and rake ci task
