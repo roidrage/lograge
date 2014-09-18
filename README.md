@@ -246,15 +246,6 @@ YourApp::Application.configure do
 end
 ```
 
-**Changes**
-
-* Add support for Graylog2 events (Lennart Koopmann, http://github.com/lennartkoopmann)
-* Add support for Logstash events (Holger Just, http://github.com/meineerde)
-* Fix for Rails 3.2.9
-* Use keys everywhere (Curt Michols, http://github.com/asenchi)
-* Add `custom_options` to allow adding custom key-value pairs at runtime (Adam
-  Cooper, https://github.com/adamcooper)
-
 **License**
 
 MIT. Code extracted from [Travis CI](http://travis-ci.org).
