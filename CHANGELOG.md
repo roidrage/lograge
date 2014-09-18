@@ -1,13 +1,6 @@
 # Change Log
 
-## Unreleased
-### Added
-### Deprecated
-### Removed
-### Fixed
-### Security
 ### Other
-
 * Add documentation on how to enable param logging #68
 * Add missing JSON formatter to README #77
 
