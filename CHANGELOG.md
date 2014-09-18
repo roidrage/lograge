@@ -1,6 +1,7 @@
 # Change Log
 
 ## Added
+* Rubocop and rake ci task
 * LICENSE.txt
 
 ### Other
