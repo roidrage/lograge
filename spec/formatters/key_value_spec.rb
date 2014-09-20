@@ -15,8 +15,13 @@ describe Lograge::Formatters::KeyValue do
 
   subject { described_class.new.call(payload) }
 
-  it { should include('controller=welcome') }
-  it { should include('action=index') }
+  it "includes the 'controller' key/value" do
+    expect(subject).to include('controller=welcome')
+  end
+
+  it "includes the 'action' key/value" do
+    expect(subject).to include('action=index')
+  end
 
   it_behaves_like 'a key value formatter'
 end
