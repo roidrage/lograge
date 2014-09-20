@@ -1,6 +1,7 @@
 # Change Log
 
 ## Added
+* Add formatter for lines (<https://github.com/zimbatm/lines>) #35
 * Rubocop and rake ci task
 * LICENSE.txt
 
