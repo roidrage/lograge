@@ -8,13 +8,13 @@ require 'action_controller/log_subscriber'
 require 'action_view/log_subscriber'
 
 describe Lograge do
-  describe "when removing Rails' log subscribers" do
+  context "when removing Rails' log subscribers" do
     after do
       ActionController::LogSubscriber.attach_to :action_controller
       ActionView::LogSubscriber.attach_to :action_view
     end
 
-    it 'should remove subscribers for controller events' do
+    it 'removes subscribers for controller events' do
       expect do
         Lograge.remove_existing_log_subscriptions
       end.to change {
@@ -22,7 +22,7 @@ describe Lograge do
       }
     end
 
-    it 'should remove subscribers for all events' do
+    it 'removes subscribers for all events' do
       expect do
         Lograge.remove_existing_log_subscriptions
       end.to change {
@@ -30,12 +30,12 @@ describe Lograge do
       }
     end
 
-    it "shouldn't remove subscribers that aren't from Rails" do
+    it "does not remove subscribers that aren't from Rails" do
       blk = -> {}
       ActiveSupport::Notifications.subscribe('process_action.action_controller', &blk)
       Lograge.remove_existing_log_subscriptions
       listeners = ActiveSupport::Notifications.notifier.listeners_for('process_action.action_controller')
-      listeners.size.should > 0
+      expect(listeners.size).to eq(1)
     end
   end
 
@@ -54,32 +54,50 @@ describe Lograge do
 
     context ':cee' do
       let(:format) { :cee }
-      it { should be_instance_of(Lograge::Formatters::Cee) }
+
+      it "is an instance of Lograge::Formatters::Cee" do
+        expect(subject).to be_instance_of(Lograge::Formatters::Cee)
+      end
     end
 
     context ':raw' do
       let(:format) { :raw }
-      it { should be_instance_of(Lograge::Formatters::Raw) }
+
+      it "is an instance of Lograge::Formatters::Raw" do
+        expect(subject).to be_instance_of(Lograge::Formatters::Raw)
+      end
     end
 
     context ':logstash' do
       let(:format) { :logstash }
-      it { should be_instance_of(Lograge::Formatters::Logstash) }
+
+      it "is an instance of Lograge::Formatters::Logstash" do
+        expect(subject).to be_instance_of(Lograge::Formatters::Logstash)
+      end
     end
 
     context ':graylog2' do
       let(:format) { :graylog2 }
-      it { should be_instance_of(Lograge::Formatters::Graylog2) }
+
+      it "is an instance of Lograge::Formatters::Graylog2" do
+        expect(subject).to be_instance_of(Lograge::Formatters::Graylog2)
+      end
     end
 
     context ':lograge' do
       let(:format) { :lograge }
-      it { should be_instance_of(Lograge::Formatters::KeyValue) }
+
+      it "is an instance of Lograge::Formatters::KeyValue" do
+        expect(subject).to be_instance_of(Lograge::Formatters::KeyValue)
+      end
     end
 
     context 'default' do
       let(:format) { nil }
-      it { should be_instance_of(Lograge::Formatters::KeyValue) }
+
+      it "is an instance of Lograge::Formatters::KeyValue" do
+        expect(subject).to be_instance_of(Lograge::Formatters::KeyValue)
+      end
     end
   end
 end

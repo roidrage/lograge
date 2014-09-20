@@ -21,11 +21,31 @@ describe Lograge::Formatters::L2met do
 
   subject { described_class.new.call(payload) }
 
-  it { should include('source=admin-welcome:index') }
-  it { should_not include('controller=admin/welcome') }
-  it { should_not include('action=index') }
-  it { should include('measure#page.duration=30.00') }
-  it { should include('measure#page.view=10.00') }
-  it { should include('measure#page.db=20.00') }
-  it { should include('measure#page.cache=40.00') }
+  it "includes the 'source' key/value" do
+    expect(subject).to include('source=admin-welcome:index')
+  end
+
+  it "does not include the 'controller' key/value" do
+    expect(subject).not_to include('controller=admin/welcome')
+  end
+
+  it "does not include the 'action' key/value" do
+    expect(subject).not_to include('action=index')
+  end
+
+  it "includes the 'page.duration'" do
+    expect(subject).to include('measure#page.duration=30.00')
+  end
+
+  it "includes the 'page.view'" do
+    expect(subject).to include('measure#page.view=10.00')
+  end
+
+  it "includes the 'page.db'" do
+    expect(subject).to include('measure#page.db=20.00')
+  end
+
+  it "includes the 'page.cache'" do
+    expect(subject).to include('measure#page.cache=40.00')
+  end
 end

@@ -12,7 +12,14 @@ describe Lograge::Formatters::Graylog2 do
       action: 'index'
     }
   end
+
   subject { described_class.new.call(payload) }
-  it { expect(subject[:_custom]).to eq('data') }
-  it { expect(subject[:short_message]).to eq('[200] GET / (welcome#index)') }
+
+  it "provides the ':_custom' attribute" do
+    expect(subject[:_custom]).to eq('data')
+  end
+
+  it "provides the serialized ':short_message' attribute" do
+    expect(subject[:short_message]).to eq('[200] GET / (welcome#index)')
+  end
 end

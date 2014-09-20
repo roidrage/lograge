@@ -27,233 +27,241 @@ describe Lograge::RequestLogSubscriber do
 
   before { Lograge.logger = logger }
 
-  describe 'with custom_options configured for cee output' do
+  context 'with custom_options configured for cee output' do
     before do
       Lograge.formatter = ->(data) { "My test: #{data}" }
     end
 
-    it 'should combine the hash properly for the output' do
+    it 'combines the hash properly for the output' do
       Lograge.custom_options = { data: 'value' }
       subscriber.process_action(event)
-      log_output.string.should =~ /^My test: {.*:data=>"value"/
+      expect(log_output.string).to match(/^My test: {.*:data=>"value"/)
     end
-    it 'should combine the output of a lambda properly' do
+
+    it 'combines the output of a lambda properly' do
       Lograge.custom_options = lambda { |_event| { data: 'value' } }
       subscriber.process_action(event)
-      log_output.string.should =~ /^My test: {.*:data=>"value"/
+      expect(log_output.string).to match(/^My test: {.*:data=>"value"/)
     end
-    it 'should work if the method returns nil' do
+
+    it 'works when the method returns nil' do
       Lograge.custom_options = lambda { |_event| nil }
       subscriber.process_action(event)
-      log_output.string.should be_present
+      expect(log_output.string).to be_present
     end
   end
 
-  describe 'when processing a redirect' do
-    it 'should store the location in a thread local variable' do
+  context 'when processing a redirect' do
+    it 'stores the location in a thread local variable' do
       subscriber.redirect_to(redirect)
-      Thread.current[:lograge_location].should == 'http://example.com'
+      expect(Thread.current[:lograge_location]).to eq('http://example.com')
     end
   end
 
-  describe 'when processing an action with lograge output' do
+  context 'when processing an action with lograge output' do
     before do
       Lograge.formatter = Lograge::Formatters::KeyValue.new
     end
 
-    it 'should include the URL in the log output' do
+    it 'includes the URL in the log output' do
       subscriber.process_action(event)
-      log_output.string.should include('/home')
+      expect(log_output.string).to include('/home')
     end
 
-    it 'should not include the query string in the url' do
+    it 'does not include the query string in the url' do
       subscriber.process_action(event)
-      log_output.string.should_not include('?foo=bar')
+      expect(log_output.string).not_to include('?foo=bar')
     end
 
-    it 'should start the log line with the HTTP method' do
+    it 'starts the log line with the HTTP method' do
       subscriber.process_action(event)
-      log_output.string.starts_with?('method=GET ').should == true
+      expect(log_output.string).to match(/^method=GET /)
     end
 
-    it 'should include the status code' do
+    it 'includes the status code' do
       subscriber.process_action(event)
-      log_output.string.should include('status=200 ')
+      expect(log_output.string).to include('status=200 ')
     end
 
-    it 'should include the controller and action' do
+    it 'includes the controller and action' do
       subscriber.process_action(event)
-      log_output.string.should include('controller=home action=index')
+      expect(log_output.string).to include('controller=home action=index')
     end
 
-    it 'should include the duration' do
+    it 'includes the duration' do
       subscriber.process_action(event)
-      log_output.string.should =~ /duration=[\.0-9]{4,4} /
+      expect(log_output.string).to match(/duration=[\.0-9]{4,4} /)
     end
 
-    it 'should include the view rendering time' do
+    it 'includes the view rendering time' do
       subscriber.process_action(event)
-      log_output.string.should =~ /view=0.01 /
+      expect(log_output.string).to match(/view=0.01 /)
     end
 
-    it 'should include the database rendering time' do
+    it 'includes the database rendering time' do
       subscriber.process_action(event)
-      log_output.string.should =~ /db=0.02/
+      expect(log_output.string).to match(/db=0.02/)
     end
 
-    it 'should add a 500 status when an exception occurred' do
+    it 'adds a 500 status when an exception occurred' do
       event.payload[:status] = nil
       event.payload[:exception] = ['AbstractController::ActionNotFound', 'Route not found']
       subscriber.process_action(event)
-      log_output.string.should =~ /status=500 /
-      log_output.string.should =~ /error='AbstractController::ActionNotFound:Route not found' /
+
+      expect(log_output.string).to match(/status=500 /)
+      expect(log_output.string).to match(
+        /error='AbstractController::ActionNotFound:Route not found' /
+      )
     end
 
-    it 'should return an unknown status when no status or exception is found' do
+    it 'returns an unknown status when no status or exception is found' do
       event.payload[:status] = nil
       event.payload[:exception] = nil
       subscriber.process_action(event)
-      log_output.string.should =~ /status=0 /
+      expect(log_output.string).to match(/status=0 /)
     end
 
-    describe 'with a redirect' do
+    context 'with a redirect' do
       before do
         Thread.current[:lograge_location] = 'http://www.example.com'
       end
 
-      it 'should add the location to the log line' do
+      it 'adds the location to the log line' do
         subscriber.process_action(event)
-        log_output.string.should =~ %r{ location=http://www.example.com}
+        expect(log_output.string).to match(/location=http:\/\/www.example.com/)
       end
 
-      it 'should remove the thread local variable' do
+      it 'removes the thread local variable' do
         subscriber.process_action(event)
-        Thread.current[:lograge_location].should.nil?
+        expect(Thread.current[:lograge_location]).to be_falsey
       end
     end
 
-    it 'should not include a location by default' do
+    it 'does not include a location by default' do
       subscriber.process_action(event)
-      log_output.string.should_not =~ /location=/
+      expect(log_output.string).to_not include('location=')
     end
   end
 
-  describe 'with custom_options configured for lograge output' do
+  context 'with custom_options configured for lograge output' do
     before do
       Lograge.formatter = Lograge::Formatters::KeyValue.new
     end
 
-    it 'should combine the hash properly for the output' do
+    it 'combines the hash properly for the output' do
       Lograge.custom_options = { data: 'value' }
       subscriber.process_action(event)
-      log_output.string.should =~ / data=value/
+      expect(log_output.string).to match(/ data=value/)
     end
-    it 'should combine the output of a lambda properly' do
+
+    it 'combines the output of a lambda properly' do
       Lograge.custom_options = lambda { |_event| { data: 'value' } }
       subscriber.process_action(event)
-      log_output.string.should =~ / data=value/
+      expect(log_output.string).to match(/ data=value/)
     end
-    it 'should work if the method returns nil' do
+
+    it 'works when the method returns nil' do
       Lograge.custom_options = lambda { |_event| nil }
       subscriber.process_action(event)
-      log_output.string.should be_present
+      expect(log_output.string).to be_present
     end
   end
 
-  describe 'with before_format configured for lograge output' do
+  context 'with before_format configured for lograge output' do
     before do
       Lograge.formatter = Lograge::Formatters::KeyValue.new
       Lograge.before_format = nil
     end
 
-    it 'should output correctly' do
+    it 'outputs correctly' do
       Lograge.before_format = lambda { |data, payload|
         Hash[*data.first].merge(Hash[*payload.first])
       }
       subscriber.process_action(event)
-      log_output.string.should include('method=GET')
-      log_output.string.should include('status=200')
+
+      expect(log_output.string).to include('method=GET')
+      expect(log_output.string).to include('status=200')
     end
-    it 'should work if the method returns nil' do
+
+    it 'works if the method returns nil' do
       Lograge.before_format = lambda { |_data, _payload| nil }
       subscriber.process_action(event)
-      log_output.string.should be_present
+      expect(log_output.string).to be_present
     end
   end
 
-  describe 'with ignore configured' do
+  context 'with ignore configured' do
     before do
-      # Lograge::log_format = :lograge
-      Lograge.ignore_nothing # clear the old ignores before each test
+      Lograge.ignore_nothing
     end
 
-    it 'should not log ignored controller actions given a single ignored action' do
+    it 'does not log ignored controller actions given a single ignored action' do
       Lograge.ignore_actions 'home#index'
       subscriber.process_action(event)
-      log_output.string.should be_blank
+      expect(log_output.string).to be_blank
     end
 
-    it 'should not log ignored controller actions given a single ignored action after a custom ignore' do
+    it 'does not log ignored controller actions given a single ignored action after a custom ignore' do
       Lograge.ignore(lambda { |_event| false })
       Lograge.ignore_actions 'home#index'
       subscriber.process_action(event)
-      log_output.string.should be_blank
+      expect(log_output.string).to be_blank
     end
 
-    it 'should log non-ignored controller actions given a single ignored action' do
+    it 'logs non-ignored controller actions given a single ignored action' do
       Lograge.ignore_actions 'foo#bar'
       subscriber.process_action(event)
-      log_output.string.should_not be_blank
+      expect(log_output.string).to be_present
     end
 
-    it 'should not log ignored controller actions given multiple ignored actions' do
+    it 'does not log ignored controller actions given multiple ignored actions' do
       Lograge.ignore_actions ['foo#bar', 'home#index', 'bar#foo']
       subscriber.process_action(event)
-      log_output.string.should be_blank
+      expect(log_output.string).to be_blank
     end
 
-    it 'should log non-ignored controller actions given multiple ignored actions' do
+    it 'logs non-ignored controller actions given multiple ignored actions' do
       Lograge.ignore_actions ['foo#bar', 'bar#foo']
       subscriber.process_action(event)
-      log_output.string.should_not be_blank
+      expect(log_output.string).to_not be_blank
     end
 
-    it 'should not log ignored events' do
+    it 'does not log ignored events' do
       Lograge.ignore(lambda do |event|
         'GET' == event.payload[:method]
       end)
       subscriber.process_action(event)
-      log_output.string.should be_blank
+      expect(log_output.string).to be_blank
     end
 
-    it 'should log non-ignored events' do
+    it 'logs non-ignored events' do
       Lograge.ignore(lambda do |event|
         'foo' == event.payload[:method]
       end)
       subscriber.process_action(event)
-      log_output.string.should_not be_blank
+      expect(log_output.string).not_to be_blank
     end
 
-    it 'should not choke on nil ignore_actions input' do
+    it 'does not choke on nil ignore_actions input' do
       Lograge.ignore_actions nil
       subscriber.process_action(event)
-      log_output.string.should_not be_blank
+      expect(log_output.string).not_to be_blank
     end
 
-    it 'should not choke on nil ignore input' do
+    it 'does not choke on nil ignore input' do
       Lograge.ignore nil
       subscriber.process_action(event)
-      log_output.string.should_not be_blank
+      expect(log_output.string).not_to be_blank
     end
   end
 
-  it "should fallback to ActiveSupport's logger if one isn't configured" do
+  it "will fallback to ActiveSupport's logger if one isn't configured" do
     Lograge.formatter = Lograge::Formatters::KeyValue.new
     Lograge.logger = nil
     ActiveSupport::LogSubscriber.logger = logger
 
     subscriber.process_action(event)
 
-    log_output.string.should be_present
+    expect(log_output.string).to be_present
   end
 end
