@@ -139,6 +139,7 @@ Done.
 The available formatters are:
 
 ```ruby
+  Lograge::Formatters::Lines.new
   Lograge::Formatters::Cee.new
   Lograge::Formatters::Graylog2.new
   Lograge::Formatters::KeyValue.new  # default lograge format
