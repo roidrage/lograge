@@ -9,3 +9,6 @@ Documentation:
 AllCops:
   Exclude:
     - 'Guardfile'
+
+Style/RegexpLiteral:
+  MaxSlashes: 2

@@ -16,28 +16,28 @@ describe Lograge::RequestLogSubscriber do
 
   let(:event) do
     ActiveSupport::Notifications::Event.new(
-                                            'process_action.action_controller',
-                                            Time.now,
-                                            Time.now,
-                                            2,
-                                            status: 200,
-                                            format: 'application/json',
-                                            method: 'GET',
-                                            path: '/home?foo=bar',
-                                            params: event_params,
-                                            db_runtime: 0.02,
-                                            view_runtime: 0.01
-                                           )
+      'process_action.action_controller',
+      Time.now,
+      Time.now,
+      2,
+      status: 200,
+      format: 'application/json',
+      method: 'GET',
+      path: '/home?foo=bar',
+      params: event_params,
+      db_runtime: 0.02,
+      view_runtime: 0.01
+    )
   end
   let(:redirect) do
     ActiveSupport::Notifications::Event.new(
-                                            'redirect_to.action_controller',
-                                            Time.now,
-                                            Time.now,
-                                            1,
-                                            location: 'http://example.com',
-                                            status: 302
-                                           )
+      'redirect_to.action_controller',
+      Time.now,
+      Time.now,
+      1,
+      location: 'http://example.com',
+      status: 302
+    )
   end
 
   before { Lograge.logger = logger }
@@ -145,7 +145,7 @@ describe Lograge::RequestLogSubscriber do
 
       it 'adds the location to the log line' do
         subscriber.process_action(event)
-        expect(log_output.string).to match(%r{location=http:\/\/www.example.com})
+        expect(log_output.string).to match(/location=http:\/\/www.example.com/)
       end
 
       it 'removes the thread local variable' do
