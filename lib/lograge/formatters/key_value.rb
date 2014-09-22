@@ -29,7 +29,7 @@ module Lograge
         value = "'#{value}'" if key == :error
 
         # Ensure that we always have exactly two decimals
-        value = '%.2f' % value if value.is_a? Float
+        value = Kernel.format('%.2f', value) if value.is_a? Float
 
         "#{key}=#{value}"
       end

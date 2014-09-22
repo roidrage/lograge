@@ -13,7 +13,9 @@ require 'active_support/core_ext/string/inflections'
 require 'active_support/ordered_options'
 
 module Lograge
-  mattr_accessor :logger
+  module_function
+
+  mattr_accessor :logger, :application, :ignore_tests
 
   # Custom options that will be appended to log line
   #
@@ -58,21 +60,21 @@ module Lograge
 
   def self.ignore_actions(actions)
     ignore(lambda do |event|
-      params = event.payload[:params]
-      Array(actions).include?("#{params['controller']}##{params['action']}")
-    end)
+             params = event.payload[:params]
+             Array(actions).include?("#{params['controller']}##{params['action']}")
+           end)
   end
 
-  def self.ignore_tests
-    @@ignore_tests ||= []
+  def ignore_tests
+    @ignore_tests ||= []
   end
 
   def self.ignore(test)
     ignore_tests.push(test) if test
   end
 
-  def self.ignore_nothing
-    @@ignore_tests = []
+  def ignore_nothing
+    @ignore_tests = []
   end
 
   def self.ignore?(event)
@@ -113,26 +115,34 @@ module Lograge
   end
 
   def self.setup(app)
+    self.application = app
     app.config.action_dispatch.rack_cache[:verbose] = false if app.config.action_dispatch.rack_cache
     require 'lograge/rails_ext/rack/logger'
     Lograge.remove_existing_log_subscriptions
     Lograge::RequestLogSubscriber.attach_to :action_controller
-    Lograge.custom_options = app.config.lograge.custom_options
-    Lograge.before_format = app.config.lograge.before_format
-    Lograge.log_level = app.config.lograge.log_level || :info
-    support_deprecated_config(app) # TODO: Remove with version 1.0
-    Lograge.formatter = app.config.lograge.formatter || Lograge::Formatters::KeyValue.new
-    Lograge.ignore_actions(app.config.lograge.ignore_actions)
-    Lograge.ignore(app.config.lograge.ignore_custom)
+    Lograge.custom_options = lograge_config.custom_options
+    Lograge.before_format = lograge_config.before_format
+    Lograge.log_level = lograge_config.log_level || :info
+    support_deprecated_config # TODO: Remove with version 1.0
+    Lograge.formatter = lograge_config.formatter || Lograge::Formatters::KeyValue.new
+    Lograge.ignore_actions(lograge_config.ignore_actions)
+    Lograge.ignore(lograge_config.ignore_custom)
   end
 
   # TODO: Remove with version 1.0
-  def self.support_deprecated_config(app)
-    if legacy_log_format = app.config.lograge.log_format
-      ActiveSupport::Deprecation.warn 'config.lograge.log_format is deprecated. Use config.lograge.formatter instead.', caller
-      legacy_log_format = :key_value if legacy_log_format == :lograge
-      app.config.lograge.formatter = "Lograge::Formatters::#{legacy_log_format.to_s.classify}".constantize.new
-    end
+
+  def support_deprecated_config
+    return unless lograge_config.log_format
+
+    legacy_log_format = lograge_config.log_format
+    warning = 'config.lograge.log_format is deprecated. Use config.lograge.formatter instead.'
+    ActiveSupport::Deprecation.warn(warning, caller)
+    legacy_log_format = :key_value if legacy_log_format == :lograge
+    lograge_config.formatter = "Lograge::Formatters::#{legacy_log_format.to_s.classify}".constantize.new
+  end
+
+  def lograge_config
+    application.config.lograge
   end
 end
 

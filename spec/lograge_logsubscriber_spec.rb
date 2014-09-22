@@ -12,16 +12,31 @@ describe Lograge::RequestLogSubscriber do
   end
 
   let(:subscriber) { Lograge::RequestLogSubscriber.new }
+  let(:event_params) { { 'controller' => 'home', 'action' => 'index', 'foo' => 'bar' } }
+
   let(:event) do
     ActiveSupport::Notifications::Event.new(
-      'process_action.action_controller', Time.now, Time.now, 2, status: 200, format: 'application/json', method: 'GET', path: '/home?foo=bar', params: {
-        'controller' => 'home', 'action' => 'index', 'foo' => 'bar'
-      }, db_runtime: 0.02, view_runtime: 0.01
+      'process_action.action_controller',
+      Time.now,
+      Time.now,
+      2,
+      status: 200,
+      format: 'application/json',
+      method: 'GET',
+      path: '/home?foo=bar',
+      params: event_params,
+      db_runtime: 0.02,
+      view_runtime: 0.01
     )
   end
   let(:redirect) do
     ActiveSupport::Notifications::Event.new(
-      'redirect_to.action_controller', Time.now, Time.now, 1, location: 'http://example.com', status: 302
+      'redirect_to.action_controller',
+      Time.now,
+      Time.now,
+      1,
+      location: 'http://example.com',
+      status: 302
     )
   end
 
@@ -39,13 +54,15 @@ describe Lograge::RequestLogSubscriber do
     end
 
     it 'combines the output of a lambda properly' do
-      Lograge.custom_options = lambda { |_event| { data: 'value' } }
+      Lograge.custom_options = ->(_event) { { data: 'value' } }
+
       subscriber.process_action(event)
       expect(log_output.string).to match(/^My test: {.*:data=>"value"/)
     end
 
     it 'works when the method returns nil' do
-      Lograge.custom_options = lambda { |_event| nil }
+      Lograge.custom_options = ->(_event) { nil }
+
       subscriber.process_action(event)
       expect(log_output.string).to be_present
     end
@@ -155,13 +172,14 @@ describe Lograge::RequestLogSubscriber do
     end
 
     it 'combines the output of a lambda properly' do
-      Lograge.custom_options = lambda { |_event| { data: 'value' } }
+      Lograge.custom_options = ->(_event) { { data: 'value' } }
+
       subscriber.process_action(event)
       expect(log_output.string).to match(/ data=value/)
     end
-
     it 'works when the method returns nil' do
-      Lograge.custom_options = lambda { |_event| nil }
+      Lograge.custom_options = ->(_event) { nil }
+
       subscriber.process_action(event)
       expect(log_output.string).to be_present
     end
@@ -174,17 +192,16 @@ describe Lograge::RequestLogSubscriber do
     end
 
     it 'outputs correctly' do
-      Lograge.before_format = lambda { |data, payload|
-        Hash[*data.first].merge(Hash[*payload.first])
-      }
+      Lograge.before_format = ->(data, payload) { Hash[*data.first].merge(Hash[*payload.first]) }
+
       subscriber.process_action(event)
 
       expect(log_output.string).to include('method=GET')
       expect(log_output.string).to include('status=200')
     end
-
     it 'works if the method returns nil' do
-      Lograge.before_format = lambda { |_data, _payload| nil }
+      Lograge.before_format = ->(_data, _payload) { nil }
+
       subscriber.process_action(event)
       expect(log_output.string).to be_present
     end
@@ -202,7 +219,8 @@ describe Lograge::RequestLogSubscriber do
     end
 
     it 'does not log ignored controller actions given a single ignored action after a custom ignore' do
-      Lograge.ignore(lambda { |_event| false })
+      Lograge.ignore(->(_event) { false })
+
       Lograge.ignore_actions 'home#index'
       subscriber.process_action(event)
       expect(log_output.string).to be_blank
@@ -227,17 +245,15 @@ describe Lograge::RequestLogSubscriber do
     end
 
     it 'does not log ignored events' do
-      Lograge.ignore(lambda do |event|
-        'GET' == event.payload[:method]
-      end)
+      Lograge.ignore(->(event) { 'GET' == event.payload[:method] })
+
       subscriber.process_action(event)
       expect(log_output.string).to be_blank
     end
 
     it 'logs non-ignored events' do
-      Lograge.ignore(lambda do |event|
-        'foo' == event.payload[:method]
-      end)
+      Lograge.ignore(->(event) { 'foo' == event.payload[:method] })
+
       subscriber.process_action(event)
       expect(log_output.string).not_to be_blank
     end
