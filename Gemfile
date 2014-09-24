@@ -5,7 +5,7 @@ gemspec
 
 group :test do
   gem 'actionpack'
-  gem 'logstash-event', '1.1.5'
+  gem 'logstash-event', '1.2.02'
   gem 'rubocop'
   gem 'lines'
 end
