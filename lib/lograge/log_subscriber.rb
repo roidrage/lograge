@@ -54,10 +54,10 @@ module Lograge
     end
 
     def extract_status(payload)
-      if payload[:status]
-        { status: payload[:status].to_i }
-      elsif payload[:exception]
-        exception, message = payload[:exception]
+      if (status = payload[:status])
+        { status: status.to_i }
+      elsif (error = payload[:exception])
+        exception, message = error
         { status: 500, error: "#{exception}:#{message}" }
       else
         { status: 0 }
