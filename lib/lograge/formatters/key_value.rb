@@ -4,10 +4,7 @@ module Lograge
       def call(data)
         fields = fields_to_display(data)
 
-        event = fields.reduce([]) do |message, key|
-          message << format(key, data[key])
-          message
-        end
+        event = fields.map { |key| format(key, data[key]) }
         event.join(' ')
       end
 
