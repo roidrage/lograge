@@ -11,10 +11,10 @@ module Lograge
       payload = event.payload
 
       data      = extract_request(payload)
-      data.merge! extract_status(payload)
-      data.merge! runtimes(event)
-      data.merge! location(event)
-      data.merge! custom_options(event)
+      extract_status(data, payload)
+      runtimes(data, event)
+      location(data, event)
+      custom_options(data, event)
 
       data = before_format(data, payload)
       formatted_message = Lograge.formatter.call(data)
@@ -55,45 +55,40 @@ module Lograge
       end
     end
 
-    def extract_status(payload)
+    def extract_status(data, payload)
       if (status = payload[:status])
-        { status: status.to_i }
+        data[:status] = status.to_i
       elsif (error = payload[:exception])
         exception, message = error
-        { status: 500, error: "#{exception}:#{message}" }
+        data[:status] = 500
+        data[:error]  = "#{exception}:#{message}"
       else
-        { status: 0 }
+        data[:status] = 0
       end
     end
 
-    def custom_options(event)
-      Lograge.custom_options(event) || {}
+    def custom_options(data, event)
+      options = Lograge.custom_options(event)
+      data.merge! options if options
     end
 
     def before_format(data, payload)
       Lograge.before_format(data, payload)
     end
 
-    def runtimes(event)
-      {
-        duration: event.duration,
-        view: event.payload[:view_runtime],
-        db: event.payload[:db_runtime]
-      }.reduce({}) do |runtimes, (name, runtime)|
-        runtimes[name] = runtime.to_f.round(2) if runtime
-        runtimes
-      end
+    def runtimes(data, event)
+      payload = event.payload
+      data[:duration] = event.duration.to_f.round(2)
+      data[:view]     = payload[:view_runtime].to_f.round(2) if payload.key?(:view_runtime)
+      data[:db]       = payload[:db_runtime].to_f.round(2) if payload.key?(:db_runtime)
     end
 
-    def location(_event)
+    def location(data, _event)
       location = Thread.current[:lograge_location]
+      return unless location
 
-      if location
-        Thread.current[:lograge_location] = nil
-        { location: location }
-      else
-        {}
-      end
+      Thread.current[:lograge_location] = nil
+      data[:location] = location
     end
   end
 end
