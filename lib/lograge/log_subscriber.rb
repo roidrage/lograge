@@ -45,10 +45,12 @@ module Lograge
       payload[:path].split('?').first
     end
 
-    def extract_format(payload)
-      if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR == 0
+    if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR == 0
+      def extract_format(payload)
         payload[:formats].first
-      else
+      end
+    else
+      def extract_format(payload)
         payload[:format]
       end
     end
