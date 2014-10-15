@@ -13,13 +13,15 @@ module Lograge
       end
 
       def format(key, value)
-        # Exactly preserve the previous output
-        # Parsing this can be ambigious if the error messages contains
-        # a single quote
-        value = "'#{value}'" if key == :error
-
-        # Ensure that we always have exactly two decimals
-        value = Kernel.format('%.2f', value) if value.is_a? Float
+        if key == :error
+          # Exactly preserve the previous output
+          # Parsing this can be ambigious if the error messages contains
+          # a single quote
+          value = "'#{value}'"
+        else
+          # Ensure that we always have exactly two decimals
+          value = Kernel.format('%.2f', value) if value.is_a? Float
+        end
 
         "#{key}=#{value}"
       end
