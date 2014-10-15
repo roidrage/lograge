@@ -42,7 +42,9 @@ module Lograge
     end
 
     def extract_path(payload)
-      payload[:path].split('?').first
+      path = payload[:path]
+      index = path.index('?')
+      index ? path[0, index] : path
     end
 
     if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR == 0
