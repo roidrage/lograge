@@ -13,7 +13,7 @@ module Lograge
       data      = extract_request(payload)
       extract_status(data, payload)
       runtimes(data, event)
-      location(data, event)
+      location(data)
       custom_options(data, event)
 
       data = before_format(data, payload)
@@ -85,7 +85,7 @@ module Lograge
       data[:db]       = payload[:db_runtime].to_f.round(2) if payload.key?(:db_runtime)
     end
 
-    def location(data, _event)
+    def location(data)
       location = Thread.current[:lograge_location]
       return unless location
 
