@@ -2,7 +2,7 @@ module Lograge
   module Formatters
     class KeyValue
       LOGRAGE_FIELDS = [
-        :method, :path, :format, :controller, :action, :status, :error,
+        :time, :method, :path, :format, :controller, :action, :status, :error,
         :duration, :view, :db, :location
       ]
 

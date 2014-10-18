@@ -10,7 +10,8 @@ module Lograge
 
       payload = event.payload
 
-      data      = extract_request(payload)
+      data      = extract_time(event)
+      data.merge! extract_request(payload)
       data.merge! extract_status(payload)
       data.merge! runtimes(event)
       data.merge! location(event)
@@ -30,6 +31,12 @@ module Lograge
     end
 
     private
+    
+    def extract_time(event)
+      {
+        time: event.time
+      }
+    end
 
     def extract_request(payload)
       {
