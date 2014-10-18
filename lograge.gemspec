@@ -2,7 +2,7 @@
 require './lib/lograge/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'lograge'
+  s.name        = 'lograge-with-time'
   s.version     = Lograge::VERSION
   s.authors     = ['Mathias Meyer']
   s.email       = ['meyer@paperplanes.de']
