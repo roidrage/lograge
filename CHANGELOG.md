@@ -3,6 +3,9 @@
 ## Fixed
 * Make rubocop pass
 
+## Other
+* Performance optimizations (<https://github.com/splattael>) #9
+
 ## Added
 * Add formatter for lines (<https://github.com/zimbatm/lines>) #35
 * Rubocop and rake ci task
