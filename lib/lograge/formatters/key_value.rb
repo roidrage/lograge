@@ -1,11 +1,6 @@
 module Lograge
   module Formatters
     class KeyValue
-      LOGRAGE_FIELDS = [
-        :time, :method, :path, :format, :controller, :action, :status, :error,
-        :duration, :view, :db, :location
-      ]
-
       def call(data)
         fields = fields_to_display(data)
 
