@@ -12,10 +12,10 @@ module Lograge
 
       data      = extract_time(event)
       data.merge! extract_request(payload)
-      data.merge! extract_status(payload)
-      data.merge! runtimes(event)
-      data.merge! location(event)
-      data.merge! custom_options(event)
+      extract_status(data, payload)
+      runtimes(data, event)
+      location(data)
+      custom_options(data, event)
 
       data = before_format(data, payload)
       formatted_message = Lograge.formatter.call(data)
@@ -49,56 +49,55 @@ module Lograge
     end
 
     def extract_path(payload)
-      payload[:path].split('?').first
+      path = payload[:path]
+      index = path.index('?')
+      index ? path[0, index] : path
     end
 
-    def extract_format(payload)
-      if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR == 0
+    if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR == 0
+      def extract_format(payload)
         payload[:formats].first
-      else
+      end
+    else
+      def extract_format(payload)
         payload[:format]
       end
     end
 
-    def extract_status(payload)
-      if payload[:status]
-        { status: payload[:status].to_i }
-      elsif payload[:exception]
-        exception, message = payload[:exception]
-        { status: 500, error: "#{exception}:#{message}" }
+    def extract_status(data, payload)
+      if (status = payload[:status])
+        data[:status] = status.to_i
+      elsif (error = payload[:exception])
+        exception, message = error
+        data[:status] = 500
+        data[:error]  = "#{exception}:#{message}"
       else
-        { status: 0 }
+        data[:status] = 0
       end
     end
 
-    def custom_options(event)
-      Lograge.custom_options(event) || {}
+    def custom_options(data, event)
+      options = Lograge.custom_options(event)
+      data.merge! options if options
     end
 
     def before_format(data, payload)
       Lograge.before_format(data, payload)
     end
 
-    def runtimes(event)
-      {
-        duration: event.duration,
-        view: event.payload[:view_runtime],
-        db: event.payload[:db_runtime]
-      }.reduce({}) do |runtimes, (name, runtime)|
-        runtimes[name] = runtime.to_f.round(2) if runtime
-        runtimes
-      end
+    def runtimes(data, event)
+      payload = event.payload
+      data[:duration] = event.duration.to_f.round(2)
+      data[:view]     = payload[:view_runtime].to_f.round(2) if payload.key?(:view_runtime)
+      data[:db]       = payload[:db_runtime].to_f.round(2) if payload.key?(:db_runtime)
     end
 
-    def location(_event)
+    def location(data)
       location = Thread.current[:lograge_location]
+      return unless location
 
-      if location
-        Thread.current[:lograge_location] = nil
-        { location: location }
-      else
-        {}
-      end
+      Thread.current[:lograge_location] = nil
+      data[:location] = location
     end
   end
 end
