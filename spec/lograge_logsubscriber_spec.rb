@@ -90,9 +90,9 @@ describe Lograge::RequestLogSubscriber do
       expect(log_output.string).not_to include('?foo=bar')
     end
 
-    it 'starts the log line with the HTTP method' do
+    it 'starts the log line with the time of request' do
       subscriber.process_action(event)
-      expect(log_output.string).to match(/^method=GET /)
+      expect(log_output.string).to match(/^time=/)
     end
 
     it 'includes the status code' do
@@ -195,8 +195,7 @@ describe Lograge::RequestLogSubscriber do
       Lograge.before_format = ->(data, payload) { Hash[*data.first].merge(Hash[*payload.first]) }
 
       subscriber.process_action(event)
-
-      expect(log_output.string).to include('method=GET')
+      expect(log_output.string).to include('time='+event.time.to_s)
       expect(log_output.string).to include('status=200')
     end
     it 'works if the method returns nil' do
