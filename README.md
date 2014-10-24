@@ -225,15 +225,6 @@ However, the payload does already contain the params hash, so you can easily
 add it in manually using `custom_options`:
 
 ```ruby
-config.lograge.custom_options = lambda do |event|
-  {params: event.payload[:params].except('controller', 'action', 'format')} #exclude redundant params
-end
-```
-
-In the meantime, if you want to log parameters in your application, you can use
-the following snippet:
-
-```ruby
 # production.rb
 YourApp::Application.configure do
   config.lograge.enabled = true
