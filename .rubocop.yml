@@ -12,3 +12,6 @@ AllCops:
 
 Style/RegexpLiteral:
   MaxSlashes: 2
+
+Metrics/AbcSize:
+  Enabled: false
