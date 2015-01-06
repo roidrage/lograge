@@ -7,12 +7,14 @@ rvm:
   - 2.1
   - 2.2.0
   - jruby
+  - jruby-head
 env:
   global:
     - JRUBY_OPTS='-J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-Djruby.compile.mode=OFF -J-Djruby.compile.invokedynamic=false'
 matrix:
   allow_failures:
     - rvm: jruby
+    - rvm: jruby-head
 gemfile:
   - Gemfile
   - gemfiles/Gemfile.actionpack3.2
