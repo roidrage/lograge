@@ -88,6 +88,20 @@ MyApp::Application.configure do
 end
 ```
 
+You can also keep the original (and verbose) Rails logger by following this configuration:
+
+```ruby
+MyApp::Application.configure do
+  config.lograge.keep_original_rails_log = true
+
+  # Rails 4+
+  config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
+
+  # Rails 3.2
+  # config.lograge.logger = ActiveSupport::BufferedLoggerLogger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
+end
+```
+
 You can then add custom variables to the event to be used in `custom_options` (available via the `event.payload` hash)
 
 ```ruby
