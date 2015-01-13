@@ -98,7 +98,7 @@ MyApp::Application.configure do
   config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
 
   # Rails 3.2
-  # config.lograge.logger = ActiveSupport::BufferedLoggerLogger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
+  # config.lograge.logger = ActiveSupport::BufferedLogger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
 end
 ```
 
