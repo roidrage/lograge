@@ -4,8 +4,8 @@ require './lib/lograge/version'
 Gem::Specification.new do |s|
   s.name        = 'lograge'
   s.version     = Lograge::VERSION
-  s.authors     = ['Mathias Meyer']
-  s.email       = ['meyer@paperplanes.de']
+  s.authors     = ['Mathias Meyer', 'Ben Lovell']
+  s.email       = ['meyer@paperplanes.de', 'benjamin.lovell@gmail.com']
   s.homepage    = 'https://github.com/roidrage/lograge'
   s.summary     = "Tame Rails' multi-line logging into a single line per request"
   s.description = "Tame Rails' multi-line logging into a single line per request"
