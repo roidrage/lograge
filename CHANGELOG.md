@@ -1,17 +1,20 @@
 # Change Log
 
-## Fixed
+## 0.3.1
+
+### Fixed 2015-01-17
+
 * Make rubocop pass
 
-## Other
-* Performance optimizations (<https://github.com/splattael>) #9
+### Added
 
-## Added
 * Add formatter for lines (<https://github.com/zimbatm/lines>) #35
 * Rubocop and rake ci task
 * LICENSE.txt
 
 ### Other
+
+* Performance optimizations (<https://github.com/splattael>) #9
 * Add documentation on how to enable param logging #68
 * Add missing JSON formatter to README #77
 * Cleaning up gemspec
