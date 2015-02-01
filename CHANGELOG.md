@@ -1,5 +1,13 @@
 # Change Log
 
+## Unreleased
+
+### Fixed
+* Make sure rack_cache[:verbose] can be set #103
+
+### Other
+* Use https in Gemfile #104
+
 ## 0.3.1
 
 ### Fixed 2015-01-17
