@@ -58,6 +58,44 @@ describe Lograge do
     end
   end
 
+  describe 'disabling rack_cache verbosity' do
+    subject { -> { Lograge.setup(app_config) } }
+    let(:app_config) do
+      double(config:
+        ActiveSupport::OrderedOptions.new.tap do |config|
+          config.action_dispatch = config_option
+          config.lograge = ActiveSupport::OrderedOptions.new
+          config.lograge.keep_original_rails_log = true
+        end
+      )
+    end
+    let(:config_option) { double(rack_cache: rack_cache) }
+
+    context 'when rack_cache is false' do
+      let(:rack_cache) { false }
+
+      it 'does not change config option' do
+        expect(subject).to_not change { config_option.rack_cache }
+      end
+    end
+
+    context 'when rack_cache is a hash' do
+      let(:rack_cache) { { foo: 'bar', verbose: true } }
+
+      it 'sets verbose to false' do
+        expect(subject).to change { config_option.rack_cache[:verbose] }.to(false)
+      end
+    end
+
+    context 'when rack_cache is true' do
+      let(:rack_cache) { true }
+
+      it 'does not change config option' do
+        expect(subject).to_not change { config_option.rack_cache }
+      end
+    end
+  end
+
   describe 'deprecated log_format interpreter' do
     let(:app_config) do
       double(config:

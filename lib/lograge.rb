@@ -116,7 +116,7 @@ module Lograge
 
   def self.setup(app)
     self.application = app
-    app.config.action_dispatch.rack_cache[:verbose] = false if app.config.action_dispatch.rack_cache
+    app.config.action_dispatch.rack_cache[:verbose] = false if rack_cache_hashlike?(app)
 
     unless app.config.lograge.keep_original_rails_log
       require 'lograge/rails_ext/rack/logger'
@@ -134,6 +134,11 @@ module Lograge
     Lograge.ignore_actions(lograge_config.ignore_actions)
     Lograge.ignore(lograge_config.ignore_custom)
   end
+
+  def rack_cache_hashlike?(app)
+    app.config.action_dispatch.rack_cache && app.config.action_dispatch.rack_cache.respond_to?(:[]=)
+  end
+  private_class_method :rack_cache_hashlike?
 
   # TODO: Remove with version 1.0
 
