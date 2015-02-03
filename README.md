@@ -252,6 +252,10 @@ YourApp::Application.configure do
 end
 ```
 
+**Contributing**
+
+See the CONTRIBUTING.md file for further information.
+
 **License**
 
 MIT. Code extracted from [Travis CI](http://travis-ci.org).
