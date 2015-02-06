@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 require './lib/lograge/version'
 
 Gem::Specification.new do |s|
@@ -13,7 +12,6 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files lib`.split("\n")
 
-  # specify any dependencies here; for example:
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'guard-rspec'
   s.add_runtime_dependency 'activesupport', '>= 3'

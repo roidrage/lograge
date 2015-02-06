@@ -5,7 +5,7 @@ module Lograge
         load_dependencies
         event = LogStash::Event.new(data)
 
-        event.message = "[#{data[:status]}] #{data[:method]} #{data[:path]} (#{data[:controller]}##{data[:action]})"
+        event['message'] = "[#{data[:status]}] #{data[:method]} #{data[:path]} (#{data[:controller]}##{data[:action]})"
         event.to_json
       end
 
