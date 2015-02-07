@@ -4,6 +4,8 @@ require 'lograge/log_subscriber'
 require 'active_support/notifications'
 require 'active_support/core_ext/string'
 require 'logger'
+require 'active_record/errors'
+require 'rails'
 
 describe Lograge::RequestLogSubscriber do
   let(:log_output) { StringIO.new }
@@ -120,14 +122,17 @@ describe Lograge::RequestLogSubscriber do
       expect(log_output.string).to match(/db=0.02/)
     end
 
-    it 'adds a 500 status when an exception occurred' do
-      event.payload[:status] = nil
-      event.payload[:exception] = ['AbstractController::ActionNotFound', 'Route not found']
-      subscriber.process_action(event)
+    it 'adds a 404 status when an exception occurred' do
+      error_double = double(ActionDispatch::ExceptionWrapper, status_code: 404)
+      expect(ActionDispatch::ExceptionWrapper).to(receive(:new).with({}, ActiveRecord::RecordNotFound.new)
+                                                  .and_return(error_double))
 
-      expect(log_output.string).to match(/status=500 /)
+      event.payload[:exception] = ['ActiveRecord::RecordNotFound', 'Record not found']
+      event.payload[:status] = nil
+      subscriber.process_action(event)
+      expect(log_output.string).to match(/status=404 /)
       expect(log_output.string).to match(
-        /error='AbstractController::ActionNotFound:Route not found' /
+        /error='ActiveRecord::RecordNotFound: Record not found' /
       )
     end
 

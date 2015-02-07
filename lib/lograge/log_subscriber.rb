@@ -1,5 +1,4 @@
 require 'json'
-
 require 'active_support/core_ext/class/attribute'
 require 'active_support/log_subscriber'
 
@@ -10,7 +9,7 @@ module Lograge
 
       payload = event.payload
 
-      data      = extract_request(payload)
+      data = extract_request(payload)
       extract_status(data, payload)
       runtimes(data, event)
       location(data)
@@ -62,11 +61,17 @@ module Lograge
         data[:status] = status.to_i
       elsif (error = payload[:exception])
         exception, message = error
-        data[:status] = 500
-        data[:error]  = "#{exception}:#{message}"
+        data[:status] = get_error_status_code(exception)
+        data[:error] = "#{exception}: #{message}"
       else
         data[:status] = 0
       end
+    end
+
+    def get_error_status_code(exception)
+      exception_object = exception.constantize.new
+      exception_wrapper = ::ActionDispatch::ExceptionWrapper.new({}, exception_object)
+      exception_wrapper.status_code
     end
 
     def custom_options(data, event)
