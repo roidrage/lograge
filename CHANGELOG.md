@@ -5,6 +5,7 @@
 ### Fixed
 * Make sure rack_cache[:verbose] can be set #103
 * Follow hash syntax for logstash-event v1.4.x #75
+* Log RecordNotFound as 404 #27, #110, #112
 
 ### Other
 * Use https in Gemfile #104
