@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/roidrage/lograge.svg?branch=master)](https://travis-ci.org/roidrage/lograge)
+
 Lograge - Taming Rails' Default Request Logging
 =======
 
