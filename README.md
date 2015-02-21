@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/roidrage/lograge.svg?branch=master)](https://travis-ci.org/roidrage/lograge)
+* [![Build Status](https://travis-ci.org/roidrage/lograge.svg?branch=master)](https://travis-ci.org/roidrage/lograge)
+* [![Gem Version](https://badge.fury.io/rb/lograge.svg)](http://badge.fury.io/rb/lograge)
+* [![Dependency Status](https://gemnasium.com/roidrage/lograge.svg)](https://gemnasium.com/roidrage/lograge)
 
 Lograge - Taming Rails' Default Request Logging
 =======
