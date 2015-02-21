@@ -116,23 +116,45 @@ module Lograge
 
   def self.setup(app)
     self.application = app
-    app.config.action_dispatch.rack_cache[:verbose] = false if rack_cache_hashlike?(app)
+    disable_rack_cache_verbose_output
+    keep_original_rails_log
 
-    unless app.config.lograge.keep_original_rails_log
-      require 'lograge/rails_ext/rack/logger'
-      Lograge.remove_existing_log_subscriptions
-    end
+    attach_to_action_controller
+    set_lograge_log_options
+    support_deprecated_config # TODO: Remove with version 1.0
+    set_formatter
+    set_ignores
+  end
 
-    Lograge.logger = app.config.lograge.logger
+  def set_ignores
+    Lograge.ignore_actions(lograge_config.ignore_actions)
+    Lograge.ignore(lograge_config.ignore_custom)
+  end
 
+  def set_formatter
+    Lograge.formatter = lograge_config.formatter || Lograge::Formatters::KeyValue.new
+  end
+
+  def attach_to_action_controller
     Lograge::RequestLogSubscriber.attach_to :action_controller
+  end
+
+  def set_lograge_log_options
+    Lograge.logger = lograge_config.logger
     Lograge.custom_options = lograge_config.custom_options
     Lograge.before_format = lograge_config.before_format
     Lograge.log_level = lograge_config.log_level || :info
-    support_deprecated_config # TODO: Remove with version 1.0
-    Lograge.formatter = lograge_config.formatter || Lograge::Formatters::KeyValue.new
-    Lograge.ignore_actions(lograge_config.ignore_actions)
-    Lograge.ignore(lograge_config.ignore_custom)
+  end
+
+  def disable_rack_cache_verbose_output
+    application.config.action_dispatch.rack_cache[:verbose] = false if rack_cache_hashlike?(application)
+  end
+
+  def keep_original_rails_log
+    return if lograge_config.keep_original_rails_log
+
+    require 'lograge/rails_ext/rack/logger'
+    Lograge.remove_existing_log_subscriptions
   end
 
   def rack_cache_hashlike?(app)
