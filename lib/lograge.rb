@@ -26,7 +26,7 @@ module Lograge
   mattr_writer :custom_options
   self.custom_options = nil
 
-  def self.custom_options(event)
+  def custom_options(event)
     if @@custom_options.respond_to?(:call)
       @@custom_options.call(event)
     else
@@ -40,7 +40,7 @@ module Lograge
   mattr_writer :before_format
   self.before_format = nil
 
-  def self.before_format(data, payload)
+  def before_format(data, payload)
     result = nil
     result = @@before_format.call(data, payload) if @@before_format
     result || data
@@ -58,7 +58,7 @@ module Lograge
   # are given to 'ignore'.  Both methods can be called multiple times, which
   # just adds more ignore conditions to a list that is checked before logging.
 
-  def self.ignore_actions(actions)
+  def ignore_actions(actions)
     ignore(lambda do |event|
              params = event.payload[:params]
              Array(actions).include?("#{params['controller']}##{params['action']}")
@@ -69,7 +69,7 @@ module Lograge
     @ignore_tests ||= []
   end
 
-  def self.ignore(test)
+  def ignore(test)
     ignore_tests.push(test) if test
   end
 
@@ -77,7 +77,7 @@ module Lograge
     @ignore_tests = []
   end
 
-  def self.ignore?(event)
+  def ignore?(event)
     ignore_tests.any? { |ignore_test| ignore_test.call(event) }
   end
 
@@ -92,7 +92,7 @@ module Lograge
   #  - :logstash - JSON formatted as a Logstash Event.
   mattr_accessor :formatter
 
-  def self.remove_existing_log_subscriptions
+  def remove_existing_log_subscriptions
     ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
       case subscriber
       when ActionView::LogSubscriber
@@ -103,7 +103,7 @@ module Lograge
     end
   end
 
-  def self.unsubscribe(component, subscriber)
+  def unsubscribe(component, subscriber)
     events = subscriber.public_methods(false).reject { |method| method.to_s == 'call' }
     events.each do |event|
       ActiveSupport::Notifications.notifier.listeners_for("#{event}.#{component}").each do |listener|
@@ -114,7 +114,7 @@ module Lograge
     end
   end
 
-  def self.setup(app)
+  def setup(app)
     self.application = app
     app.config.action_dispatch.rack_cache[:verbose] = false if rack_cache_hashlike?(app)
 
