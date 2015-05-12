@@ -8,8 +8,5 @@ AllCops:
   Exclude:
     - 'Guardfile'
 
-Style/RegexpLiteral:
-  MaxSlashes: 2
-
 Metrics/AbcSize:
   Enabled: false
