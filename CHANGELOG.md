@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.3.2
+
 ### Fixed
 * Make sure rack_cache[:verbose] can be set #103
 * Follow hash syntax for logstash-event v1.4.x #75
