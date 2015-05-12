@@ -150,7 +150,7 @@ describe Lograge::RequestLogSubscriber do
 
       it 'adds the location to the log line' do
         subscriber.process_action(event)
-        expect(log_output.string).to match(/location=http:\/\/www.example.com/)
+        expect(log_output.string).to match(%r{location=http://www.example.com})
       end
 
       it 'removes the thread local variable' do
