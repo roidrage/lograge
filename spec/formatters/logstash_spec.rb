@@ -28,7 +28,7 @@ describe Lograge::Formatters::Logstash do
   end
 
   it "includes the 'path' key/value" do
-    expect(subject).to match(/"path":"\/"/)
+    expect(subject).to match(%r{"path":"/"})
   end
 
   it "includes the 'controller' key/value" do
