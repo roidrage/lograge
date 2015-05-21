@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'lograge'
 require 'lograge/log_subscriber'
 require 'active_support/notifications'

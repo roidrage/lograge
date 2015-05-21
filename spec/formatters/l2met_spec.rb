@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'lograge'
 
 describe Lograge::Formatters::L2met do
