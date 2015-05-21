@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'lograge'
 require 'active_support/notifications'
 require 'active_support/core_ext/string'
