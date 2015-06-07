@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+* Resolves build failures under rails 3.2 caused by `logstash-event` dependency
+
 ## 0.3.2
 
 ### Fixed
