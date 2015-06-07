@@ -14,5 +14,4 @@ gemfile:
   - Gemfile
   - gemfiles/Gemfile.actionpack3.2
   - gemfiles/Gemfile.actionpack4.0
-  - gemfiles/Gemfile.actionpack4.2
 script: bundle exec rake
