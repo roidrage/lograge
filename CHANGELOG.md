@@ -5,6 +5,7 @@
 ### Fixed
 
 * Resolves build failures under rails 3.2 caused by `logstash-event` dependency
+* Delay loading so `config.enabled=` works from `config/initializers/*.rb` (<https://github.com/allori>) #62
 
 ## 0.3.2
 
