@@ -54,9 +54,11 @@ In your Gemfile
 gem "lograge"
 ```
 
-Enable it for the relevant environments, e.g. production:
+Enable it in an initializer or the relevant environment config:
 
 ```ruby
+# config/initializers/lograge.rb
+# OR
 # config/environments/production.rb
 MyApp::Application.configure do
   config.lograge.enabled = true
