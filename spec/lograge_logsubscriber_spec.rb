@@ -121,18 +121,22 @@ describe Lograge::RequestLogSubscriber do
       expect(log_output.string).to match(/db=0.02/)
     end
 
-    it 'adds a 404 status when an exception occurred' do
-      error_double = double(ActionDispatch::ExceptionWrapper, status_code: 404)
-      expect(ActionDispatch::ExceptionWrapper).to(receive(:new).with({}, ActiveRecord::RecordNotFound.new)
-                                                  .and_return(error_double))
+    context 'when an `ActiveRecord::RecordNotFound` is raised' do
+      let(:exception) { 'ActiveRecord::RecordNotFound' }
 
-      event.payload[:exception] = ['ActiveRecord::RecordNotFound', 'Record not found']
-      event.payload[:status] = nil
-      subscriber.process_action(event)
-      expect(log_output.string).to match(/status=404 /)
-      expect(log_output.string).to match(
-        /error='ActiveRecord::RecordNotFound: Record not found' /
-      )
+      before do
+        ActionDispatch::ExceptionWrapper.rescue_responses[exception] = :not_found
+        event.payload[:exception] = [exception, 'Record not found']
+        event.payload[:status] = nil
+      end
+
+      it 'adds a 404 status' do
+        subscriber.process_action(event)
+        expect(log_output.string).to match(/status=404 /)
+        expect(log_output.string).to match(
+          /error='ActiveRecord::RecordNotFound: Record not found' /
+        )
+      end
     end
 
     it 'returns an unknown status when no status or exception is found' do
