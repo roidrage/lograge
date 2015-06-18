@@ -123,6 +123,7 @@ module Lograge
 
     attach_to_action_controller
     set_lograge_log_options
+    setup_custom_payload
     support_deprecated_config # TODO: Remove with version 1.0
     set_formatter
     set_ignores
@@ -139,6 +140,17 @@ module Lograge
 
   def attach_to_action_controller
     Lograge::RequestLogSubscriber.attach_to :action_controller
+  end
+
+  def setup_custom_payload
+    return unless lograge_config.custom_payload.respond_to?(:call)
+    append_payload_method = ActionController::Base.instance_method(:append_info_to_payload)
+    custom_payload_method = lograge_config.custom_payload
+
+    ActionController::Base.send(:define_method, :append_info_to_payload) do |payload|
+      append_payload_method.bind(self).call(payload)
+      payload[:custom_payload] = instance_eval(&custom_payload_method)
+    end
   end
 
   def set_lograge_log_options

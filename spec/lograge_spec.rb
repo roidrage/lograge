@@ -92,6 +92,38 @@ describe Lograge do
     end
   end
 
+  describe 'handling custom_payload option' do
+    let(:app_config) do
+      double(config:
+              ActiveSupport::OrderedOptions.new.tap do |config|
+                config.action_dispatch = double(rack_cache: false)
+                config.lograge = ActiveSupport::OrderedOptions.new
+                config.lograge.custom_payload = proc { { user_id: current_user_id } }
+              end
+            )
+    end
+    let(:controller) do
+      Class.new do
+        def append_info_to_payload(payload)
+          payload.merge!(appended: true)
+        end
+      end
+    end
+    let(:user_id) { '24601' }
+    let(:payload) { { timestamp: Date.parse('5-11-1955') } }
+
+    subject { payload.dup }
+
+    before do
+      controller.any_instance.stub(:current_user_id).and_return(user_id)
+      stub_const('ActionController::Base', controller)
+      Lograge.setup(app_config)
+      ActionController::Base.new.append_info_to_payload(subject)
+    end
+
+    it { should eq(payload.merge(appended: true, custom_payload: { user_id: user_id })) }
+  end
+
   describe 'deprecated log_format interpreter' do
     let(:app_config) do
       double(config:

@@ -83,7 +83,8 @@ module Lograge
     end
 
     def custom_options(event)
-      Lograge.custom_options(event) || {}
+      options = Lograge.custom_options(event) || {}
+      options.merge event.payload[:custom_payload] || {}
     end
 
     def before_format(data, payload)
