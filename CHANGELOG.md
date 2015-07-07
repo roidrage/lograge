@@ -1,6 +1,8 @@
 # Change Log
 
-## Unreleased
+### 0.3.4
+
+* Added LTSV formatter (<https://github.com/takashi>) #138
 
 ### 0.3.3
 
