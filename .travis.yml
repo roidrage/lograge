@@ -3,7 +3,7 @@ cache: bundle
 sudo: false
 rvm:
   - 1.9.3
-  - 2.2.2
+  - 2.2.3
   - jruby
   - jruby-head
   - rbx-2
