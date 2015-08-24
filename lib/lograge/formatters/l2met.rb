@@ -29,7 +29,7 @@ module Lograge
       end
 
       def source_field(data)
-        "#{data[:controller].to_s.gsub('/', '-')}:#{data[:action]}"
+        "#{data[:controller].to_s.tr('/', '-')}:#{data[:action]}"
       end
     end
   end
