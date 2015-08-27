@@ -1,4 +1,3 @@
-
 shared_examples_for 'a key value formatter' do
   let(:payload) do
     {
