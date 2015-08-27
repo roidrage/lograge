@@ -1,5 +1,3 @@
-require 'lograge'
-
 describe Lograge::Formatters::Cee do
   it 'prepends the output with @cee' do
     expect(subject.call({})).to match(/^@cee/)

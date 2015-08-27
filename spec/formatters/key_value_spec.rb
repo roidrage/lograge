@@ -1,5 +1,3 @@
-require 'lograge'
-
 describe Lograge::Formatters::KeyValue do
   let(:payload) do
     {

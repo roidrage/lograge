@@ -1,5 +1,3 @@
-require 'lograge'
-
 describe Lograge::Formatters::Json do
   let(:deserialized_output) { JSON.parse(subject.call(custom: 'data')) }
 

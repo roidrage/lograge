@@ -1,5 +1,3 @@
-require 'lograge'
-
 describe Lograge::Formatters::L2met do
   let(:payload) do
     {

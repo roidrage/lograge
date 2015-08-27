@@ -1,5 +1,3 @@
-require 'lograge'
-
 describe Lograge::Formatters::LTSV do
   let(:payload) do
     {

@@ -1,5 +1,3 @@
-require 'lograge'
-
 describe Lograge::Formatters::Graylog2 do
   let(:payload) do
     {

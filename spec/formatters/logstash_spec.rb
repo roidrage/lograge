@@ -1,5 +1,3 @@
-require 'lograge'
-
 describe Lograge::Formatters::Logstash do
   let(:payload) do
     {
