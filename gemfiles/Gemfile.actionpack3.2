@@ -13,6 +13,10 @@ group :test do
   gem 'logstash-event', github: 'elastic/logstash', tag: 'v1.5.4'
   # logstash 1.5.4 is only supported with jrjackson up to  0.2.9
   gem 'jrjackson', '0.2.9', platforms: :jruby
+  # thread_save is a logstash dependency
+  gem 'thread_safe', '0.3.5'
+
+
   gem 'lines'
   gem 'rubocop'
 end
