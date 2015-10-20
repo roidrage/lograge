@@ -10,6 +10,8 @@ group :test do
   # Using the tag is an attempt of having a stable version to test against where we can ensure that
   # we test against the correct code.
   gem 'logstash-event', github: 'elastic/logstash', tag: 'v1.5.4'
-  gem 'rubocop'
+  # logstash 1.5.4 is only supported with jrjackson up to  0.2.9
+  gem 'jrjackson', '0.2.9', platforms: :jruby
   gem 'lines'
+  gem 'rubocop'
 end
