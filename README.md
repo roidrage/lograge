@@ -108,7 +108,7 @@ MyApp::Application.configure do
 end
 ```
 
-You can then add custom variables to the event to be used in `custom_options` (available via the `event.payload` hash)
+You can then add custom variables to the event to be used in `custom_options` (available via the `event.payload` hash, which has to be processed in `custom_options` method to be included in log output, see above):
 
 ```ruby
 # app/controllers/application_controller.rb
