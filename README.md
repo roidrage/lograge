@@ -259,6 +259,21 @@ YourApp::Application.configure do
 end
 ```
 
+## FAQ
+
+### Handle ActionController::RoutingError
+
+Add a ` get '*unmatched_route', to: 'application#route_not_found'` rule to the end of your `routes.rb`
+Then add a new controller action in your `application_controller.rb`.
+
+```ruby
+def route_not_found
+  render 'error_pages/404', status: :not_found
+end
+```
+[#146](https://github.com/roidrage/lograge/issues/146)
+
+
 **Contributing**
 
 See the CONTRIBUTING.md file for further information.
