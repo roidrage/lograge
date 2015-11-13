@@ -46,7 +46,7 @@ relevant information as simple key-value pairs. The syntax is heavily inspired
 by the log output of the Heroku router. It doesn't include any timestamp by
 default, instead it assumes you use a proper log formatter instead.
 
-**Installation**
+## Installation ##
 
 In your Gemfile
 
@@ -179,7 +179,7 @@ MyApp::Application.configure do
 end
 ```
 
-**Internals**
+## Internals ##
 
 Thanks to the notification system that was introduced in Rails 3, replacing the
 logging is easy. Lograge unhooks all subscriptions from
@@ -226,7 +226,7 @@ enabled by default.
 
 There, a single line per request. Beautiful.
 
-**What it doesn't do**
+## What it doesn't do ##
 
 Lograge is opinionated, very opinionated. If the stuff below doesn't suit your
 needs, it may not be for you.
@@ -259,9 +259,9 @@ YourApp::Application.configure do
 end
 ```
 
-## FAQ
+## FAQ ##
 
-### Handle ActionController::RoutingError
+### Handle ActionController::RoutingError ###
 
 Add a ` get '*unmatched_route', to: 'application#route_not_found'` rule to the end of your `routes.rb`
 Then add a new controller action in your `application_controller.rb`.
@@ -271,14 +271,15 @@ def route_not_found
   render 'error_pages/404', status: :not_found
 end
 ```
+
 [#146](https://github.com/roidrage/lograge/issues/146)
 
 
-**Contributing**
+## Contributing ##
 
 See the CONTRIBUTING.md file for further information.
 
-**License**
+## License ##
 
 MIT. Code extracted from [Travis CI](http://travis-ci.org).
 
