@@ -29,16 +29,6 @@ describe Lograge::RequestLogSubscriber do
       view_runtime: 0.01
     )
   end
-  let(:redirect) do
-    ActiveSupport::Notifications::Event.new(
-      'redirect_to.action_controller',
-      Time.now,
-      Time.now,
-      1,
-      location: 'http://example.com',
-      status: 302
-    )
-  end
 
   before { Lograge.logger = logger }
 
@@ -69,8 +59,19 @@ describe Lograge::RequestLogSubscriber do
   end
 
   context 'when processing a redirect' do
+    let(:redirect_event) do
+      ActiveSupport::Notifications::Event.new(
+        'redirect_to.action_controller',
+        Time.now,
+        Time.now,
+        1,
+        location: 'http://example.com',
+        status: 302
+      )
+    end
+
     it 'stores the location in a thread local variable' do
-      subscriber.redirect_to(redirect)
+      subscriber.redirect_to(redirect_event)
       expect(Thread.current[:lograge_location]).to eq('http://example.com')
     end
   end
