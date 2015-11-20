@@ -9,14 +9,7 @@ module Lograge
       return if Lograge.ignore?(event)
 
       payload = event.payload
-
-      data = extract_request(payload)
-      extract_status(data, payload)
-      runtimes(data, event)
-      location(data)
-      unpermitted(data)
-      custom_options(data, event)
-
+      data = extract_request(event, payload)
       data = before_format(data, payload)
       formatted_message = Lograge.formatter.call(data)
       logger.send(Lograge.log_level, formatted_message)
@@ -37,7 +30,17 @@ module Lograge
 
     private
 
-    def extract_request(payload)
+    def extract_request(event, payload)
+      payload = event.payload
+      data = initial_data(payload)
+      data.merge!(extract_status(payload))
+      data.merge!(extract_runtimes(event, payload))
+      data.merge!(extract_location)
+      data.merge!(extract_unpermitted_params)
+      data.merge!(custom_options(event))
+    end
+
+    def initial_data(payload)
       {
         method: payload[:method],
         path: extract_path(payload),
@@ -63,15 +66,14 @@ module Lograge
       end
     end
 
-    def extract_status(data, payload)
+    def extract_status(payload)
       if (status = payload[:status])
-        data[:status] = status.to_i
+        { status: status.to_i }
       elsif (error = payload[:exception])
         exception, message = error
-        data[:status] = get_error_status_code(exception)
-        data[:error] = "#{exception}: #{message}"
+        { status: get_error_status_code(exception), error: "#{exception}: #{message}" }
       else
-        data[:status] = 0
+        { status: 0 }
       end
     end
 
@@ -80,36 +82,35 @@ module Lograge
       Rack::Utils.status_code(status)
     end
 
-    def custom_options(data, event)
-      options = Lograge.custom_options(event)
-      data.merge! options if options
+    def custom_options(event)
+      Lograge.custom_options(event) || {}
     end
 
     def before_format(data, payload)
       Lograge.before_format(data, payload)
     end
 
-    def runtimes(data, event)
-      payload = event.payload
-      data[:duration] = event.duration.to_f.round(2)
-      data[:view]     = payload[:view_runtime].to_f.round(2) if payload.key?(:view_runtime)
-      data[:db]       = payload[:db_runtime].to_f.round(2) if payload.key?(:db_runtime)
+    def extract_runtimes(event, payload)
+      data = { duration: event.duration.to_f.round(2) }
+      data[:view] = payload[:view_runtime].to_f.round(2) if payload.key?(:view_runtime)
+      data[:db] = payload[:db_runtime].to_f.round(2) if payload.key?(:db_runtime)
+      data
     end
 
-    def location(data)
+    def extract_location
       location = Thread.current[:lograge_location]
-      return unless location
+      return {} unless location
 
       Thread.current[:lograge_location] = nil
-      data[:location] = location
+      { location: location }
     end
 
-    def unpermitted(data)
+    def extract_unpermitted_params
       unpermitted_params = Thread.current[:lograge_unpermitted_params]
-      return unless unpermitted_params
+      return {} unless unpermitted_params
 
       Thread.current[:lograge_unpermitted_params] = nil
-      data[:unpermitted_params] = unpermitted_params
+      { unpermitted_params: unpermitted_params }
     end
   end
 end
