@@ -76,6 +76,23 @@ describe Lograge::RequestLogSubscriber do
     end
   end
 
+  context 'when processing unpermitted parameters' do
+    let(:unpermitted_parameters_event) do
+      ActiveSupport::Notifications::Event.new(
+        'unpermitted_parameters.action_controller',
+        Time.now,
+        Time.now,
+        1,
+        keys: %w(foo bar)
+      )
+    end
+
+    it 'stores the parameters in a thread local variable' do
+      subscriber.unpermitted_parameters(unpermitted_parameters_event)
+      expect(Thread.current[:lograge_unpermitted_params]).to eq(%w(foo bar))
+    end
+  end
+
   context 'when processing an action with lograge output' do
     before do
       Lograge.formatter = Lograge::Formatters::KeyValue.new
@@ -158,13 +175,34 @@ describe Lograge::RequestLogSubscriber do
 
       it 'removes the thread local variable' do
         subscriber.process_action(event)
-        expect(Thread.current[:lograge_location]).to be_falsey
+        expect(Thread.current[:lograge_location]).to be_nil
       end
     end
 
     it 'does not include a location by default' do
       subscriber.process_action(event)
       expect(log_output.string).to_not include('location=')
+    end
+
+    context 'with unpermitted_parameters' do
+      before do
+        Thread.current[:lograge_unpermitted_params] = %w(florb blarf)
+      end
+
+      it 'adds the unpermitted_params to the log line' do
+        subscriber.process_action(event)
+        expect(log_output.string).to include('unpermitted_params=["florb", "blarf"]')
+      end
+
+      it 'removes the thread local variable' do
+        subscriber.process_action(event)
+        expect(Thread.current[:lograge_unpermitted_params]).to be_nil
+      end
+    end
+
+    it 'does not include unpermitted_params by default' do
+      subscriber.process_action(event)
+      expect(log_output.string).to_not include('unpermitted_params=')
     end
   end
 

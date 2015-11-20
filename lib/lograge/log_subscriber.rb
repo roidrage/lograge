@@ -14,6 +14,7 @@ module Lograge
       extract_status(data, payload)
       runtimes(data, event)
       location(data)
+      unpermitted(data)
       custom_options(data, event)
 
       data = before_format(data, payload)
@@ -23,6 +24,11 @@ module Lograge
 
     def redirect_to(event)
       Thread.current[:lograge_location] = event.payload[:location]
+    end
+
+    def unpermitted_parameters(event)
+      Thread.current[:lograge_unpermitted_params] ||= []
+      Thread.current[:lograge_unpermitted_params].concat(event.payload[:keys])
     end
 
     def logger
@@ -96,6 +102,14 @@ module Lograge
 
       Thread.current[:lograge_location] = nil
       data[:location] = location
+    end
+
+    def unpermitted(data)
+      unpermitted_params = Thread.current[:lograge_unpermitted_params]
+      return unless unpermitted_params
+
+      Thread.current[:lograge_unpermitted_params] = nil
+      data[:unpermitted_params] = unpermitted_params
     end
   end
 end
