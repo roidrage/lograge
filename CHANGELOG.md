@@ -1,5 +1,9 @@
 # Change Log
 
+### Unreleased
+
+* Support logging of unpermitted parameters in Rails 4+ #154
+
 ### 0.3.4
 
 * Added LTSV formatter (<https://github.com/takashi>) #138
