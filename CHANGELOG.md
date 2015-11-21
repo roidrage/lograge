@@ -2,6 +2,8 @@
 
 ### Unreleased
 
+### 0.3.5
+
 * Support logging of unpermitted parameters in Rails 4+ #154
 
 ### 0.3.4
