@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in lograge.gemspec
 gemspec
 
+gem 'pry', group: :development
+
 group :test do
   gem 'actionpack'
   gem 'activerecord'
