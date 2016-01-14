@@ -4,24 +4,24 @@
 
 ### 0.3.5
 
-* Support logging of unpermitted parameters in Rails 4+ #154
+* Support logging of unpermitted parameters in Rails 4+ [#154](https://github.com/roidrage/lograge/pull/154)
 
 ### 0.3.4
 
-* Added LTSV formatter (<https://github.com/takashi>) #138
+* Added LTSV formatter (<https://github.com/takashi>) [#138](https://github.com/roidrage/lograge/pull/138)
 
 ### 0.3.3
 
-* Resolves #126 issues with status codes #134
+* Resolves #126 issues with status codes [#134](https://github.com/roidrage/lograge/pull/134)
 * Resolves build failures under rails 3.2 caused by `logstash-event` dependency
-* Delay loading so `config.enabled=` works from `config/initializers/*.rb` (<https://github.com/allori>) #62
+* Delay loading so `config.enabled=` works from `config/initializers/*.rb` (<https://github.com/allori>) [#62](https://github.com/roidrage/lograge/pull/62)
 
 ## 0.3.2
 
 ### Fixed
-* Make sure rack_cache[:verbose] can be set #103
-* Follow hash syntax for logstash-event v1.4.x #75
-* Log RecordNotFound as 404 #27, #110, #112
+* Make sure rack_cache[:verbose] can be set [#103](https://github.com/roidrage/lograge/pull/103)
+* Follow hash syntax for logstash-event v1.4.x [#75](https://github.com/roidrage/lograge/pull/75)
+* Log RecordNotFound as 404 [#27](https://github.com/roidrage/lograge/pull/27), [#110](https://github.com/roidrage/lograge/pull/110), [#112](https://github.com/roidrage/lograge/pull/112)
 
 ### Other
 * Use https in Gemfile #104
@@ -34,27 +34,27 @@
 
 ### Added
 
-* Add formatter for lines (<https://github.com/zimbatm/lines>) #35
+* Add formatter for lines (<https://github.com/zimbatm/lines>) [#35](https://github.com/roidrage/lograge/pull/35)
 * Rubocop and rake ci task
 * LICENSE.txt
 
 ### Other
 
-* Performance optimizations (<https://github.com/splattael>) #9
-* Add documentation on how to enable param logging #68
-* Add missing JSON formatter to README #77
+* Performance optimizations (<https://github.com/splattael>) [#9](https://github.com/roidrage/lograge/pull/9)
+* Add documentation on how to enable param logging [#68](https://github.com/roidrage/lograge/pull/68)
+* Add missing JSON formatter to README [#77](https://github.com/roidrage/lograge/pull/77)
 * Cleaning up gemspec
 
 ## 0.3.0 - 2014-03-11
 
 ### Added
-* Add formatter for l2met (<https://github.com/BRMatt>) #47
-* Add JSON formatter (<https://github.com/i0rek>) #56
-* Add `before_format` hook (<https://github.com/i0rek>) #59
-* Add Ruby 2.1.0 for testing on Travis CI (<https://github.com/salimane>) #60
+* Add formatter for l2met (<https://github.com/BRMatt>) [#47](https://github.com/roidrage/lograge/pull/47)
+* Add JSON formatter (<https://github.com/i0rek>) [#56](https://github.com/roidrage/lograge/pull/56)
+* Add `before_format` hook (<https://github.com/i0rek>) [#59](https://github.com/roidrage/lograge/pull/59)
+* Add Ruby 2.1.0 for testing on Travis CI (<https://github.com/salimane>) [#60](https://github.com/roidrage/lograge/pull/60)
 
 ### Fixed
-* Update Logstash formatter for Logstash 1.2 format (<https://github.com/msaffitz>) #55
+* Update Logstash formatter for Logstash 1.2 format (<https://github.com/msaffitz>) [#55](https://github.com/roidrage/lograge/pull/55)
 
 
 
