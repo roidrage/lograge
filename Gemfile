@@ -15,5 +15,4 @@ group :test do
   # logstash 1.5.4 is only supported with jrjackson up to  0.2.9
   gem 'jrjackson', '0.2.9', platforms: :jruby
   gem 'lines'
-  gem 'rubocop', '~> 0.35'
 end
