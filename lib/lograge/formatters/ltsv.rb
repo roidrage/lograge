@@ -5,7 +5,7 @@ module Lograge
         fields = fields_to_display(data)
 
         event = fields.map { |key| format(key, data[key]) }
-        event.join('\t')
+        event.join("\t")
       end
 
       def fields_to_display(data)
