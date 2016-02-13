@@ -2,7 +2,6 @@ language: ruby
 cache: bundle
 sudo: false
 rvm:
-  - 1.9.3
   - 2.3.0
   - jruby
   - jruby-head
