@@ -15,6 +15,5 @@ env:
     - JRUBY_OPTS='-J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-Djruby.compile.mode=OFF -J-Djruby.compile.invokedynamic=false'
 gemfile:
   - Gemfile
-  - gemfiles/Gemfile.actionpack3.2
   - gemfiles/Gemfile.actionpack4.0
 script: bundle exec rake
