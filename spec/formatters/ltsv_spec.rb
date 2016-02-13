@@ -24,4 +24,8 @@ describe Lograge::Formatters::LTSV do
   it 'escapes escape sequences as value' do
     expect(subject).to include('will_escaped:\\t')
   end
+
+  it 'is separated by hard tabs' do
+    expect(subject.split("\t").count).to eq(payload.count)
+  end
 end
