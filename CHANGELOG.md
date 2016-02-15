@@ -2,6 +2,10 @@
 
 ### Unreleased
 
+### 0.3.6
+
+* Fix an issue with LTSV formatter #162
+
 ### 0.3.5
 
 * Support logging of unpermitted parameters in Rails 4+ [#154](https://github.com/roidrage/lograge/pull/154)
