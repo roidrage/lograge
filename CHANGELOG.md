@@ -2,6 +2,8 @@
 
 ### Unreleased
 
+* End support for Ruby 1.9.3 and Rails 3 #164
+
 ### 0.3.6
 
 * Fix an issue with LTSV formatter #162
