@@ -100,11 +100,7 @@ You can also keep the original (and verbose) Rails logger by following this conf
 MyApp::Application.configure do
   config.lograge.keep_original_rails_log = true
 
-  # Rails 4+
   config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
-
-  # Rails 3.2
-  # config.lograge.logger = ActiveSupport::BufferedLogger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
 end
 ```
 
