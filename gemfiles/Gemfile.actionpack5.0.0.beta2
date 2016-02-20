@@ -1,13 +1,12 @@
 source 'https://rubygems.org'
 
 # Specify your gem's dependencies in lograge.gemspec
-gemspec
-
-gem 'pry', group: :development
+gemspec path: '..'
 
 group :test do
-  gem 'actionpack', '4.2.5.1'
-  gem 'activerecord', '4.2.5.1'
+  gem 'activerecord', '5.0.0.beta2'
+  gem 'actionpack', '5.0.0.beta2'
+
   # logstash does not release any gems on rubygems, but they have two gemspecs within their repo.
   # Using the tag is an attempt of having a stable version to test against where we can ensure that
   # we test against the correct code.
