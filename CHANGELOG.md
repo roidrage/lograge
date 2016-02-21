@@ -2,8 +2,10 @@
 
 ### Unreleased
 
+### 0.4.0.pre
+
 * Add support for Rails 5 beta 2 [#166](https://github.com/roidrage/lograge/pull/166)
-* End support for Ruby 1.9.3 and Rails 3 #164
+* End support for Ruby 1.9.3 and Rails 3 [#164](https://github.com/roidrage/lograge/pull/164)
 
 ### 0.3.6
 
