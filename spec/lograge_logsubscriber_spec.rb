@@ -2,7 +2,7 @@ require 'lograge/log_subscriber'
 require 'active_support/notifications'
 require 'active_support/core_ext/string'
 require 'logger'
-require 'active_record/errors'
+require 'active_record'
 require 'rails'
 
 describe Lograge::RequestLogSubscriber do

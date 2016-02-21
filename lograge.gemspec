@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop', '0.35.1'
   s.add_development_dependency 'parser', '2.3.0.2'
 
-  s.add_runtime_dependency 'activesupport', '>= 4'
-  s.add_runtime_dependency 'actionpack', '>= 4'
-  s.add_runtime_dependency 'railties', '>= 4'
+  s.add_runtime_dependency 'activesupport', '>= 4', '<= 5.0.0.beta2'
+  s.add_runtime_dependency 'actionpack', '>= 4', '<= 5.0.0.beta2'
+  s.add_runtime_dependency 'railties', '>= 4', '<= 5.0.0.beta2'
 end
