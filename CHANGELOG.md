@@ -9,7 +9,7 @@
 
 ### 0.3.6
 
-* Fix an issue with LTSV formatter #162
+* Fix an issue with LTSV formatter [#162](https://github.com/roidrage/lograge/pull/162)
 
 ### 0.3.5
 
