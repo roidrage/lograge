@@ -16,5 +16,5 @@ env:
 gemfile:
   - Gemfile
   - gemfiles/Gemfile.actionpack4.0
-  - gemfiles/Gemfile.actionpack5.0.0.beta2
+  - gemfiles/Gemfile.actionpack5.0.0.beta3
 script: bundle exec rake
