@@ -2,6 +2,10 @@
 
 ### Unreleased
 
+### 0.4.0.pre2
+
+* Add support for Rails 5 beta 3 [#169](https://github.com/roidrage/lograge/pull/169)
+
 ### 0.4.0.pre
 
 * Add support for Rails 5 beta 2 [#166](https://github.com/roidrage/lograge/pull/166)
