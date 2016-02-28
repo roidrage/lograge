@@ -4,9 +4,17 @@ module Lograge
   module Formatters
     class L2met < KeyValue
       L2MET_FIELDS = [
-        :method, :path, :format, :source, :status, :error,
-        :duration, :view, :db, :location
-      ]
+        :method,
+        :path,
+        :format,
+        :source,
+        :status,
+        :error,
+        :duration,
+        :view,
+        :db,
+        :location
+      ].freeze
 
       def call(data)
         super(modify_payload(data))

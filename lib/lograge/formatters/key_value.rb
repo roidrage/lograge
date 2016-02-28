@@ -18,9 +18,8 @@ module Lograge
           # Parsing this can be ambigious if the error messages contains
           # a single quote
           value = "'#{value}'"
-        else
-          # Ensure that we always have exactly two decimals
-          value = Kernel.format('%.2f', value) if value.is_a? Float
+        elsif value.is_a? Float
+          value = Kernel.format('%.2f', value)
         end
 
         "#{key}=#{value}"
