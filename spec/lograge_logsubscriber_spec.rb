@@ -12,7 +12,7 @@ describe Lograge::RequestLogSubscriber do
   end
 
   let(:subscriber) { Lograge::RequestLogSubscriber.new }
-  let(:event_params) { { 'controller' => 'home', 'action' => 'index', 'foo' => 'bar' } }
+  let(:event_params) { { 'foo' => 'bar' } }
 
   let(:event) do
     ActiveSupport::Notifications::Event.new(
@@ -21,6 +21,8 @@ describe Lograge::RequestLogSubscriber do
       Time.now,
       2,
       status: 200,
+      controller: 'home',
+      action: 'index',
       format: 'application/json',
       method: 'GET',
       path: '/home?foo=bar',

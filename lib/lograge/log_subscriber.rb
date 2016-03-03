@@ -45,8 +45,8 @@ module Lograge
         method: payload[:method],
         path: extract_path(payload),
         format: extract_format(payload),
-        controller: payload[:params]['controller'],
-        action: payload[:params]['action']
+        controller: payload[:controller],
+        action: payload[:action]
       }
     end
 

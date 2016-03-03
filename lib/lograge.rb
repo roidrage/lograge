@@ -62,8 +62,8 @@ module Lograge
 
   def ignore_actions(actions)
     ignore(lambda do |event|
-             params = event.payload[:params]
-             Array(actions).include?("#{params['controller']}##{params['action']}")
+             params = event.payload
+             Array(actions).include?("#{params[:controller]}##{params[:action]}")
            end)
   end
 
