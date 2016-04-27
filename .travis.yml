@@ -6,6 +6,10 @@ rvm:
   - jruby-9.0.5.0
   - jruby-head
   - rbx-2
+matrix:
+  allow_failures:
+    - rvm: rbx-2
+    - rvm: jruby-head
 env:
   global:
     - JRUBY_OPTS='-J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-Djruby.compile.mode=OFF -J-Djruby.compile.invokedynamic=false'
