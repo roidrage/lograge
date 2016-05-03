@@ -2,6 +2,7 @@
 
 ### Unreleased
 
+* Rails 5 beta 4 support [#174](https://github.com/roidrage/lograge/pull/174)
 * Retrieve controller/action from payload not nested params [cd2dc08](https://github.com/roidrage/lograge/commit/cd2dc08)
 
 ### 0.4.0.pre2
