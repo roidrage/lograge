@@ -6,7 +6,9 @@ rvm:
   - jruby-9.0.5.0
   - jruby-head
   - rbx-2
+before_install: gem install bundler
 matrix:
+  fast_finish: true
   allow_failures:
     - rvm: rbx-2
     - rvm: jruby-head
@@ -14,7 +16,7 @@ env:
   global:
     - JRUBY_OPTS='-J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-Djruby.compile.mode=OFF -J-Djruby.compile.invokedynamic=false'
 gemfile:
-  - Gemfile
-  - gemfiles/Gemfile.actionpack4.0
   - gemfiles/Gemfile.actionpack5.0.0.beta4
-script: bundle exec rake
+  - gemfiles/Gemfile.actionpack4.0
+  - Gemfile
+script: bundle install --jobs=3 --retry=3 && bundle exec rake

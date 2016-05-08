@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.4.0.rc1
+
+* Rails 5 rc1 support [#175](https://github.com/roidrage/lograge/pull/175)
+
 ### 0.4.0.pre4
 
 * Rails 5 beta 4 support [#174](https://github.com/roidrage/lograge/pull/174)
