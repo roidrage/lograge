@@ -246,11 +246,10 @@ add it in manually using `custom_options`:
 YourApp::Application.configure do
   config.lograge.enabled = true
   config.lograge.custom_options = lambda do |event|
-    params = event.payload[:params].reject do |k|
-      ['controller', 'action'].include? k
-    end
-
-    { "params" => params }
+    exceptions = %w(controller action format id)
+    {
+      params: event.payload[:params].except(exceptions)
+    }
   end
 end
 ```
