@@ -38,7 +38,7 @@ Completed 200 OK in 79ms (Views: 78.8ms | ActiveRecord: 0.0ms)
 you get a single line with all the important information, like this:
 
 ```
-method=GET path=/jobs/833552.json format=json controller=jobs action=show status=200 duration=58.33 view=40.43 db=15.26
+method=GET path=/jobs/833552.json format=json controller=JobsController  action=show status=200 duration=58.33 view=40.43 db=15.26
 ```
 
 The second line is easy to grasp with a single glance and still includes all the
@@ -125,7 +125,7 @@ actions, or you can write a custom handler to skip messages based on data in the
 MyApp::Application.configure do
   config.lograge.enabled = true
 
-  config.lograge.ignore_actions = ['home#index', 'aController#anAction']
+  config.lograge.ignore_actions = ['HomeController#index', 'AController#an_action']
   config.lograge.ignore_custom = lambda do |event|
     # return true here if you want to ignore based on the event
   end

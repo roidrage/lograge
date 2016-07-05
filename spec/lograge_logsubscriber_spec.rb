@@ -21,7 +21,7 @@ describe Lograge::RequestLogSubscriber do
       Time.now,
       2,
       status: 200,
-      controller: 'home',
+      controller: 'HomeController',
       action: 'index',
       format: 'application/json',
       method: 'GET',
@@ -122,7 +122,7 @@ describe Lograge::RequestLogSubscriber do
 
     it 'includes the controller and action' do
       subscriber.process_action(event)
-      expect(log_output.string).to include('controller=home action=index')
+      expect(log_output.string).to include('controller=HomeController action=index')
     end
 
     it 'includes the duration' do
@@ -261,7 +261,7 @@ describe Lograge::RequestLogSubscriber do
     end
 
     it 'does not log ignored controller actions given a single ignored action' do
-      Lograge.ignore_actions 'home#index'
+      Lograge.ignore_actions 'HomeController#index'
       subscriber.process_action(event)
       expect(log_output.string).to be_blank
     end
@@ -269,25 +269,25 @@ describe Lograge::RequestLogSubscriber do
     it 'does not log ignored controller actions given a single ignored action after a custom ignore' do
       Lograge.ignore(->(_event) { false })
 
-      Lograge.ignore_actions 'home#index'
+      Lograge.ignore_actions 'HomeController#index'
       subscriber.process_action(event)
       expect(log_output.string).to be_blank
     end
 
     it 'logs non-ignored controller actions given a single ignored action' do
-      Lograge.ignore_actions 'foo#bar'
+      Lograge.ignore_actions 'FooController#bar'
       subscriber.process_action(event)
       expect(log_output.string).to be_present
     end
 
     it 'does not log ignored controller actions given multiple ignored actions' do
-      Lograge.ignore_actions ['foo#bar', 'home#index', 'bar#foo']
+      Lograge.ignore_actions ['FooController#bar', 'HomeController#index', 'BarController#foo']
       subscriber.process_action(event)
       expect(log_output.string).to be_blank
     end
 
     it 'logs non-ignored controller actions given multiple ignored actions' do
-      Lograge.ignore_actions ['foo#bar', 'bar#foo']
+      Lograge.ignore_actions ['FooController#bar', 'BarController#foo']
       subscriber.process_action(event)
       expect(log_output.string).to_not be_blank
     end
