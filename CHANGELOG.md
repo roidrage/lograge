@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.4.1
+
+* Controller name is specified by class [#184](https://github.com/roidrage/lograge/pull/184)
+* Loosen gemspec dependency on Rails 5 [#182](https://github.com/roidrage/lograge/pull/182)
+
 ### 0.4.0
 
 * Rails 5 support [#181](https://github.com/roidrage/lograge/pull/181)
