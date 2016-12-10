@@ -256,6 +256,34 @@ end
 
 ## FAQ ##
 
+### Logging errors / exceptions ###
+
+Our first recommendation is that you use exception tracking services built for
+purpose ;)
+
+If you absolutely *must* log exceptions in the single-line format, you can
+do something similar to this example:
+
+```ruby
+# config/environments/production.rb
+
+YourApp::Application.configure do
+  config.lograge.enabled = true
+  config.lograge.custom_options = lambda do |event|
+    {
+      exception: event.payload[:exception], # ["ExceptionClass", "the message"]
+      exception_object: event.payload[:exception_object] # the exception instance
+    }
+  end
+end
+```
+
+The `:exception` is just the basic class and message whereas the
+`:exception_object` is the actual exception instance. You can use both /
+either. Be mindful when including this, you will probably want to cherry-pick
+particular attributes and almost definitely want to `join` the `backtrace` into
+something without newline characters.
+
 ### Handle ActionController::RoutingError ###
 
 Add a ` get '*unmatched_route', to: 'application#route_not_found'` rule to the end of your `routes.rb`
