@@ -10,3 +10,6 @@ AllCops:
 
 Metrics/AbcSize:
   Enabled: false
+
+Style/EmptyMethod:
+  Enabled: false

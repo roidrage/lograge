@@ -56,7 +56,7 @@ module Lograge
       index ? path[0, index] : path
     end
 
-    if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR == 0
+    if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR.zero?
       def extract_format(payload)
         payload[:formats].first
       end

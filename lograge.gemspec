@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.files = `git ls-files lib`.split("\n")
 
   s.add_development_dependency 'rspec'
-  s.add_development_dependency 'rubocop', '0.37.2'
+  s.add_development_dependency 'rubocop', '0.46.0'
 
   s.add_runtime_dependency 'activesupport', '>= 4', '< 5.1'
   s.add_runtime_dependency 'actionpack',    '>= 4', '< 5.1'

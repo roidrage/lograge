@@ -45,8 +45,7 @@ describe Lograge do
                   config.action_dispatch = double(rack_cache: false)
                   config.lograge = ActiveSupport::OrderedOptions.new
                   config.lograge.keep_original_rails_log = true
-                end
-              )
+                end)
       end
 
       it "does not remove Rails' subscribers" do
@@ -64,8 +63,7 @@ describe Lograge do
                 config.action_dispatch = config_option
                 config.lograge = ActiveSupport::OrderedOptions.new
                 config.lograge.keep_original_rails_log = true
-              end
-            )
+              end)
     end
     let(:config_option) { double(rack_cache: rack_cache) }
 
@@ -101,8 +99,7 @@ describe Lograge do
                 config.action_dispatch = double(rack_cache: false)
                 config.lograge = ActiveSupport::OrderedOptions.new
                 config.lograge.log_format = format
-              end
-            )
+              end)
     end
     before { ActiveSupport::Deprecation.silence { Lograge.setup(app_config) } }
     subject { Lograge.formatter }
