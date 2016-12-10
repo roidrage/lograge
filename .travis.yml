@@ -2,15 +2,13 @@ language: ruby
 cache: bundle
 sudo: false
 rvm:
-  - 2.3.0
-  - jruby-9.0.5.0
+  - 2.3.3
+  - jruby-9.1.6.0
   - jruby-head
-  - rbx-2
 before_install: gem install bundler
 matrix:
   fast_finish: true
   allow_failures:
-    - rvm: rbx-2
     - rvm: jruby-head
 env:
   global:
@@ -19,4 +17,3 @@ gemfile:
   - gemfiles/Gemfile.actionpack5.0.0
   - gemfiles/Gemfile.actionpack4.0
   - Gemfile
-script: bundle install --jobs=3 --retry=3 && bundle exec rake
