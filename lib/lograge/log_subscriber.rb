@@ -1,5 +1,6 @@
 require 'json'
 require 'action_pack'
+require 'action_controller'
 require 'active_support/core_ext/class/attribute'
 require 'active_support/log_subscriber'
 
@@ -9,6 +10,7 @@ module Lograge
       return if Lograge.ignore?(event)
 
       payload = event.payload
+      _additions = ActionController::Base.log_process_action(payload)
       data = extract_request(event, payload)
       data = before_format(data, payload)
       formatted_message = Lograge.formatter.call(data)
