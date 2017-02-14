@@ -94,15 +94,14 @@ describe Lograge do
 
   describe 'handling custom_payload option' do
     let(:app_config) do
-      double(config:
-              ActiveSupport::OrderedOptions.new.tap do |config|
-                config.action_dispatch = double(rack_cache: false)
-                config.lograge = Lograge::OrderedOptions.new
-                config.lograge.custom_payload do |c|
-                  { user_id: c.current_user_id }
-                end
-              end
-            )
+      config_obj = ActiveSupport::OrderedOptions.new.tap do |config|
+        config.action_dispatch = double(rack_cache: false)
+        config.lograge = Lograge::OrderedOptions.new
+        config.lograge.custom_payload do |c|
+          { user_id: c.current_user_id }
+        end
+      end
+      double(config: config_obj)
     end
     let(:controller) do
       Class.new do
