@@ -97,8 +97,10 @@ describe Lograge do
       double(config:
               ActiveSupport::OrderedOptions.new.tap do |config|
                 config.action_dispatch = double(rack_cache: false)
-                config.lograge = ActiveSupport::OrderedOptions.new
-                config.lograge.custom_payload = proc { { user_id: current_user_id } }
+                config.lograge = Lograge::OrderedOptions.new
+                config.lograge.custom_payload do |c|
+                  { user_id: c.current_user_id }
+                end
               end
             )
     end

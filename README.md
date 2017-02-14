@@ -123,11 +123,10 @@ This hash is merged into the log data automatically.
 MyApp::Application.configure do
   config.lograge.enabled = true
 
-  # custom_payload must be a proc that returns a hash
-  config.lograge.custom_payload = proc do
+  config.lograge.custom_payload do |controller|
     {
-      host: request.host,
-      user_id: current_user.try(:id)
+      host: controller.request.host,
+      user_id: controller.current_user.try(:id)
     }
   end
 end

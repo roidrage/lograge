@@ -9,9 +9,9 @@ require 'lograge/formatters/logstash'
 require 'lograge/formatters/ltsv'
 require 'lograge/formatters/raw'
 require 'lograge/log_subscriber'
+require 'lograge/ordered_options'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
-require 'active_support/ordered_options'
 
 # rubocop:disable ModuleLength
 module Lograge
@@ -143,13 +143,13 @@ module Lograge
   end
 
   def setup_custom_payload
-    return unless lograge_config.custom_payload.respond_to?(:call)
+    return unless lograge_config.custom_payload_method.respond_to?(:call)
     append_payload_method = ActionController::Base.instance_method(:append_info_to_payload)
-    custom_payload_method = lograge_config.custom_payload
+    custom_payload_method = lograge_config.custom_payload_method
 
     ActionController::Base.send(:define_method, :append_info_to_payload) do |payload|
       append_payload_method.bind(self).call(payload)
-      payload[:custom_payload] = instance_eval(&custom_payload_method)
+      payload[:custom_payload] = custom_payload_method.call(self)
     end
   end
 
