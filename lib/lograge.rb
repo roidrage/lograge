@@ -51,7 +51,7 @@ module Lograge
   # Set conditions for events that should be ignored
   #
   # Currently supported formats are:
-  #  - A single string representing a controller action, e.g. 'users#sign_in'
+  #  - A single string representing a controller action, e.g. 'UsersController#sign_in'
   #  - An array of strings representing controller actions
   #  - An object that responds to call with an event argument and returns
   #    true iff the event should be ignored.
