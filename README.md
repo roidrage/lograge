@@ -60,7 +60,7 @@ Enable it in an initializer or the relevant environment config:
 # config/initializers/lograge.rb
 # OR
 # config/environments/production.rb
-MyApp::Application.configure do
+Rails.application.configure do
   config.lograge.enabled = true
 end
 ```
@@ -69,7 +69,7 @@ You can also add a hook for own custom data
 
 ```ruby
 # config/environments/staging.rb
-MyApp::Application.configure do
+Rails.application.configure do
   config.lograge.enabled = true
 
   # custom_options can be a lambda or hash
@@ -84,12 +84,12 @@ end
 Or you can add a timestamp:
 
 ```ruby
-MyApp::Application.configure do
+Rails.application.configure do
   config.lograge.enabled = true
 
   # add time to lograge
   config.lograge.custom_options = lambda do |event|
-    {:time => event.time}
+    { time: event.time }
   end
 end
 ```
@@ -97,7 +97,7 @@ end
 You can also keep the original (and verbose) Rails logger by following this configuration:
 
 ```ruby
-MyApp::Application.configure do
+Rails.application.configure do
   config.lograge.keep_original_rails_log = true
 
   config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
@@ -122,7 +122,7 @@ actions, or you can write a custom handler to skip messages based on data in the
 
 ```ruby
 # config/environments/production.rb
-MyApp::Application.configure do
+Rails.application.configure do
   config.lograge.enabled = true
 
   config.lograge.ignore_actions = ['HomeController#index', 'AController#an_action']
@@ -138,7 +138,7 @@ JSON logs in the json_event format used by [Logstash](http://logstash.net/).
 
 ```ruby
 # config/environments/production.rb
-MyApp::Application.configure do
+Rails.application.configure do
   config.lograge.formatter = Lograge::Formatters::Logstash.new
 end
 ```
@@ -170,7 +170,7 @@ an object which responds to #call:
 
 ```ruby
 # config/environments/production.rb
-MyApp::Application.configure do
+Rails.application.configure do
   config.lograge.formatter = ->(data) { "Called #{data[:controller]}" } # data is a ruby hash
 end
 ```
