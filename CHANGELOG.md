@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.5.0.rc1
+
+* Rails 5.1 RC1 support [#205](https://github.com/roidrage/lograge/pull/205)
+
 ### 0.4.1
 
 * Controller name is specified by class [#184](https://github.com/roidrage/lograge/pull/184)
