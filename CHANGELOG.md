@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.5.0.rc2
+
+* Rails 5.1 RC2 support [#207](https://github.com/roidrage/lograge/pull/207)
+
 ### 0.5.0.rc1
 
 * Rails 5.1 RC1 support [#205](https://github.com/roidrage/lograge/pull/205)
