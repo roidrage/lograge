@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.5.1
+
+* Loosen Rails gem dependency [#209](https://github.com/roidrage/lograge/pull/209)
+
 ### 0.5.0
 
 * Rails 5.1 support [#208](https://github.com/roidrage/lograge/pull/208)
