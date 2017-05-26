@@ -3,7 +3,7 @@ cache: bundle
 sudo: false
 rvm:
   - 2.3.3
-  - jruby-9.1.8.0
+  - jruby-9.1.10.0
   - jruby-head
 before_install: gem install bundler
 matrix:
