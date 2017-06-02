@@ -98,8 +98,6 @@ module Lograge
   def remove_existing_log_subscriptions
     ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
       case subscriber
-      when ActiveJob::Logging::LogSubscriber
-        unsubscribe(:active_job, subscriber)
       when ActionView::LogSubscriber
         unsubscribe(:action_view, subscriber)
       when ActionController::LogSubscriber
