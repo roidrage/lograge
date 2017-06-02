@@ -9,6 +9,7 @@ require 'lograge/formatters/logstash'
 require 'lograge/formatters/ltsv'
 require 'lograge/formatters/raw'
 require 'lograge/log_subscriber'
+require 'lograge/job_subscriber'
 require 'lograge/ordered_options'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
@@ -97,6 +98,8 @@ module Lograge
   def remove_existing_log_subscriptions
     ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
       case subscriber
+      when ActiveJob::Logging::LogSubscriber
+        unsubscribe(:active_job, subscriber)
       when ActionView::LogSubscriber
         unsubscribe(:action_view, subscriber)
       when ActionController::LogSubscriber
@@ -122,6 +125,7 @@ module Lograge
     keep_original_rails_log
 
     attach_to_action_controller
+    attach_to_active_job
     set_lograge_log_options
     setup_custom_payload
     support_deprecated_config # TODO: Remove with version 1.0
@@ -140,6 +144,10 @@ module Lograge
 
   def attach_to_action_controller
     Lograge::RequestLogSubscriber.attach_to :action_controller
+  end
+
+  def attach_to_active_job
+    Lograge::JobSubscriber.attach_to :active_job
   end
 
   def setup_custom_payload

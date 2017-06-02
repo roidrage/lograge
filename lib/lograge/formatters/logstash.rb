@@ -1,11 +1,12 @@
 module Lograge
   module Formatters
     class Logstash
-      def call(data)
+      def call(data, type = 'controller')
         load_dependencies
         event = LogStash::Event.new(data)
 
-        event['message'] = "[#{data[:status]}] #{data[:method]} #{data[:path]} (#{data[:controller]}##{data[:action]})"
+        event['message'] = "[#{data[:status]}] #{data[:method]} #{data[:path]} (#{data[:controller]}##{data[:action]})" if type == 'controller'
+        event['message'] = data[:message] if type == 'job'
         event.to_json
       end
 
