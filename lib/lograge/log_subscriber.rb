@@ -12,7 +12,7 @@ module Lograge
       data = extract_request(event, payload)
       data = before_format(data, payload)
       formatted_message = Lograge.formatter.call(data)
-      logger.send(Lograge.log_level, formatted_message)
+      logger.public_send(Lograge.log_level, formatted_message)
     end
 
     def redirect_to(event)
