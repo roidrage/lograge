@@ -328,4 +328,30 @@ describe Lograge::RequestLogSubscriber do
 
     expect(log_output.string).to be_present
   end
+
+  describe "used logger level" do
+    context 'when status is 4XX' do
+      before do
+        event.payload[:status] = 400
+        allow(logger).to receive(:warn)
+      end
+
+      it 'calls logger.warn' do
+        subscriber.process_action(event)
+        expect(logger).to have_received(:warn)
+      end
+    end
+
+    context 'when status is 5XX' do
+      before do
+        event.payload[:status] = 500
+        allow(logger).to receive(:error)
+      end
+
+      it 'calls logger.error' do
+        subscriber.process_action(event)
+        expect(logger).to have_received(:error)
+      end
+    end
+  end
 end
