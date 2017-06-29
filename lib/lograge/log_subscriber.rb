@@ -12,7 +12,8 @@ module Lograge
       data = extract_request(event, payload)
       data = before_format(data, payload)
       formatted_message = Lograge.formatter.call(data)
-      logger.send(Lograge.log_level, formatted_message)
+      logger_level = extract_logger_level(payload)
+      logger.send(logger_level, formatted_message)
     end
 
     def redirect_to(event)
@@ -111,6 +112,17 @@ module Lograge
 
       Thread.current[:lograge_unpermitted_params] = nil
       { unpermitted_params: unpermitted_params }
+    end
+
+    def extract_logger_level(payload)
+      case payload[:status]
+      when 400..499
+        'warn'
+      when 500..599
+        'error'
+      else
+        Lograge.log_level
+      end
     end
   end
 end
