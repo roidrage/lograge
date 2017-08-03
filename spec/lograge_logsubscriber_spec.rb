@@ -74,7 +74,7 @@ describe Lograge::RequestLogSubscriber do
 
     it 'stores the location in a thread local variable' do
       subscriber.redirect_to(redirect_event)
-      expect(Thread.current[:lograge_location]).to eq('http://example.com')
+      expect(RequestStore.store[:lograge_location]).to eq('http://example.com')
     end
   end
 
@@ -91,7 +91,7 @@ describe Lograge::RequestLogSubscriber do
 
     it 'stores the parameters in a thread local variable' do
       subscriber.unpermitted_parameters(unpermitted_parameters_event)
-      expect(Thread.current[:lograge_unpermitted_params]).to eq(%w(foo bar))
+      expect(RequestStore.store[:lograge_unpermitted_params]).to eq(%w(foo bar))
     end
   end
 
@@ -167,7 +167,7 @@ describe Lograge::RequestLogSubscriber do
 
     context 'with a redirect' do
       before do
-        Thread.current[:lograge_location] = 'http://www.example.com'
+        RequestStore.store[:lograge_location] = 'http://www.example.com'
       end
 
       it 'adds the location to the log line' do
@@ -177,7 +177,7 @@ describe Lograge::RequestLogSubscriber do
 
       it 'removes the thread local variable' do
         subscriber.process_action(event)
-        expect(Thread.current[:lograge_location]).to be_nil
+        expect(RequestStore.store[:lograge_location]).to be_nil
       end
     end
 
@@ -188,7 +188,7 @@ describe Lograge::RequestLogSubscriber do
 
     context 'with unpermitted_parameters' do
       before do
-        Thread.current[:lograge_unpermitted_params] = %w(florb blarf)
+        RequestStore.store[:lograge_unpermitted_params] = %w(florb blarf)
       end
 
       it 'adds the unpermitted_params to the log line' do
@@ -198,7 +198,7 @@ describe Lograge::RequestLogSubscriber do
 
       it 'removes the thread local variable' do
         subscriber.process_action(event)
-        expect(Thread.current[:lograge_unpermitted_params]).to be_nil
+        expect(RequestStore.store[:lograge_unpermitted_params]).to be_nil
       end
     end
 

@@ -2,6 +2,7 @@ require 'json'
 require 'action_pack'
 require 'active_support/core_ext/class/attribute'
 require 'active_support/log_subscriber'
+require 'request_store'
 
 module Lograge
   class RequestLogSubscriber < ActiveSupport::LogSubscriber
@@ -16,12 +17,12 @@ module Lograge
     end
 
     def redirect_to(event)
-      Thread.current[:lograge_location] = event.payload[:location]
+      RequestStore.store[:lograge_location] = event.payload[:location]
     end
 
     def unpermitted_parameters(event)
-      Thread.current[:lograge_unpermitted_params] ||= []
-      Thread.current[:lograge_unpermitted_params].concat(event.payload[:keys])
+      RequestStore.store[:lograge_unpermitted_params] ||= []
+      RequestStore.store[:lograge_unpermitted_params].concat(event.payload[:keys])
     end
 
     def logger
@@ -98,18 +99,18 @@ module Lograge
     end
 
     def extract_location
-      location = Thread.current[:lograge_location]
+      location = RequestStore.store[:lograge_location]
       return {} unless location
 
-      Thread.current[:lograge_location] = nil
+      RequestStore.store[:lograge_location] = nil
       { location: location }
     end
 
     def extract_unpermitted_params
-      unpermitted_params = Thread.current[:lograge_unpermitted_params]
+      unpermitted_params = RequestStore.store[:lograge_unpermitted_params]
       return {} unless unpermitted_params
 
-      Thread.current[:lograge_unpermitted_params] = nil
+      RequestStore.store[:lograge_unpermitted_params] = nil
       { unpermitted_params: unpermitted_params }
     end
   end
