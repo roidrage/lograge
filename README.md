@@ -116,6 +116,22 @@ class ApplicationController < ActionController::Base
 end
 ```
 
+Alternatively, you can add a hook for accessing controller methods directly (e.g. `request` and `current_user`).
+This hash is merged into the log data automatically.
+
+```ruby
+MyApp::Application.configure do
+  config.lograge.enabled = true
+
+  config.lograge.custom_payload do |controller|
+    {
+      host: controller.request.host,
+      user_id: controller.current_user.try(:id)
+    }
+  end
+end
+```
+
 To further clean up your logging, you can also tell Lograge to skip log messages
 meeting given criteria.  You can skip log messages generated from certain controller
 actions, or you can write a custom handler to skip messages based on data in the log event:

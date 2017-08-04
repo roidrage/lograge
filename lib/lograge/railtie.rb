@@ -4,7 +4,7 @@ require 'action_controller/log_subscriber'
 
 module Lograge
   class Railtie < Rails::Railtie
-    config.lograge = ActiveSupport::OrderedOptions.new
+    config.lograge = Lograge::OrderedOptions.new
     config.lograge.enabled = false
 
     config.after_initialize do |app|

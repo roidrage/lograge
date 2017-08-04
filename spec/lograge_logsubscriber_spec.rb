@@ -233,6 +233,26 @@ describe Lograge::RequestLogSubscriber do
     end
   end
 
+  context 'when event payload includes a "custom_payload"' do
+    before do
+      Lograge.formatter = Lograge::Formatters::KeyValue.new
+    end
+
+    it 'incorporates the payload correctly' do
+      event.payload[:custom_payload] = { data: 'value' }
+
+      subscriber.process_action(event)
+      expect(log_output.string).to match(/ data=value/)
+    end
+
+    it 'works when custom_payload is nil' do
+      event.payload[:custom_payload] = nil
+
+      subscriber.process_action(event)
+      expect(log_output.string).to be_present
+    end
+  end
+
   context 'with before_format configured for lograge output' do
     before do
       Lograge.formatter = Lograge::Formatters::KeyValue.new

@@ -5,7 +5,9 @@ rvm:
   - 2.4.1
   - jruby-9.1.12.0
   - jruby-head
-before_install: gem install bundler
+before_install:
+  - gem update --system
+  - gem install bundler
 matrix:
   fast_finish: true
   allow_failures:
