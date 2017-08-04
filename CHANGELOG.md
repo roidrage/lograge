@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.6.0
+
+* Replace thread-locals with `request_store` [#218](https://github.com/roidrage/lograge/pull/218)
+* An alternative to the `append_info_to_payload` strategy [#135](https://github.com/roidrage/lograge/pull/135)
+
 ### 0.5.1
 
 * Loosen Rails gem dependency [#209](https://github.com/roidrage/lograge/pull/209)
