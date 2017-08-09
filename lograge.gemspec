@@ -18,5 +18,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'activesupport', '>= 4', '< 5.2'
   s.add_runtime_dependency 'actionpack',    '>= 4', '< 5.2'
   s.add_runtime_dependency 'railties',      '>= 4', '< 5.2'
-  s.add_runtime_dependency 'request_store', '~> 1.0'
+  s.add_runtime_dependency 'request_store', '~> 1.3'
 end
