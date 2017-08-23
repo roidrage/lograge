@@ -3,6 +3,7 @@ module Lograge
     class Logstash
       def call(data)
         load_dependencies
+        data.delete(:headers) unless data[:headers].is_a?(Hash) # NOTE: for rails 5.1 support
         event = LogStash::Event.new(data)
 
         event['message'] = "[#{data[:status]}] #{data[:method]} #{data[:path]} (#{data[:controller]}##{data[:action]})"
