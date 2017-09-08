@@ -3,7 +3,7 @@ cache: bundle
 sudo: false
 rvm:
   - 2.4.1
-  - jruby-9.1.12.0
+  - jruby-9.1.13.0
   - jruby-head
 before_install:
   - gem update --system
