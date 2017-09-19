@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.7.0
+
+* Configurable base clas [#227](https://github.com/roidrage/lograge/pull/227)
+
 ### 0.6.0
 
 * Replace thread-locals with `request_store` [#218](https://github.com/roidrage/lograge/pull/218)
