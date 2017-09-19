@@ -38,6 +38,7 @@ module Lograge
       data.merge!(extract_runtimes(event, payload))
       data.merge!(extract_location)
       data.merge!(extract_unpermitted_params)
+      data.merge!(extract_process_id)
       data.merge!(custom_options(event))
     end
 
@@ -113,6 +114,12 @@ module Lograge
 
       RequestStore.store[:lograge_unpermitted_params] = nil
       { unpermitted_params: unpermitted_params }
+    end
+
+    def extract_process_id
+      {
+        process_id: Process.pid
+      }
     end
   end
 end
