@@ -93,6 +93,7 @@ describe Lograge do
   end
 
   describe 'handling custom_payload option' do
+    let(:controller_class) { 'ActionController::Base' }
     let(:app_config) do
       config_obj = ActiveSupport::OrderedOptions.new.tap do |config|
         config.action_dispatch = double(rack_cache: false)
@@ -119,12 +120,29 @@ describe Lograge do
     subject { payload.dup }
 
     before do
-      stub_const('ActionController::Base', controller)
+      stub_const(controller_class, controller)
       Lograge.setup(app_config)
-      ActionController::Base.new.append_info_to_payload(subject)
+      controller_class.constantize.new.append_info_to_payload(subject)
     end
 
     it { should eq(payload.merge(appended: true, custom_payload: { user_id: '24601' })) }
+
+    context 'when base_controller_class option is set' do
+      let(:controller_class) { 'ActionController::API' }
+      let(:app_config) do
+        config_obj = ActiveSupport::OrderedOptions.new.tap do |config|
+          config.action_dispatch = double(rack_cache: false)
+          config.lograge = Lograge::OrderedOptions.new
+          config.lograge.base_controller_class = controller_class.constantize
+          config.lograge.custom_payload do |c|
+            { user_id: c.current_user_id }
+          end
+        end
+        double(config: config_obj)
+      end
+
+      it { should eq(payload.merge(appended: true, custom_payload: { user_id: '24601' })) }
+    end
   end
 
   describe 'deprecated log_format interpreter' do

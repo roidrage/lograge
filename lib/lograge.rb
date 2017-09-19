@@ -144,10 +144,11 @@ module Lograge
 
   def setup_custom_payload
     return unless lograge_config.custom_payload_method.respond_to?(:call)
-    append_payload_method = ActionController::Base.instance_method(:append_info_to_payload)
+    base_controller_class = lograge_config.base_controller_class || ActionController::Base
+    append_payload_method = base_controller_class.instance_method(:append_info_to_payload)
     custom_payload_method = lograge_config.custom_payload_method
 
-    ActionController::Base.send(:define_method, :append_info_to_payload) do |payload|
+    base_controller_class.send(:define_method, :append_info_to_payload) do |payload|
       append_payload_method.bind(self).call(payload)
       payload[:custom_payload] = custom_payload_method.call(self)
     end
