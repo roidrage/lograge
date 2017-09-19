@@ -133,7 +133,7 @@ describe Lograge do
         config_obj = ActiveSupport::OrderedOptions.new.tap do |config|
           config.action_dispatch = double(rack_cache: false)
           config.lograge = Lograge::OrderedOptions.new
-          config.lograge.base_controller_class = controller_class.constantize
+          config.lograge.base_controller_class = controller_class
           config.lograge.custom_payload do |c|
             { user_id: c.current_user_id }
           end
