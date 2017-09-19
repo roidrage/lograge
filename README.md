@@ -70,7 +70,7 @@ If you're using Rails 5's API-only mode and inherit from `ActionController::API`
 ```ruby
 # config/initializers/lograge.rb
 Rails.application.configure do
-  config.lograge.base_controller_class = ActionController::API
+  config.lograge.base_controller_class = 'ActionController::API'
 end
 ```
 
