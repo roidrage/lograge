@@ -1,8 +1,12 @@
 # Change Log
 
+### 0.7.1
+
+* Bug fix for configurable controllers [#228](https://github.com/roidrage/lograge/pull/228)
+
 ### 0.7.0
 
-* Configurable base clas [#227](https://github.com/roidrage/lograge/pull/227)
+* Configurable base class [#227](https://github.com/roidrage/lograge/pull/227)
 
 ### 0.6.0
 
