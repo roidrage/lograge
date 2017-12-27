@@ -16,18 +16,29 @@ module Lograge
         :location
       ].freeze
 
+      UNWANTED_FIELDS = [
+        :controller,
+        :action
+      ].freeze
+
       def call(data)
         super(modify_payload(data))
+      end
+
+      protected
+
+      def fields_to_display(data)
+        L2MET_FIELDS + additional_fields(data)
+      end
+
+      def additional_fields(data)
+        (data.keys - L2MET_FIELDS) - UNWANTED_FIELDS
       end
 
       def format(key, value)
         key = "measure#page.#{key}" if value.is_a?(Float)
 
         super(key, value)
-      end
-
-      def fields_to_display(data)
-        L2MET_FIELDS + (data.keys - L2MET_FIELDS) - [:controller, :action]
       end
 
       def modify_payload(data)
