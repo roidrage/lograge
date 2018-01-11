@@ -129,11 +129,12 @@ describe Lograge do
 
     context 'when base_controller_class option is set' do
       let(:controller_class) { 'ActionController::API' }
+      let(:base_controller_class) { controller_class }
       let(:app_config) do
         config_obj = ActiveSupport::OrderedOptions.new.tap do |config|
           config.action_dispatch = double(rack_cache: false)
           config.lograge = Lograge::OrderedOptions.new
-          config.lograge.base_controller_class = controller_class
+          config.lograge.base_controller_class = base_controller_class
           config.lograge.custom_payload do |c|
             { user_id: c.current_user_id }
           end
@@ -142,6 +143,12 @@ describe Lograge do
       end
 
       it { should eq(payload.merge(appended: true, custom_payload: { user_id: '24601' })) }
+
+      context 'when base_controller_class is an array' do
+        let(:base_controller_class) { [controller_class] }
+
+        it { should eq(payload.merge(appended: true, custom_payload: { user_id: '24601' })) }
+      end
     end
   end
 

@@ -65,12 +65,23 @@ Rails.application.configure do
 end
 ```
 
-If you're using Rails 5's API-only mode and inherit from `ActionController::API`:
+If you're using Rails 5's API-only mode and inherit from
+`ActionController::API`, you must define it as the controller base class which
+lograge will patch:
 
 ```ruby
 # config/initializers/lograge.rb
 Rails.application.configure do
   config.lograge.base_controller_class = 'ActionController::API'
+end
+```
+
+If you use multiple base controller classes in your application, specify an array:
+
+```ruby
+# config/initializers/lograge.rb
+Rails.application.configure do
+  config.lograge.base_controller_class = ['ActionController::API', 'ActionController::Base']
 end
 ```
 
