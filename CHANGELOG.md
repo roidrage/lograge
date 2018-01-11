@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.8.0
+
+* Configure multiple base controllers [#230](https://github.com/roidrage/lograge/pull/230)
+
 ### 0.7.1
 
 * Bug fix for configurable controllers [#228](https://github.com/roidrage/lograge/pull/228)
