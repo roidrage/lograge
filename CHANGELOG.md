@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.9.0
+
+* Relax Rails gem dependency [#235](https://github.com/roidrage/lograge/pull/235)
+
 ### 0.8.0
 
 * Configure multiple base controllers [#230](https://github.com/roidrage/lograge/pull/230)
