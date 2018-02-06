@@ -2,7 +2,8 @@ language: ruby
 cache: bundle
 sudo: false
 rvm:
-  - 2.4.1
+  - 2.5
+  - 2.4
   - jruby-9.1.15.0
   - jruby-head
 before_install:
