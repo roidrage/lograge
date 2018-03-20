@@ -53,6 +53,10 @@ module Lograge
 
     def extract_path(payload)
       path = payload[:path]
+      strip_query_string(path)
+    end
+
+    def strip_query_string(path)
       index = path.index('?')
       index ? path[0, index] : path
     end
@@ -104,7 +108,7 @@ module Lograge
       return {} unless location
 
       RequestStore.store[:lograge_location] = nil
-      { location: location }
+      { location: strip_query_string(location) }
     end
 
     def extract_unpermitted_params
