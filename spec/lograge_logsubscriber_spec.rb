@@ -167,7 +167,7 @@ describe Lograge::RequestLogSubscriber do
 
     context 'with a redirect' do
       before do
-        RequestStore.store[:lograge_location] = 'http://www.example.com'
+        RequestStore.store[:lograge_location] = 'http://www.example.com?key=value'
       end
 
       it 'adds the location to the log line' do
