@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.10.0
+
+* Strip querystring from `Location` header [#241](https://github.com/roidrage/lograge/pull/241)
+
 ### 0.9.0
 
 * Relax Rails gem dependency [#235](https://github.com/roidrage/lograge/pull/235)
