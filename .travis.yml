@@ -4,7 +4,7 @@ sudo: false
 rvm:
   - 2.5
   - 2.4
-  - jruby-9.1.15.0
+  - jruby-9.1.17.0
   - jruby-head
 before_install:
   - gem install bundler
