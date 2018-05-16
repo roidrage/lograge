@@ -32,7 +32,6 @@ module Lograge
     private
 
     def extract_request(event, payload)
-      payload = event.payload
       data = initial_data(payload)
       data.merge!(extract_status(payload))
       data.merge!(extract_runtimes(event, payload))
