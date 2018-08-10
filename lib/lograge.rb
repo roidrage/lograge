@@ -117,6 +117,7 @@ module Lograge
   end
 
   def setup(app)
+    require 'lograge/rails_ext/action_dispatch/debug_exceptions'
     self.application = app
     disable_rack_cache_verbose_output
     keep_original_rails_log
