@@ -10,7 +10,7 @@ module Lograge
         exception: [wrapper.exception.class.name, wrapper.exception.message]
       }
       ActiveSupport::Notifications.instrument 'process_exception.action_controller', payload
-      super(request, wrapper) if lograge_config.keep_original_rails_log
+      super(request, wrapper) if Lograge.lograge_config.keep_original_rails_log
     end
   end
   ActionDispatch::DebugExceptions.prepend DebugExceptions
