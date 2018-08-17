@@ -16,6 +16,8 @@ env:
   global:
     - JRUBY_OPTS='-J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-Djruby.compile.mode=OFF -J-Djruby.compile.invokedynamic=false'
 gemfile:
+  - gemfiles/Gemfile.actionpack5.2
+  - gemfiles/Gemfile.actionpack5.1
   - gemfiles/Gemfile.actionpack5.0
   - gemfiles/Gemfile.actionpack4.0
   - Gemfile
