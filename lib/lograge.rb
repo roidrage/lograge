@@ -1,4 +1,5 @@
 require 'lograge/version'
+require 'lograge/formatters/helpers/method_and_path'
 require 'lograge/formatters/cee'
 require 'lograge/formatters/json'
 require 'lograge/formatters/graylog2'
@@ -8,10 +9,18 @@ require 'lograge/formatters/lines'
 require 'lograge/formatters/logstash'
 require 'lograge/formatters/ltsv'
 require 'lograge/formatters/raw'
-require 'lograge/log_subscriber'
+require 'lograge/log_subscribers/base'
+require 'lograge/log_subscribers/action_cable'
+require 'lograge/log_subscribers/action_controller'
+require 'lograge/silent_logger'
 require 'lograge/ordered_options'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
+
+if defined?(ActionCable)
+  require 'lograge/rails_ext/action_cable/channel/base'
+  require 'lograge/rails_ext/action_cable/connection/base'
+end
 
 # rubocop:disable ModuleLength
 module Lograge
@@ -63,8 +72,12 @@ module Lograge
   def ignore_actions(actions)
     ignore(lambda do |event|
              params = event.payload
-             Array(actions).include?("#{params[:controller]}##{params[:action]}")
+             Array(actions).include?("#{controller_field(params)}##{params[:action]}")
            end)
+  end
+
+  def controller_field(params)
+    params[:controller] || params[:channel_class] || params[:connection_class]
   end
 
   def ignore_tests
@@ -122,6 +135,8 @@ module Lograge
     keep_original_rails_log
 
     attach_to_action_controller
+    attach_to_action_cable if defined?(ActionCable)
+
     set_lograge_log_options
     setup_custom_payload
     support_deprecated_config # TODO: Remove with version 1.0
@@ -139,24 +154,29 @@ module Lograge
   end
 
   def attach_to_action_controller
-    Lograge::RequestLogSubscriber.attach_to :action_controller
+    Lograge::LogSubscribers::ActionController.attach_to :action_controller
+  end
+
+  def attach_to_action_cable
+    Lograge::LogSubscribers::ActionCable.attach_to :action_cable
   end
 
   def setup_custom_payload
     return unless lograge_config.custom_payload_method.respond_to?(:call)
 
-    base_controller_classes = Array(lograge_config.base_controller_class)
-    base_controller_classes.map! { |klass| klass.try(:constantize) }
-    if base_controller_classes.empty?
-      base_controller_classes << ActionController::Base
+    base_classes = Array(lograge_config.base_controller_class)
+    base_classes.map! { |klass| klass.try(:constantize) }
+    if base_classes.empty?
+      base_classes << ActionController::Base
+      base_classes << ActionCable::Channel::Base if defined?(ActionCable)
     end
 
-    base_controller_classes.each do |base_controller_class|
-      extend_base_controller_class(base_controller_class)
+    base_classes.each do |base_class|
+      extend_base_class(base_class)
     end
   end
 
-  def extend_base_controller_class(klass)
+  def extend_base_class(klass)
     append_payload_method = klass.instance_method(:append_info_to_payload)
     custom_payload_method = lograge_config.custom_payload_method
 
@@ -181,6 +201,9 @@ module Lograge
     return if lograge_config.keep_original_rails_log
 
     require 'lograge/rails_ext/rack/logger'
+
+    require 'lograge/rails_ext/action_cable/server/base' if defined?(ActionCable)
+
     Lograge.remove_existing_log_subscriptions
   end
 

@@ -1,6 +1,8 @@
 module Lograge
   module Formatters
     class Graylog2
+      include Lograge::Formatters::Helpers::MethodAndPath
+
       def call(data)
         # Cloning because we don't want to mess with the original when mutating keys.
         data_clone = data.clone
@@ -23,7 +25,7 @@ module Lograge
       end
 
       def short_message(data)
-        "[#{data[:status]}] #{data[:method]} #{data[:path]} (#{data[:controller]}##{data[:action]})"
+        "[#{data[:status]}]#{method_and_path_string(data)}(#{data[:controller]}##{data[:action]})"
       end
     end
   end
