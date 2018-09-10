@@ -16,6 +16,10 @@ module Lograge
       logger.send(Lograge.log_level, formatted_message)
     end
 
+    def halted_callback(event)
+      RequestStore.store[:lograge_halted_callback] = event.payload[:filter]
+    end
+
     def redirect_to(event)
       RequestStore.store[:lograge_location] = event.payload[:location]
     end
@@ -37,6 +41,7 @@ module Lograge
       data.merge!(extract_runtimes(event, payload))
       data.merge!(extract_location)
       data.merge!(extract_unpermitted_params)
+      data.merge!(extract_halted_callback)
       data.merge!(custom_options(event))
     end
 
@@ -116,6 +121,14 @@ module Lograge
 
       RequestStore.store[:lograge_unpermitted_params] = nil
       { unpermitted_params: unpermitted_params }
+    end
+
+    def extract_halted_callback
+      halted_callback = RequestStore.store[:lograge_halted_callback]
+      return {} unless halted_callback
+
+      RequestStore.store[:lograge_halted_callback] = nil
+      { halted_callback: halted_callback.to_s }
     end
   end
 end
