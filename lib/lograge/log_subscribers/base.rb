@@ -14,6 +14,10 @@ module Lograge
         Lograge.logger.presence || super
       end
 
+      def halted_callback(event)
+        RequestStore.store[:lograge_halted_callback] = event.payload[:filter]
+      end
+
       private
 
       def process_main_event(event)
@@ -33,6 +37,7 @@ module Lograge
         data.merge!(extract_runtimes(event, payload))
         data.merge!(extract_location)
         data.merge!(extract_unpermitted_params)
+        data.merge!(extract_halted_callback)
         data.merge!(custom_options(event))
       end
 
@@ -66,6 +71,14 @@ module Lograge
         else
           {}
         end
+      end
+
+      def extract_halted_callback
+        halted_callback = RequestStore.store[:lograge_halted_callback]
+        return {} unless halted_callback
+
+        RequestStore.store[:lograge_halted_callback] = nil
+        { halted_callback: halted_callback.to_s }
       end
 
       def custom_options(event)

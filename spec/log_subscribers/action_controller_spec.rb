@@ -98,6 +98,23 @@ describe Lograge::LogSubscribers::ActionController do
     end
   end
 
+  context 'when processing halted callback' do
+    let(:halted_callback_event) do
+      ActiveSupport::Notifications::Event.new(
+        'halted_callback.action_controller',
+        Time.now,
+        Time.now,
+        1,
+        filter: :user_authenticated?
+      )
+    end
+
+    it 'stores the parameters in a thread local variable' do
+      subscriber.halted_callback(halted_callback_event)
+      expect(RequestStore.store[:lograge_halted_callback]).to eq(:user_authenticated?)
+    end
+  end
+
   context 'when processing an action with lograge output' do
     before do
       Lograge.formatter = Lograge::Formatters::KeyValue.new
@@ -230,6 +247,27 @@ describe Lograge::LogSubscribers::ActionController do
         subscriber.process_action(event_without_allocations)
         expect(log_output.string).to_not match(/allocations=/)
       end
+    end
+    
+    context 'with halted_callback' do
+      before do
+        RequestStore.store[:lograge_halted_callback] = :user_authenticated?
+      end
+
+      it 'adds the unpermitted_params to the log line' do
+        subscriber.process_action(event)
+        expect(log_output.string).to include('halted_callback=user_authenticated?')
+      end
+
+      it 'removes the thread local variable' do
+        subscriber.process_action(event)
+        expect(RequestStore.store[:lograge_halted_callback]).to be_nil
+      end
+    end
+
+    it 'does not include unpermitted_params by default' do
+      subscriber.process_action(event)
+      expect(log_output.string).to_not include('halted_callback=')
     end
   end
 
