@@ -140,7 +140,7 @@ Alternatively, you can add a hook for accessing controller methods directly (e.g
 This hash is merged into the log data automatically.
 
 ```ruby
-MyApp::Application.configure do
+Rails.application.configure do
   config.lograge.enabled = true
 
   config.lograge.custom_payload do |controller|
