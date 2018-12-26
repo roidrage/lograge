@@ -201,7 +201,7 @@ The available formatters are:
   Lograge::Formatters::Raw.new       # Returns a ruby hash object
 ```
 
-In addition to the formatters, you can manipulate the data your self by passing
+In addition to the formatters, you can manipulate the data yourself by passing
 an object which responds to #call:
 
 ```ruby
