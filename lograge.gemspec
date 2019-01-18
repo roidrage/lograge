@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = "Tame Rails' multi-line logging into a single line per request"
   s.license     = 'MIT'
 
-  s.files = `git ls-files lib`.split("\n") + ["license.txt"]
+  s.files = `git ls-files lib license.txt`.split("\n")
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rubocop', '0.46.0'
