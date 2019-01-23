@@ -110,6 +110,8 @@ module Lograge
       ActionController::LogSubscriber.send(:subscriber)
     when 'action_view'
       ActionView::LogSubscriber.send(:subscriber)
+    when 'active_record'
+      ActiveRecord::LogSubscriber.send(:subscriber)
     end
   end
 
