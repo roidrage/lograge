@@ -12,8 +12,9 @@ module Lograge
       payload = event.payload
       data = extract_request(event, payload)
       data = before_format(data, payload)
+      log_level = Lograge.map_log_level ? log_level_for_status(payload) : Lograge.log_level
       formatted_message = Lograge.formatter.call(data)
-      logger.send(Lograge.log_level, formatted_message)
+      logger.send(log_level, formatted_message)
     end
 
     def redirect_to(event)
@@ -67,6 +68,19 @@ module Lograge
     else
       def extract_format(payload)
         payload[:format]
+      end
+    end
+
+    def log_level_for_status(payload)
+      status = extract_status(payload)[:status]
+      if status < 300
+        :info
+      elsif status < 400
+        :warn
+      elsif status < 500
+        :error
+      else
+        :fatal
       end
     end
 
