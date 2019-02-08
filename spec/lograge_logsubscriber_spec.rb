@@ -32,7 +32,59 @@ describe Lograge::RequestLogSubscriber do
     )
   end
 
+  let(:event_with_error) do
+    ActiveSupport::Notifications::Event.new(
+      'process_action.action_controller',
+      Time.now,
+      Time.now,
+      2,
+      status: 400,
+      controller: 'HomeController',
+      action: 'index',
+      format: 'application/json',
+      method: 'GET',
+      path: '/home?foo=bar',
+      params: event_params,
+      db_runtime: 0.02,
+      view_runtime: 0.01
+    )
+  end
+
   before { Lograge.logger = logger }
+
+  context 'log_level' do
+    context 'with map_log_level = false (default)' do
+      it 'outputs ok response as INFO' do
+        expect(logger).to receive(:info)
+        expect(logger).to_not receive(:error)
+        subscriber.process_action(event)
+      end
+
+      it 'outputs error response as INFO' do
+        expect(logger).to receive(:info)
+        expect(logger).to_not receive(:error)
+        subscriber.process_action(event_with_error)
+      end
+    end
+
+    context 'with map_log_level = true' do
+      before do
+        Lograge.map_log_level = true
+      end
+
+      it 'outputs ok response as INFO' do
+        expect(logger).to receive(:info)
+        expect(logger).to_not receive(:error)
+        subscriber.process_action(event)
+      end
+
+      it 'outputs error response as ERROR' do
+        expect(logger).to_not receive(:info)
+        expect(logger).to receive(:error)
+        subscriber.process_action(event_with_error)
+      end
+    end
+  end
 
   context 'with custom_options configured for cee output' do
     before do
