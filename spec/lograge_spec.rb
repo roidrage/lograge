@@ -212,4 +212,62 @@ describe Lograge do
       end
     end
   end
+
+  describe 'handling exceptions' do
+    let(:app_config) do
+      double(config:
+        ActiveSupport::OrderedOptions.new.tap do |config|
+          config.action_dispatch = double(rack_cache: false)
+          config.lograge = ActiveSupport::OrderedOptions.new
+        end)
+    end
+    let(:debug_exceptions) do
+      # Workaround `undefined method 'blamed_files'` bug
+      require 'active_support/dependencies'
+      # Workaround `undefined method 'with_indifferent_access'` bug:
+      # https://github.com/rails/rails/issues/33634
+      require 'active_support/core_ext/hash/indifferent_access'
+      ActionDispatch::DebugExceptions.new(->(_) { raise })
+    end
+    let(:output) { StringIO.new }
+    let(:logger) { Logger.new(output) }
+    let(:env) do
+      Rack::MockRequest.env_for(
+        '',
+        'action_dispatch.show_detailed_exceptions' => true,
+        'action_dispatch.logger' => logger
+      )
+    end
+
+    before do
+      Lograge.setup(app_config)
+      Lograge.logger = logger
+    end
+
+    it 'adds formatted exception log' do
+      debug_exceptions.call(env)
+      expect(output.string).to match(/status=500 error='RuntimeError: '/)
+    end
+
+    it 'removes original exception log' do
+      debug_exceptions.call(env)
+      expect(output.string).not_to match(/FATAL -- : RuntimeError/)
+    end
+
+    context 'when keep_original_rails_log is true' do
+      before do
+        app_config.config.lograge.keep_original_rails_log = true
+      end
+
+      it 'adds formatted exception log' do
+        debug_exceptions.call(env)
+        expect(output.string).to match(/status=500 error='RuntimeError: '/)
+      end
+
+      it 'keeps original exception log' do
+        debug_exceptions.call(env)
+        expect(output.string).to match(/FATAL -- : RuntimeError/)
+      end
+    end
+  end
 end

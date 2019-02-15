@@ -15,6 +15,7 @@ module Lograge
       formatted_message = Lograge.formatter.call(data)
       logger.send(Lograge.log_level, formatted_message)
     end
+    alias process_exception process_action
 
     def redirect_to(event)
       RequestStore.store[:lograge_location] = event.payload[:location]
