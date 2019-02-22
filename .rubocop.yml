@@ -11,5 +11,8 @@ AllCops:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/ClassLength:
+  Enabled: false
+
 Style/EmptyMethod:
   Enabled: false

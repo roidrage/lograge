@@ -87,6 +87,10 @@ module Lograge
   mattr_accessor :log_level
   self.log_level = :info
 
+  # Log level may be calculated based on http status by setting map_log_level = true
+  mattr_accessor :map_log_level
+  self.map_log_level = false
+
   # The emitted log format
   #
   # Currently supported formats are>
@@ -171,6 +175,7 @@ module Lograge
     Lograge.custom_options = lograge_config.custom_options
     Lograge.before_format = lograge_config.before_format
     Lograge.log_level = lograge_config.log_level || :info
+    Lograge.map_log_level = lograge_config.map_log_level
   end
 
   def disable_rack_cache_verbose_output
