@@ -12,6 +12,10 @@ describe Lograge::Formatters::Logstash do
 
   subject { described_class.new.call(payload) }
 
+  it "includes the 'message' key/value" do
+    expect(subject).to match(%r{"message":"\[200\] GET \/ \(welcome#index\)"})
+  end
+
   it "includes the 'custom' key/value" do
     expect(subject).to match(/"custom":"data"/)
   end
