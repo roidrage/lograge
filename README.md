@@ -197,6 +197,7 @@ The available formatters are:
   Lograge::Formatters::KeyValue.new  # default lograge format
   Lograge::Formatters::Json.new
   Lograge::Formatters::Logstash.new
+  Lograge::Formatters::LogstashRaw.new # Returns a lostash event object
   Lograge::Formatters::LTSV.new
   Lograge::Formatters::Raw.new       # Returns a ruby hash object
 ```
