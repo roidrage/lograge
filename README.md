@@ -204,6 +204,7 @@ The available formatters are:
   Lograge::Formatters::Cee.new
   Lograge::Formatters::Graylog2.new
   Lograge::Formatters::KeyValue.new  # default lograge format
+  Lograge::Formatters::KeyValueDeep.new
   Lograge::Formatters::Json.new
   Lograge::Formatters::Logstash.new
   Lograge::Formatters::LTSV.new
