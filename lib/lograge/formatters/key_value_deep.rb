@@ -7,32 +7,35 @@ module Lograge
 
       protected
 
-      def flatten_keys(data, prefix='')
-        case data
-        when Array
-          result = {}
-          data.each_with_index do |value, key|
-            key = "#{prefix}_#{key}" if prefix.length > 0
-            if [Hash, Array].include? value.class
-              result.merge!(flatten_keys(value, key))
-            else
-              result[key] = value
-            end
-          end
-          return result
-        when Hash
-          result = {}
-          data.map do |key, value|
-            key = "#{prefix}_#{key}" if prefix.length > 0
-            if [Hash, Array].include? value.class
-              result.merge!(flatten_keys(value, key))
-            else
-              result[key] = value
-            end
-          end
-          return result
-        end
+      def flatten_keys(data, prefix = '')
+        return flatten_object(data, prefix) if [Hash, Array].include? data.class
+
         data
+      end
+
+      def flatten_object(data, prefix)
+        result = {}
+        loop_on_object(data) do |key, value|
+          key = "#{prefix}_#{key}" unless prefix.empty?
+          if [Hash, Array].include? value.class
+            result.merge!(flatten_keys(value, key))
+          else
+            result[key] = value
+          end
+        end
+        result
+      end
+
+      def loop_on_object(data)
+        if data.class == Array
+          data.each_with_index do |value, index|
+            yield index, value
+          end
+          return
+        end
+        data.each do |key, value|
+          yield key, value
+        end
       end
     end
   end

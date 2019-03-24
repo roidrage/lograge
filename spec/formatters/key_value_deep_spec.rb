@@ -34,9 +34,11 @@ describe Lograge::Formatters::KeyValueDeep do
     expect(subject).to include('params_object_key_array_1=2')
   end
 
-  it "return the correct serialization" do
+  it 'return the correct serialization' do
     puts subject
-    expect(subject).to eq('custom=data status=200 method=GET path=/ controller=welcome action=index params_object_key=value params_object_key_array_0=1 params_object_key_array_1=2 params_object_key_array_2=3.40')
+    expect(subject).to eq("custom=data status=200 method=GET path=/ \
+controller=welcome action=index params_object_key=value params_object_key_array_0=1 \
+params_object_key_array_1=2 params_object_key_array_2=3.40")
   end
 
   it_behaves_like 'a key value formatter'
