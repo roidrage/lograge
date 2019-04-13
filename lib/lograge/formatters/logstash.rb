@@ -1,11 +1,13 @@
 module Lograge
   module Formatters
     class Logstash
+      include Lograge::Formatters::Helpers::MethodAndPath
+
       def call(data)
         load_dependencies
         event = LogStash::Event.new(data)
 
-        event['message'] = "[#{data[:status]}] #{data[:method]} #{data[:path]} (#{data[:controller]}##{data[:action]})"
+        event['message'] = "[#{data[:status]}]#{method_and_path_string(data)}(#{data[:controller]}##{data[:action]})"
         event.to_json
       end
 

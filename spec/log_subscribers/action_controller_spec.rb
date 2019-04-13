@@ -1,17 +1,17 @@
-require 'lograge/log_subscriber'
+require 'lograge/log_subscribers/action_controller'
 require 'active_support/notifications'
 require 'active_support/core_ext/string'
 require 'logger'
 require 'active_record'
 require 'rails'
 
-describe Lograge::RequestLogSubscriber do
+describe Lograge::LogSubscribers::ActionController do
   let(:log_output) { StringIO.new }
   let(:logger) do
     Logger.new(log_output).tap { |logger| logger.formatter = ->(_, _, _, msg) { msg } }
   end
 
-  let(:subscriber) { Lograge::RequestLogSubscriber.new }
+  let(:subscriber) { Lograge::LogSubscribers::ActionController.new }
   let(:event_params) { { 'foo' => 'bar' } }
 
   let(:event) do
