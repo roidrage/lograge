@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.11.0
+
+* Add support for Action Cable [#257](https://github.com/roidrage/lograge/pull/257)
+
 ### 0.10.0
 
 * Strip querystring from `Location` header [#241](https://github.com/roidrage/lograge/pull/241)
