@@ -166,10 +166,7 @@ module Lograge
 
     base_classes = Array(lograge_config.base_controller_class)
     base_classes.map! { |klass| klass.try(:constantize) }
-    if base_classes.empty?
-      base_classes << ActionController::Base
-      base_classes << ActionCable::Channel::Base if defined?(ActionCable)
-    end
+    base_classes << ActionController::Base if base_classes.empty?
 
     base_classes.each do |base_class|
       extend_base_class(base_class)
