@@ -142,7 +142,7 @@ This hash is merged into the log data automatically.
 Rails.application.configure do
   config.lograge.enabled = true
 
-  config.lograge.custom_payload_method do |controller|
+  config.lograge.custom_payload do |controller|
     {
       host: controller.request.host,
       user_id: controller.current_user.try(:id)
