@@ -216,7 +216,8 @@ Thanks to the notification system that was introduced in Rails 3, replacing the
 logging is easy. Lograge unhooks all subscriptions from
 `ActionController::LogSubscriber` and `ActionView::LogSubscriber`, and hooks in
 its own log subscription, but only listening for two events: `process_action`
-and `redirect_to`. It makes sure that only subscriptions from those two classes
+and `redirect_to` (in case of standard controller logs).
+It makes sure that only subscriptions from those two classes
 are removed. If you happened to hook in your own, they'll be safe.
 
 Unfortunately, when a redirect is triggered by your application's code,
@@ -256,6 +257,23 @@ enabled), Lograge disables verbosity for rack-cache, which is unfortunately
 enabled by default.
 
 There, a single line per request. Beautiful.
+
+## Action Cable ##
+
+Starting with version 0.11.0, Lograge introduced support for Action Cable logs.
+This proved to be a particular challenge since the framework code is littered
+with multiple (and seemingly random) logger calls in a number of internal classes.
+In order to deal with it, the default Action Cable logger was silenced.
+As a consequence, calling logger e.g. in user-defined `Connection` or `Channel`
+classes has no effect - `Rails.logger` (or any other logger instance)
+has to be used instead.
+
+Additionally, while standard controller logs rely on `process_action` and `redirect_to`
+instrumentations only, Action Cable messages are generated from multiple events:
+`perform_action`, `subscribe`, `unsubscribe`, `connect`, and `disconnect`.
+`perform_action` is the only one included in the actual Action Cable code and
+others have been added by monkey patching [`ActionCable::Channel::Base`](https://github.com/roidrage/lograge/blob/master/lib/lograge/rails_ext/action_cable/channel/base.rb) and
+[`ActionCable::Connection::Base`](https://github.com/roidrage/lograge/blob/master/lib/lograge/rails_ext/action_cable/connection/base.rb) classes.
 
 ## What it doesn't do ##
 
