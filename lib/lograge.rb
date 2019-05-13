@@ -17,11 +17,6 @@ require 'lograge/ordered_options'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
 
-if defined?(ActionCable)
-  require 'lograge/rails_ext/action_cable/channel/base'
-  require 'lograge/rails_ext/action_cable/connection/base'
-end
-
 # rubocop:disable ModuleLength
 module Lograge
   module_function
@@ -158,6 +153,9 @@ module Lograge
   end
 
   def attach_to_action_cable
+    require 'lograge/rails_ext/action_cable/channel/base'
+    require 'lograge/rails_ext/action_cable/connection/base'
+
     Lograge::LogSubscribers::ActionCable.attach_to :action_cable
   end
 
