@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.11.2
+
+* Resolve a bug with Action Cable registration [#286](https://github.com/roidrage/lograge/pull/286)
+
 ### 0.11.1
 
 * Resolve a bug with Action Cable registration [#289](https://github.com/roidrage/lograge/pull/289)
