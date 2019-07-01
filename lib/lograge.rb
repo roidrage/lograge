@@ -103,23 +103,30 @@ module Lograge
   mattr_accessor :formatter
 
   def remove_existing_log_subscriptions
-    ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
-      case subscriber
-      when ActionView::LogSubscriber
-        unsubscribe(:action_view, subscriber)
-      when ActionController::LogSubscriber
-        unsubscribe(:action_controller, subscriber)
-      end
+    patterns = ActiveSupport::LogSubscriber.log_subscribers.map(&:patterns).flatten.uniq
+
+    patterns.each do |pattern|
+      subscriber = subscriber_for_pattern(pattern)
+      next unless subscriber
+      unsubscribe pattern, subscriber
     end
   end
 
-  def unsubscribe(component, subscriber)
-    events = subscriber.public_methods(false).reject { |method| method.to_s == 'call' }
-    events.each do |event|
-      ActiveSupport::Notifications.notifier.listeners_for("#{event}.#{component}").each do |listener|
-        if listener.instance_variable_get('@delegate') == subscriber
-          ActiveSupport::Notifications.unsubscribe listener
-        end
+  def subscriber_for_pattern(pattern)
+    case pattern.split('.').last
+    when 'action_controller'
+      ActionController::LogSubscriber.send(:subscriber)
+    when 'action_view'
+      ActionView::LogSubscriber.send(:subscriber)
+    when 'active_record'
+      ActiveRecord::LogSubscriber.send(:subscriber)
+    end
+  end
+
+  def unsubscribe(pattern, subscriber)
+    ActiveSupport::Notifications.notifier.listeners_for(pattern).each do |listener|
+      if listener.instance_variable_get('@delegate') == subscriber
+        ActiveSupport::Notifications.unsubscribe listener
       end
     end
   end
