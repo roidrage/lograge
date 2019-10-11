@@ -113,6 +113,10 @@ describe Lograge do
         def current_user_id
           '24601'
         end
+
+        def self.prepend_before_action(&block)
+          block.call(new)
+        end
       end
     end
     let(:payload) { { timestamp: Date.parse('5-11-1955') } }

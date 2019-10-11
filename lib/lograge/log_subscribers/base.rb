@@ -58,6 +58,10 @@ module Lograge
       end
 
       def custom_options(event)
+        # TODO: unsure if MergedWithLogragePayload should care about the user's
+        # custom_options for now (if it did, it seems that it would only make sense
+        # to call custom_options twice, one for the process_action event as is, plus one for
+        # the newly listened to start_processing.)
         options = Lograge.custom_options(event) || {}
         options.merge event.payload[:custom_payload] || {}
       end
