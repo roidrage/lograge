@@ -5,6 +5,10 @@ module Lograge
         process_main_event(event)
       end
 
+      def start_processing(event)
+        RequestStore.store[:lograge_event_payload] = event.payload.without(:headers, :params)
+      end
+
       def redirect_to(event)
         RequestStore.store[:lograge_location] = event.payload[:location]
       end
