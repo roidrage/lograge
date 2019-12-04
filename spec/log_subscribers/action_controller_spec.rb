@@ -209,6 +209,28 @@ describe Lograge::LogSubscribers::ActionController do
       subscriber.process_action(event)
       expect(log_output.string).to_not include('unpermitted_params=')
     end
+
+    context 'with memory allocations' do
+      it 'includes allocations when available' do
+        event_with_allocations = event.dup
+        event_with_allocations.define_singleton_method :allocations do
+          231
+        end
+
+        subscriber.process_action(event_with_allocations)
+        expect(log_output.string).to match(/allocations=231/)
+      end
+
+      it 'fails gracefully when allocations are unavailable' do
+        event_without_allocations = event.dup
+        if event_without_allocations.respond_to? :allocations
+          event_without_allocations.instance_eval('undef :allocations')
+        end
+
+        subscriber.process_action(event_without_allocations)
+        expect(log_output.string).to_not match(/allocations=/)
+      end
+    end
   end
 
   context 'with custom_options configured for lograge output' do
