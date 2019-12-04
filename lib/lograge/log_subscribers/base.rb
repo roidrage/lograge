@@ -29,6 +29,7 @@ module Lograge
       def extract_request(event, payload)
         data = initial_data(payload)
         data.merge!(extract_status(payload))
+        data.merge!(extract_allocations(event))
         data.merge!(extract_runtimes(event, payload))
         data.merge!(extract_location)
         data.merge!(extract_unpermitted_params)
@@ -57,6 +58,14 @@ module Lograge
 
       def get_error_status_code(exception_class_name)
         ActionDispatch::ExceptionWrapper.status_code_for_exception(exception_class_name)
+      end
+
+      def extract_allocations(event)
+        if (allocations = (event.respond_to?(:allocations) && event.allocations))
+          { allocations: allocations }
+        else
+          {}
+        end
       end
 
       def custom_options(event)
