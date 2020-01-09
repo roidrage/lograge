@@ -22,3 +22,7 @@ gemfile:
   - gemfiles/Gemfile.actionpack5.0
   - gemfiles/Gemfile.actionpack4.0
   - Gemfile
+jobs:
+  exclude:
+  - rvm: 2.7
+    gemfile: gemfiles/Gemfile.actionpack4.0
