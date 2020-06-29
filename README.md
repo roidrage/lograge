@@ -6,22 +6,20 @@ Lograge - Taming Rails' Default Request Logging
 
 Lograge is an attempt to bring sanity to Rails' noisy and unusable, unparsable
 and, in the context of running multiple processes and servers, unreadable
-default logging output. Rails' default approach to log everything is great
-during development, it's terrible when running it in production. It pretty much
+default logging output. Rails' default approach of logging everything is great
+during development, but it's terrible when your code is running in production. It pretty much
 renders Rails logs useless to me.
 
 Lograge is a work in progress. I appreciate constructive feedback and criticism.
 My main goal is to improve Rails' logging and to show people that they don't
 need to stick with its defaults anymore if they don't want to.
 
-Instead of trying solving the problem of having multiple lines per request by
-switching Rails' logger for something that outputs syslog lines or adds a
-request token, Lograge replaces Rails' request logging entirely, reducing the
-output per request to a single line with all the important information, removing
-all that clutter Rails likes to include and that gets mingled up so nicely when
-multiple processes dump their output into a single file.
+LogRage reduces the complexity of Rails logs that have multiple lines per request by replacing
+Rails' request logging entirely. By doing so, LogRage reduces the output per request to a single line 
+with all the important information, removing all the clutter that Rails likes to include 
+and that gets mixed up in confusing ways when multiple processes dump their output into a single file.
 
-Instead of having an unparsable amount of logging output like this:
+Standard Rails logging several lines of logging output for each request, that contain information that may be useful for debugging on your local or development environment but can be confusing in a live environment, like this:
 
 ```
 Started GET "/" for 127.0.0.1 at 2012-03-10 14:28:14 +0100
@@ -34,16 +32,18 @@ Processing by HomeController#index as HTML
 Completed 200 OK in 79ms (Views: 78.8ms | ActiveRecord: 0.0ms)
 ```
 
-you get a single line with all the important information, like this:
+When you use LogRage, however, you get a log that condenses this to a single line with (hopefully) all the important information, like this:
 
 ```
 method=GET path=/jobs/833552.json format=json controller=JobsController  action=show status=200 duration=58.33 view=40.43 db=15.26
 ```
 
-The second line is easy to grasp with a single glance and still includes all the
-relevant information as simple key-value pairs. The syntax is heavily inspired
-by the log output of the Heroku router. It doesn't include any timestamp by
-default, instead it assumes you use a proper log formatter instead.
+This condensed presents the information as key-value pairs, which should help make clear 
+exactly what information is present and, importantly, ensures that it's clear which aspects 
+of the log relate to the same request. The syntax is heavily inspired by the log output of 
+the Heroku router. LogRage doesn't include a timestamp by default, so I recommend that you 
+use a proper log formatter to view the file if you need this information. (However, see below 
+for how to add a timestamp if you prefer it.)
 
 ## Installation ##
 
@@ -84,7 +84,50 @@ Rails.application.configure do
 end
 ```
 
-You can also add a hook for own custom data
+## Configuration ##
+
+You can add a timestamp to the output log lines by adding a configuraton option as follows:
+
+```ruby
+Rails.application.configure do
+  config.lograge.enabled = true
+
+  # add time to lograge
+  config.lograge.custom_options = lambda do |event|
+    { time: Time.now }
+  end
+end
+```
+
+You can keep the original (and verbose) Rails logger by following this configuration:
+
+```ruby
+Rails.application.configure do
+  config.lograge.keep_original_rails_log = true
+
+  config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
+end
+```
+
+Alternatively, to further clean up your logging, you can tell Lograge to skip log messages
+that meet criteria that you set.  You can skip log messages generated from particular controller
+actions, or write a custom handler to skip messages based on data in the log event:
+
+```ruby
+# config/environments/production.rb
+Rails.application.configure do
+  config.lograge.enabled = true
+
+  config.lograge.ignore_actions = ['HomeController#index', 'AController#an_action']
+  config.lograge.ignore_custom = lambda do |event|
+    # return true here if you want to ignore based on the event
+  end
+end
+```
+
+## Custom log variables
+
+You can add a hook to LogRage that will let you add custom data to your logs:
 
 ```ruby
 # config/environments/staging.rb
@@ -100,30 +143,7 @@ Rails.application.configure do
 end
 ```
 
-Or you can add a timestamp:
-
-```ruby
-Rails.application.configure do
-  config.lograge.enabled = true
-
-  # add time to lograge
-  config.lograge.custom_options = lambda do |event|
-    { time: Time.now }
-  end
-end
-```
-
-You can also keep the original (and verbose) Rails logger by following this configuration:
-
-```ruby
-Rails.application.configure do
-  config.lograge.keep_original_rails_log = true
-
-  config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
-end
-```
-
-You can then add custom variables to the event to be used in `custom_options` (available via the `event.payload` hash, which has to be processed in `custom_options` method to be included in log output, see above):
+You can then add custom variables to your logs by adding them to the `event.payload` hash. This is then processed in the `custom_options` method above. For example:
 
 ```ruby
 # app/controllers/application_controller.rb
@@ -136,7 +156,7 @@ end
 ```
 
 Alternatively, you can add a hook for accessing controller methods directly (e.g. `request` and `current_user`).
-This hash is merged into the log data automatically.
+A hash in this form will be merged into the log data automatically.
 
 ```ruby
 Rails.application.configure do
@@ -151,43 +171,10 @@ Rails.application.configure do
 end
 ```
 
-To further clean up your logging, you can also tell Lograge to skip log messages
-meeting given criteria.  You can skip log messages generated from certain controller
-actions, or you can write a custom handler to skip messages based on data in the log event:
+## Set the output format
 
-```ruby
-# config/environments/production.rb
-Rails.application.configure do
-  config.lograge.enabled = true
-
-  config.lograge.ignore_actions = ['HomeController#index', 'AController#an_action']
-  config.lograge.ignore_custom = lambda do |event|
-    # return true here if you want to ignore based on the event
-  end
-end
-```
-
-Lograge supports multiple output formats. The most common is the default
-lograge key-value format described above. Alternatively, you can also generate
-JSON logs in the json_event format used by [Logstash](http://logstash.net/).
-
-```ruby
-# config/environments/production.rb
-Rails.application.configure do
-  config.lograge.formatter = Lograge::Formatters::Logstash.new
-end
-```
-
-*Note:* When using the logstash output, you need to add the additional gem
-`logstash-event`. You can simply add it to your Gemfile like this
-
-```ruby
-gem "logstash-event"
-```
-
-Done.
-
-The available formatters are:
+Lograge supports multiple output formats. The default format is the key-value 
+format described above, but the full list is:
 
 ```ruby
   Lograge::Formatters::Lines.new
@@ -200,7 +187,26 @@ The available formatters are:
   Lograge::Formatters::Raw.new       # Returns a ruby hash object
 ```
 
-In addition to the formatters, you can manipulate the data yourself by passing
+To generate JSON logs in the json_event format used by [Logstash](http://logstash.net/), 
+for example, set the formatter like this:
+
+```ruby
+# config/environments/production.rb
+Rails.application.configure do
+  config.lograge.formatter = Lograge::Formatters::Logstash.new
+end
+```
+
+*Note:* To use the logstash output, you need to add the additional gem
+`logstash-event` to your Gemfile like this:
+
+```ruby
+gem "logstash-event"
+```
+
+The other formats are available natively, without installing additional gems.
+
+In addition to the predefined formatters, you can manipulate the data yourself by passing
 an object which responds to #call:
 
 ```ruby
