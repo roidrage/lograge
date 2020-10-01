@@ -344,7 +344,7 @@ Then add a new controller action in your `application_controller.rb`.
 
 ```ruby
 def route_not_found
-  render 'error_pages/404', status: :not_found
+  render 'sorry error_pages/404', status: :not_found
 end
 ```
 
