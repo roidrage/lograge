@@ -12,7 +12,8 @@ renders Rails logs useless to me.
 
 Lograge is a work in progress. I appreciate constructive feedback and criticism.
 My main goal is to improve Rails' logging and to show people that they don't
-need to stick with its defaults anymore if they don't want to.
+need to stick with its defaults anymore if they don't want to. [If you want
+a similar project that does more, try `rails_semantic_logger`](https://logger.rocketjob.io/rails).
 
 Instead of trying solving the problem of having multiple lines per request by
 switching Rails' logger for something that outputs syslog lines or adds a
