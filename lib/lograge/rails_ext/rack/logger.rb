@@ -12,7 +12,8 @@ module Rails
       # Overwrites Rails 3.2 code that logs new requests
       def call_app(*args)
         env = args.last
-        @app.call(env)
+        status, headers, body = @app.call(env)
+        [status, headers, ::Rack::BodyProxy.new(body) {} ]
       ensure
         ActiveSupport::LogSubscriber.flush_all!
       end
