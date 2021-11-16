@@ -1,0 +1,49 @@
+on:
+  push:
+    branches: [master]
+
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') }}
+
+    strategy:
+      # TODO(ivy): remove when working
+      fail-fast: false
+
+      matrix:
+        ruby:
+          # MRI
+          - head
+          - "3.1.0-preview1"
+          - "3.0"
+          - "2.7"
+          - "2.6"
+
+          # JRuby
+          - jruby-head
+          - jruby-9.3
+          - jruby-9.2
+
+          # TruffleRuby
+          - truffleruby-head
+          - truffleruby-21.3
+
+        gemfile:
+          - Gemfile
+          - gemfiles/rails5.2.gemfile
+
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - run: bundle exec rake
