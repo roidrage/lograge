@@ -1,3 +1,5 @@
+require 'delegate'
+
 module Lograge
   class SilentLogger < SimpleDelegator
     def initialize(logger)
