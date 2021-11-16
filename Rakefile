@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler/gem_tasks'
 
 require 'rspec/core/rake_task'
@@ -7,6 +9,6 @@ require 'rubocop/rake_task'
 RuboCop::RakeTask.new
 
 desc 'Run specs, rubocop and reek'
-task ci: %w(spec rubocop)
+task ci: %w[spec rubocop]
 
 task default: :ci

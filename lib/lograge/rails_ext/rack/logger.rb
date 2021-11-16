@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/concern'
 require 'rails/rack/logger'
 
@@ -18,8 +20,7 @@ module Rails
       end
 
       # Overwrites Rails 3.0/3.1 code that logs new requests
-      def before_dispatch(_env)
-      end
+      def before_dispatch(_env); end
     end
   end
 end

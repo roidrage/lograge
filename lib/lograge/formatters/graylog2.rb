@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Lograge
   module Formatters
     class Graylog2
@@ -12,7 +14,7 @@ module Lograge
         }
 
         # Add underscore to every key to follow GELF additional field syntax.
-        data_clone.keys.each do |key|
+        data_clone.each_key do |key|
           data_clone[underscore_prefix(key)] = data_clone[key]
           data_clone.delete(key)
         end

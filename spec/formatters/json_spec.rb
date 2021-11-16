@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Lograge::Formatters::Json do
   let(:deserialized_output) { JSON.parse(subject.call(custom: 'data')) }
 

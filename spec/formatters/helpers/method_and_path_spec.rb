@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Lograge::Formatters::Helpers::MethodAndPath do
   describe '#method_and_path_string' do
     let(:instance) do

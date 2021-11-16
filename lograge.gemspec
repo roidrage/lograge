@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './lib/lograge/version'
 
 Gem::Specification.new do |s|
@@ -15,8 +17,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 3.1'
   s.add_development_dependency 'rubocop', '~> 1.23'
 
-  s.add_runtime_dependency 'activesupport', '>= 4'
   s.add_runtime_dependency 'actionpack',    '>= 4'
+  s.add_runtime_dependency 'activesupport', '>= 4'
   s.add_runtime_dependency 'railties',      '>= 4'
   s.add_runtime_dependency 'request_store', '~> 1.0'
 end
