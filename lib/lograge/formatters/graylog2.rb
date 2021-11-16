@@ -6,20 +6,10 @@ module Lograge
       include Lograge::Formatters::Helpers::MethodAndPath
 
       def call(data)
-        # Cloning because we don't want to mess with the original when mutating keys.
-        data_clone = data.clone
-
-        base = {
-          short_message: short_message(data_clone)
-        }
-
         # Add underscore to every key to follow GELF additional field syntax.
-        data_clone.each_key do |key|
-          data_clone[underscore_prefix(key)] = data_clone[key]
-          data_clone.delete(key)
-        end
-
-        data_clone.merge(base)
+        data.transform_keys { |k| underscore_prefix(k) }.merge(
+          short_message: short_message(data)
+        )
       end
 
       def underscore_prefix(key)
