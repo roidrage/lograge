@@ -1,15 +1,24 @@
-LineLength:
-  Max: 120
-
-Documentation:
-  Enabled: false
-
 AllCops:
   Exclude:
     - 'Guardfile'
+  NewCops: enable
+
+Layout/LineLength:
+  Max: 120
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - spec/**/*_spec.rb
 
 Metrics/AbcSize:
   Enabled: false
 
-Style/EmptyMethod:
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*_spec.rb
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Style/Documentation:
   Enabled: false
