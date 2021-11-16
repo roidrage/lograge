@@ -12,6 +12,11 @@ Gem::Specification.new do |s|
   s.description = "Tame Rails' multi-line logging into a single line per request"
   s.license     = 'MIT'
 
+  s.metadata = { 'rubygems_mfa_required' => 'true' }
+
+  # NOTE(ivy): Ruby version 2.5 is the oldest syntax supported by Rubocop.
+  s.required_ruby_version = '>= 2.5'
+
   s.files = `git ls-files lib LICENSE.txt`.split("\n")
 
   s.add_development_dependency 'rspec', '~> 3.1'

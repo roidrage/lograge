@@ -223,5 +223,6 @@ module Lograge
     application.config.lograge
   end
 end
+# rubocop:enable Metrics/ModuleLength
 
 require 'lograge/railtie' if defined?(Rails)
