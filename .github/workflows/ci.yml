@@ -7,12 +7,9 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ endsWith(matrix.ruby, 'head') }}
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.gemfile == 'gemfiles/rails_edge.gemfile' }}
 
     strategy:
-      # TODO(ivy): remove when working
-      fail-fast: false
-
       matrix:
         ruby:
           # MRI
@@ -33,8 +30,9 @@ jobs:
 
         gemfile:
           - Gemfile
-          - gemfiles/rails6.0.gemfile
-          - gemfiles/rails5.2.gemfile
+          - gemfiles/rails_edge.gemfile
+          - gemfiles/rails_6.0.gemfile
+          - gemfiles/rails_5.2.gemfile
 
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
