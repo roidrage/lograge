@@ -1,24 +1,26 @@
+# frozen_string_literal: true
+
 require 'lograge/formatters/key_value'
 
 module Lograge
   module Formatters
     class L2met < KeyValue
-      L2MET_FIELDS = [
-        :method,
-        :path,
-        :format,
-        :source,
-        :status,
-        :error,
-        :duration,
-        :view,
-        :db,
-        :location
+      L2MET_FIELDS = %i[
+        method
+        path
+        format
+        source
+        status
+        error
+        duration
+        view
+        db
+        location
       ].freeze
 
-      UNWANTED_FIELDS = [
-        :controller,
-        :action
+      UNWANTED_FIELDS = %i[
+        controller
+        action
       ].freeze
 
       def call(data)

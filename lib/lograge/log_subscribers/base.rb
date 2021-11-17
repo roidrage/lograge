@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'action_pack'
 require 'active_support/core_ext/class/attribute'
@@ -32,8 +34,8 @@ module Lograge
         data.merge!(custom_options(event))
       end
 
-      %i(initial_data extract_status extract_runtimes
-         extract_location extract_unpermitted_params).each do |method_name|
+      %i[initial_data extract_status extract_runtimes
+         extract_location extract_unpermitted_params].each do |method_name|
         define_method(method_name) { |*_arg| {} }
       end
 

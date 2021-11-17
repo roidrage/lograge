@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Lograge
   module LogSubscribers
     class ActionCable < Base
-      %i(perform_action subscribe unsubscribe connect disconnect).each do |method_name|
+      %i[perform_action subscribe unsubscribe connect disconnect].each do |method_name|
         define_method(method_name) do |event|
           process_main_event(event)
         end

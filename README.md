@@ -1,8 +1,7 @@
-[![Build Status](https://travis-ci.org/roidrage/lograge.svg?branch=master)](https://travis-ci.org/roidrage/lograge)
+[![.github/workflows/ci.yml](https://github.com/roidrage/lograge/actions/workflows/ci.yml/badge.svg)](https://github.com/roidrage/lograge/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/lograge.svg)](http://badge.fury.io/rb/lograge)
 
-Lograge - Taming Rails' Default Request Logging
-=======
+# Lograge - Taming Rails' Default Request Logging #
 
 Lograge is an attempt to bring sanity to Rails' noisy and unusable, unparsable
 and, in the context of running multiple processes and servers, unreadable
@@ -44,6 +43,17 @@ The second line is easy to grasp with a single glance and still includes all the
 relevant information as simple key-value pairs. The syntax is heavily inspired
 by the log output of the Heroku router. It doesn't include any timestamp by
 default, instead it assumes you use a proper log formatter instead.
+
+## Supported Ruby and Rails Releases ##
+
+Lograge is actively tested against current and officially supported Ruby and
+Rails releases. That said, Lograge _should_ work with older releases.
+
+- [Rails](https://endoflife.date/rails): Edge, 6.1, 6.0, 5.2
+- Rubies:
+  - [MRI](https://endoflife.date/ruby): HEAD, 3.1.0-preview1, 3.0, 2.7, 2.6
+  - JRuby: HEAD, 9.2, 9.1
+  - TruffleRuby: HEAD, 21.3
 
 ## Installation ##
 

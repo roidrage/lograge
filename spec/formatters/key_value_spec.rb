@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Lograge::Formatters::KeyValue do
   let(:payload) do
     {
