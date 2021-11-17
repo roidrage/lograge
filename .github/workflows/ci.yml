@@ -33,6 +33,7 @@ jobs:
 
         gemfile:
           - Gemfile
+          - gemfiles/rails6.0.gemfile
           - gemfiles/rails5.2.gemfile
 
     env:
