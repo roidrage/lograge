@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/roidrage/lograge.svg?branch=master)](https://travis-ci.org/roidrage/lograge)
+[![.github/workflows/ci.yml](https://github.com/roidrage/lograge/actions/workflows/ci.yml/badge.svg)](https://github.com/roidrage/lograge/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/lograge.svg)](http://badge.fury.io/rb/lograge)
 
 Lograge - Taming Rails' Default Request Logging
