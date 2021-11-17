@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
-    - 'Guardfile'
+    - Guardfile
+    - vendor/**/*
   NewCops: enable
 
 Layout/LineLength:
