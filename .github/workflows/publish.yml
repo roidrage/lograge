@@ -1,0 +1,22 @@
+name: Publish Gem
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'lib/lograge/version.rb'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v1
+      - name: Build and publish gem
+        uses: gabriel-iac/publish-gem-to-github@v1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner: thrivadev

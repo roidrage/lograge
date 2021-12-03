@@ -1,3 +1,5 @@
+name: 'Test'
+
 on:
   push:
     branches: [master]
@@ -7,29 +9,18 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.gemfile == 'gemfiles/rails_edge.gemfile' }}
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') }}
 
     strategy:
       matrix:
         ruby:
           # MRI
-          - head
-          - "3.1.0-preview1"
           - "3.0"
           - "2.7"
-
-          # JRuby
-          - jruby-head
-          - jruby-9.3
-          - jruby-9.2
-
-          # TruffleRuby
-          - truffleruby-head
-          - truffleruby-21.3
+          - "2.6"
 
         gemfile:
           - Gemfile
-          - gemfiles/rails_edge.gemfile
           - gemfiles/rails_6.0.gemfile
           - gemfiles/rails_5.2.gemfile
 
