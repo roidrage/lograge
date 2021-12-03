@@ -19,13 +19,34 @@ module Lograge
       private
 
       def initial_data(payload)
-        {
-          method: payload[:method],
-          path: extract_path(payload),
+        initial_data = {
           format: extract_format(payload),
-          controller: payload[:controller],
-          action: payload[:action]
+          http: {
+            method: payload[:method],
+            request_id: payload[:request].request_id,
+            url: payload[:request].original_url
+          },
+          network: {
+            client: {
+              ip: payload[:request].remote_ip,
+            }
+          },
+          rails_controller: payload[:controller],
+          rails_action: payload[:action],
+          timestamp: Time.now.utc.iso8601(3),
         }
+
+        if (exception_object = payload[:exception_object]).present?
+          initial_data.merge!(
+            error: {
+              kind: exception_object.class.name,
+              message: exception_object.message,
+              stack: exception_object.backtrace.join("\n")
+            }
+          )
+        end
+
+        initial_data
       end
 
       def extract_path(payload)
