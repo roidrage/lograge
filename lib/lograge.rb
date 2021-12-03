@@ -145,7 +145,7 @@ module Lograge
   end
 
   def set_formatter
-    Lograge.formatter = lograge_config.formatter || Lograge::Formatters::Raw.new
+    Lograge.formatter = lograge_config.formatter || Lograge::Formatters::Json.new
   end
 
   def attach_to_action_controller

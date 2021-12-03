@@ -27,7 +27,7 @@ module Lograge
 
       def extract_request(event, payload)
         data = initial_data(payload)
-        data[:http].merge!(extract_status(payload))
+        data.deep_merge!(extract_status(payload))
         data.merge!(extract_runtimes(event, payload))
         data.merge!(extract_location)
         data.merge!(extract_unpermitted_params)
@@ -41,12 +41,12 @@ module Lograge
 
       def extract_status(payload)
         if (status = payload[:status])
-          { status_code: status.to_i }
+          { http: { status_code: status.to_i } }
         elsif (error = payload[:exception])
           exception, _message = error
-          { status_code: get_error_status_code(exception) }
+          { http: { status_code: get_error_status_code(exception) } }
         else
-          { status_code: default_status }
+          { http: { status_code: default_status } }
         end
       end
 
