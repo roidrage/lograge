@@ -60,7 +60,9 @@ Rails releases. That said, Lograge _should_ work with older releases.
 In your Gemfile
 
 ```ruby
-gem "lograge"
+source 'https://rubygems.pkg.github.com/thrivadev' do
+  gem 'lograge'
+end
 ```
 
 Enable it in an initializer or the relevant environment config:
