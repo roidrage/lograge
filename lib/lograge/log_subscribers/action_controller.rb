@@ -31,8 +31,8 @@ module Lograge
               ip: payload[:request].remote_ip,
             }
           },
-          rails_controller: payload[:controller],
-          rails_action: payload[:action],
+          controller: payload[:controller],
+          action: payload[:action],
           timestamp: Time.now.utc.iso8601(3),
         }
 
@@ -41,7 +41,7 @@ module Lograge
             error: {
               kind: exception_object.class.name,
               message: exception_object.message,
-              stack: exception_object.backtrace.join("\n")
+              stack: exception_object.backtrace&.join("\n")
             }
           )
         end

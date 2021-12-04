@@ -209,8 +209,8 @@ describe Lograge do
     context 'default' do
       let(:format) { nil }
 
-      it 'is an instance of Lograge::Formatters::KeyValue' do
-        expect(subject).to be_instance_of(Lograge::Formatters::KeyValue)
+      it 'is an instance of Lograge::Formatters::Json' do
+        expect(subject).to be_instance_of(Lograge::Formatters::Json)
       end
     end
   end
