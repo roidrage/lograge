@@ -21,32 +21,34 @@ module Lograge
       def initial_data(payload)
         initial_data = {
           format: extract_format(payload),
+          controller: payload[:controller],
+          action: payload[:action],
+          timestamp: Time.now.utc.iso8601(3)
+        }
+
+        initial_data.deep_merge!(extract_request_details(payload))
+        initial_data.deep_merge!(extract_client_ip(payload))
+        initial_data
+      end
+
+      def extract_request_details(payload)
+        {
           http: {
             method: payload[:method],
             request_id: payload[:request].request_id,
             url: payload[:request].original_url
-          },
+          }
+        }
+      end
+
+      def extract_client_ip(payload)
+        {
           network: {
             client: {
-              ip: payload[:request].remote_ip,
+              ip: payload[:request].remote_ip
             }
-          },
-          controller: payload[:controller],
-          action: payload[:action],
-          timestamp: Time.now.utc.iso8601(3),
+          }
         }
-
-        if (exception_object = payload[:exception_object]).present?
-          initial_data.merge!(
-            error: {
-              kind: exception_object.class.name,
-              message: exception_object.message,
-              stack: exception_object.backtrace&.join("\n")
-            }
-          )
-        end
-
-        initial_data
       end
 
       def extract_path(payload)

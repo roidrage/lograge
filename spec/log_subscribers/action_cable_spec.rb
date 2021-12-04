@@ -155,7 +155,9 @@ describe Lograge::LogSubscribers::ActionCable do
     end
 
     it 'outputs correctly' do
-      Lograge.before_format = ->(data, payload) { { status_code: data[:http][:status_code] }.merge(action: payload[:action]) }
+      Lograge.before_format = lambda do |data, payload|
+        { status_code: data[:http][:status_code] }.merge(action: payload[:action])
+      end
 
       subscriber.perform_action(event)
 

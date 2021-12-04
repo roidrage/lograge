@@ -30,13 +30,15 @@ describe Lograge::LogSubscribers::ActionController do
       method: 'GET',
       path: '/home?foo=bar',
       params: event_params,
-      request: ActionDispatch::Request.new({
-        'HTTP_USER_AGENT' => 'Google Chrome',
-        'PATH_INFO' => '/home',
-        'QUERY_STRING' => 'foo=bar',
-        'REMOTE_ADDR' => '127.0.0.1',
-        'REQUEST_URI' => 'http://localhost/'
-      }),
+      request: ActionDispatch::Request.new(
+        {
+          'HTTP_USER_AGENT' => 'Google Chrome',
+          'PATH_INFO' => '/home',
+          'QUERY_STRING' => 'foo=bar',
+          'REMOTE_ADDR' => '127.0.0.1',
+          'REQUEST_URI' => 'http://localhost/'
+        }
+      ),
       db_runtime: 0.02,
       view_runtime: 0.01
     )

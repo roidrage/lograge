@@ -27,6 +27,7 @@ module Lograge
 
       def extract_request(event, payload)
         data = initial_data(payload)
+        data.deep_merge!(extract_error(payload))
         data.deep_merge!(extract_status(payload))
         data.deep_merge!(extract_runtimes(event, payload))
         data.deep_merge!(extract_location)
@@ -34,9 +35,22 @@ module Lograge
         data.deep_merge!(custom_options(event))
       end
 
-      %i[initial_data extract_status extract_runtimes
+      %i[initial_data extract_error extract_status extract_runtimes
          extract_location extract_unpermitted_params].each do |method_name|
         define_method(method_name) { |*_arg| {} }
+      end
+
+      def extract_error(payload)
+        exception_object = payload[:exception_object]
+        return {} unless exception_object.present?
+
+        {
+          error: {
+            kind: exception_object.class.name,
+            message: exception_object.message,
+            stack: exception_object.backtrace&.join("\n")
+          }
+        }
       end
 
       def extract_status(payload)
