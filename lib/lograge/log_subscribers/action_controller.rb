@@ -73,7 +73,7 @@ module Lograge
       end
 
       def extract_runtimes(event, payload)
-        data = { duration: event.duration.to_f.round(2) }
+        data = { duration: 1_000 * event.duration }
         data[:view] = payload[:view_runtime].to_f.round(2) if payload.key?(:view_runtime)
         data[:db] = payload[:db_runtime].to_f.round(2) if payload.key?(:db_runtime)
         data

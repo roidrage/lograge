@@ -69,7 +69,7 @@ describe Lograge::LogSubscribers::ActionCable do
 
     it 'includes the duration' do
       subscriber.perform_action(event)
-      expect(log_output[:duration].to_s).to match(/[.0-9]{2,4}/)
+      expect(log_output[:duration].to_s).to match(/[.0-9]{2,6}/)
     end
 
     it 'includes the timestamp' do

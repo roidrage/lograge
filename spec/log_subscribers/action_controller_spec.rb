@@ -145,7 +145,7 @@ describe Lograge::LogSubscribers::ActionController do
 
     it 'includes the duration' do
       subscriber.process_action(event)
-      expect(log_output[:duration].to_s).to match(/[.0-9]{3}/)
+      expect(log_output[:duration].to_s).to match(/[.0-9]{2,6}/)
     end
 
     it 'includes the view rendering time' do

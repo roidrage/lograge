@@ -26,7 +26,7 @@ module Lograge
       end
 
       def extract_runtimes(event, _payload)
-        { duration: event.duration.to_f.round(2) }
+        { duration: 1_000 * event.duration }
       end
     end
   end
