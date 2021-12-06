@@ -108,6 +108,11 @@ describe Lograge::LogSubscribers::ActionController do
   end
 
   context 'when processing an action with lograge output' do
+    it 'includes the message in the log output' do
+      subscriber.process_action(event)
+      expect(log_output[:message]).to eq('GET /home')
+    end
+
     it 'includes the URL in the log output' do
       subscriber.process_action(event)
       expect(log_output[:http][:url]).to include('/home')

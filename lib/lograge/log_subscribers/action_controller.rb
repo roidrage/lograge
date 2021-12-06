@@ -21,6 +21,7 @@ module Lograge
       def initial_data(payload)
         initial_data = {
           format: extract_format(payload),
+          message: "#{payload[:method]} #{extract_path(payload)}",
           controller: payload[:controller],
           action: payload[:action],
           timestamp: Time.now.utc.iso8601(3)
