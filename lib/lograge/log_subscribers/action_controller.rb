@@ -20,7 +20,6 @@ module Lograge
 
       def initial_data(payload)
         initial_data = {
-          format: extract_format(payload),
           message: "#{payload[:method]} #{extract_path(payload)}",
           controller: payload[:controller],
           action: payload[:action],
@@ -60,16 +59,6 @@ module Lograge
       def strip_query_string(path)
         index = path.index('?')
         index ? path[0, index] : path
-      end
-
-      if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR.zero?
-        def extract_format(payload)
-          payload[:formats].first
-        end
-      else
-        def extract_format(payload)
-          payload[:format]
-        end
       end
 
       def extract_runtimes(event, payload)

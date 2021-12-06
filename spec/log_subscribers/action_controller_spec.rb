@@ -287,7 +287,7 @@ describe Lograge::LogSubscribers::ActionController do
 
       subscriber.process_action(event)
 
-      expect(log_output[:format]).to eq('application/json')
+      expect(log_output[:message]).to eq('GET /home')
       expect(log_output[:status]).to eq(200)
     end
     it 'works if the method returns nil' do

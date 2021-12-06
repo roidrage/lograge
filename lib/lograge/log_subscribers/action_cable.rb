@@ -13,7 +13,6 @@ module Lograge
 
       def initial_data(payload)
         {
-          format: {},
           params: payload[:data],
           controller: payload[:channel_class] || payload[:connection_class],
           action: payload[:action],
