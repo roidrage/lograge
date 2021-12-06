@@ -19,12 +19,37 @@ module Lograge
       private
 
       def initial_data(payload)
-        {
-          method: payload[:method],
-          path: extract_path(payload),
-          format: extract_format(payload),
+        initial_data = {
+          message: "#{payload[:method]} #{extract_path(payload)}",
           controller: payload[:controller],
-          action: payload[:action]
+          action: payload[:action],
+          timestamp: Time.now.utc.iso8601(3)
+        }
+
+        initial_data.deep_merge!(extract_request_details(payload))
+        initial_data.deep_merge!(extract_client_ip(payload))
+        initial_data
+      end
+
+      def extract_request_details(payload)
+        # https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#http-requests
+        {
+          http: {
+            method: payload[:method],
+            request_id: payload[:request].request_id,
+            url: payload[:request].original_url
+          }
+        }
+      end
+
+      def extract_client_ip(payload)
+        # https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#network
+        {
+          network: {
+            client: {
+              ip: payload[:request].remote_ip
+            }
+          }
         }
       end
 
@@ -38,18 +63,10 @@ module Lograge
         index ? path[0, index] : path
       end
 
-      if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR.zero?
-        def extract_format(payload)
-          payload[:formats].first
-        end
-      else
-        def extract_format(payload)
-          payload[:format]
-        end
-      end
-
       def extract_runtimes(event, payload)
-        data = { duration: event.duration.to_f.round(2) }
+        # Duration is in milliseconds. Datadog expects times in nanoseconds.
+        # https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#performance
+        data = { duration: 1_000 * event.duration }
         data[:view] = payload[:view_runtime].to_f.round(2) if payload.key?(:view_runtime)
         data[:db] = payload[:db_runtime].to_f.round(2) if payload.key?(:db_runtime)
         data

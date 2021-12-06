@@ -27,26 +27,40 @@ module Lograge
 
       def extract_request(event, payload)
         data = initial_data(payload)
-        data.merge!(extract_status(payload))
-        data.merge!(extract_runtimes(event, payload))
-        data.merge!(extract_location)
-        data.merge!(extract_unpermitted_params)
-        data.merge!(custom_options(event))
+        data.deep_merge!(extract_error(payload))
+        data.deep_merge!(extract_status(payload))
+        data.deep_merge!(extract_runtimes(event, payload))
+        data.deep_merge!(extract_location)
+        data.deep_merge!(extract_unpermitted_params)
+        data.deep_merge!(custom_options(event))
       end
 
-      %i[initial_data extract_status extract_runtimes
+      %i[initial_data extract_error extract_status extract_runtimes
          extract_location extract_unpermitted_params].each do |method_name|
         define_method(method_name) { |*_arg| {} }
       end
 
+      def extract_error(payload)
+        exception_object = payload[:exception_object]
+        return {} unless exception_object.present?
+
+        # https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#source-code
+        {
+          error: {
+            kind: exception_object.class.name,
+            message: exception_object.message,
+            stack: exception_object.backtrace&.join("\n")
+          }
+        }
+      end
+
       def extract_status(payload)
         if (status = payload[:status])
-          { status: status.to_i }
-        elsif (error = payload[:exception])
-          exception, message = error
-          { status: get_error_status_code(exception), error: "#{exception}: #{message}" }
+          { http: { status_code: status.to_i } }
+        elsif (exception = payload[:exception_object])
+          { http: { status_code: get_error_status_code(exception.class.name) } }
         else
-          { status: default_status }
+          { http: { status_code: default_status } }
         end
       end
 
