@@ -44,6 +44,7 @@ module Lograge
         exception_object = payload[:exception_object]
         return {} unless exception_object.present?
 
+        # https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#source-code
         {
           error: {
             kind: exception_object.class.name,

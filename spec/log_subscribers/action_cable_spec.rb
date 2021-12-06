@@ -57,7 +57,7 @@ describe Lograge::LogSubscribers::ActionCable do
   end
 
   context 'when processing an action with lograge output' do
-    it 'includes the controller and action' do
+    it 'includes the controller' do
       subscriber.perform_action(event)
       expect(log_output[:controller]).to eq('ActionCableChannel')
     end

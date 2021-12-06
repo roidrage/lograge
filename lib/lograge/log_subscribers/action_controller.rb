@@ -32,6 +32,7 @@ module Lograge
       end
 
       def extract_request_details(payload)
+        # https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#http-requests
         {
           http: {
             method: payload[:method],
@@ -42,6 +43,7 @@ module Lograge
       end
 
       def extract_client_ip(payload)
+        # https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#network
         {
           network: {
             client: {
@@ -62,6 +64,8 @@ module Lograge
       end
 
       def extract_runtimes(event, payload)
+        # Duration is in milliseconds. Datadog expects times in nanoseconds.
+        # https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#performance
         data = { duration: 1_000 * event.duration }
         data[:view] = payload[:view_runtime].to_f.round(2) if payload.key?(:view_runtime)
         data[:db] = payload[:db_runtime].to_f.round(2) if payload.key?(:db_runtime)
