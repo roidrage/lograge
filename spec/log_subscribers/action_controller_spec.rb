@@ -168,6 +168,15 @@ describe Lograge::LogSubscribers::ActionController do
       expect(log_output[:network][:client][:ip]).to eq('127.0.0.1')
     end
 
+    it 'includes Datadog trace information in the log output' do
+      subscriber.process_action(event)
+      expect(log_output[:dd][:trace_id]).to eq('0')
+      expect(log_output[:dd][:span_id]).to eq('0')
+      expect(log_output[:dd].key?(:env)).to eq(true)
+      expect(log_output[:dd][:service]).to eq('rspec')
+      expect(log_output[:ddsource]).to eq(%w[ruby])
+    end
+
     context 'when an `ActiveRecord::RecordNotFound` is raised' do
       let(:exception) do
         ActiveRecord::RecordNotFound.new('Record not found').tap do |e|

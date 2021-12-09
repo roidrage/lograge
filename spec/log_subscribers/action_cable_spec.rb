@@ -77,6 +77,16 @@ describe Lograge::LogSubscribers::ActionCable do
       expect(log_output[:timestamp]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/)
     end
 
+    it 'includes Datadog trace information in the log output' do
+      subscriber.perform_action(event)
+      expect(log_output[:dd][:trace_id]).to eq('0')
+      expect(log_output[:dd][:span_id]).to eq('0')
+      expect(log_output[:dd].key?(:env)).to eq(true)
+      expect(log_output[:dd][:service]).to eq('rspec')
+      expect(log_output[:dd].key?(:version)).to eq(true)
+      expect(log_output[:ddsource]).to eq(%w[ruby])
+    end
+
     context 'when an `ActiveRecord::RecordNotFound` is raised' do
       let(:exception) do
         ActiveRecord::RecordNotFound.new('Record not found').tap do |e|
