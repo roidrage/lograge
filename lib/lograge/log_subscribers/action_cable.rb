@@ -27,7 +27,7 @@ module Lograge
       def extract_runtimes(event, _payload)
         # Duration is in milliseconds. Datadog expects times in nanoseconds.
         # https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#performance
-        { duration: 1_000 * event.duration }
+        { duration: (1_000_000.0 * event.duration).to_i }
       end
     end
   end

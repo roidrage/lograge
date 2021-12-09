@@ -20,8 +20,8 @@ describe Lograge::LogSubscribers::ActionCable do
   let(:event) do
     ActiveSupport::Notifications::Event.new(
       'perform_action.action_cable',
-      Time.now,
-      Time.now,
+      Time.new(2021, 12, 9, 12, 35, 58, "+00:00"),
+      Time.new(2021, 12, 9, 12, 35, 59, "+00:00"),
       2,
       channel_class: 'ActionCableChannel',
       data: event_params,
@@ -69,7 +69,7 @@ describe Lograge::LogSubscribers::ActionCable do
 
     it 'includes the duration' do
       subscriber.perform_action(event)
-      expect(log_output[:duration].to_s).to match(/[.0-9]{2,6}/)
+      expect(log_output[:duration]).to eq(1_000_000_000)
     end
 
     it 'includes the timestamp' do
@@ -251,8 +251,8 @@ describe Lograge::LogSubscribers::ActionCable do
       let(:event) do
         ActiveSupport::Notifications::Event.new(
           "#{action_name}.action_cable",
-          Time.now,
-          Time.now,
+          Time.new(2021, 12, 9, 12, 35, 58, "+00:00"),
+          Time.new(2021, 12, 9, 12, 35, 59, "+00:00"),
           2,
           channel_class: 'ActionCableChannel',
           data: event_params,
