@@ -28,5 +28,4 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'ddtrace',       '~> 0.51'
   s.add_runtime_dependency 'railties',      '>= 4'
   s.add_runtime_dependency 'request_store', '~> 1.0'
-
 end

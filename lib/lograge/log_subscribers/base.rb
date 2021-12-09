@@ -42,7 +42,11 @@ module Lograge
         define_method(method_name) { |*_arg| {} }
       end
 
+      # rubocop:disable Metrics/MethodLength
       def datadog_trace
+        # Inject Datadog tracing information
+        # See https://docs.datadoghq.com/tracing/connect_logs_and_traces/ruby/#manual-injection
+
         # Retrieves trace information for current thread
         correlation = ::Datadog.tracer.active_correlation
 
@@ -59,6 +63,7 @@ module Lograge
           ddsource: ['ruby']
         }
       end
+      # rubocop:enable Metrics/MethodLength
 
       def extract_error(payload)
         exception_object = payload[:exception_object]
