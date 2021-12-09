@@ -174,7 +174,7 @@ describe Lograge::LogSubscribers::ActionController do
       expect(log_output[:dd][:span_id]).to eq('0')
       expect(log_output[:dd].key?(:env)).to eq(true)
       expect(log_output[:dd][:service]).to eq('rspec')
-      expect(log_output[:ddsource]).to eq(%w['ruby'])
+      expect(log_output[:ddsource]).to eq(%w[ruby])
     end
 
     context 'when an `ActiveRecord::RecordNotFound` is raised' do
