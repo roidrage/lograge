@@ -20,8 +20,8 @@ describe Lograge::LogSubscribers::ActionController do
   let(:event) do
     ActiveSupport::Notifications::Event.new(
       'process_action.action_controller',
-      Time.new(2021, 12, 9, 12, 35, 58, "+00:00"),
-      Time.new(2021, 12, 9, 12, 35, 59, "+00:00"),
+      Time.new(2021, 12, 9, 12, 35, 58, '+00:00'),
+      Time.new(2021, 12, 9, 12, 35, 59, '+00:00'),
       2,
       status: 200,
       controller: 'HomeController',
@@ -75,8 +75,8 @@ describe Lograge::LogSubscribers::ActionController do
     let(:redirect_event) do
       ActiveSupport::Notifications::Event.new(
         'redirect_to.action_controller',
-        Time.new(2021, 12, 9, 12, 35, 58, "+00:00"),
-        Time.new(2021, 12, 9, 12, 35, 59, "+00:00"),
+        Time.new(2021, 12, 9, 12, 35, 58, '+00:00'),
+        Time.new(2021, 12, 9, 12, 35, 59, '+00:00'),
         1,
         location: 'http://example.com',
         status: 302,
@@ -94,8 +94,8 @@ describe Lograge::LogSubscribers::ActionController do
     let(:unpermitted_parameters_event) do
       ActiveSupport::Notifications::Event.new(
         'unpermitted_parameters.action_controller',
-        Time.new(2021, 12, 9, 12, 35, 58, "+00:00"),
-        Time.new(2021, 12, 9, 12, 35, 59, "+00:00"),
+        Time.new(2021, 12, 9, 12, 35, 58, '+00:00'),
+        Time.new(2021, 12, 9, 12, 35, 59, '+00:00'),
         1,
         keys: %w[foo bar]
       )
