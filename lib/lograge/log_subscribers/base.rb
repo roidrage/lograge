@@ -4,6 +4,7 @@ require 'json'
 require 'action_pack'
 require 'active_support/core_ext/class/attribute'
 require 'active_support/log_subscriber'
+require 'ddtrace'
 require 'request_store'
 
 module Lograge
@@ -27,6 +28,7 @@ module Lograge
 
       def extract_request(event, payload)
         data = initial_data(payload)
+        data.deep_merge!(datadog_trace)
         data.deep_merge!(extract_error(payload))
         data.deep_merge!(extract_status(payload))
         data.deep_merge!(extract_runtimes(event, payload))
@@ -35,9 +37,27 @@ module Lograge
         data.deep_merge!(custom_options(event))
       end
 
-      %i[initial_data extract_error extract_status extract_runtimes
+      %i[initial_data datadog_trace extract_error extract_status extract_runtimes
          extract_location extract_unpermitted_params].each do |method_name|
         define_method(method_name) { |*_arg| {} }
+      end
+
+      def datadog_trace
+        # Retrieves trace information for current thread
+        correlation = ::Datadog.tracer.active_correlation
+
+        {
+          # Adds IDs as tags to log output
+          dd: {
+            # To preserve precision during JSON serialization, use strings for large numbers
+            trace_id: correlation.trace_id.to_s,
+            span_id: correlation.span_id.to_s,
+            env: correlation.env.to_s,
+            service: correlation.service.to_s,
+            version: correlation.version.to_s
+          },
+          ddsource: ['ruby']
+        }
       end
 
       def extract_error(payload)
