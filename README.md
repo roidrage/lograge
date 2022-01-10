@@ -36,7 +36,7 @@ Completed 200 OK in 79ms (Views: 78.8ms | ActiveRecord: 0.0ms)
 you get a single line with all the important information, like this:
 
 ```
-method=GET path=/jobs/833552.json format=json controller=JobsController  action=show status=200 duration=58.33 view=40.43 db=15.26
+method=GET path=/jobs/833552.json format=json controller=JobsController  action=show status=200 duration=58.33 view=40.43 db=15.26 
 ```
 
 The second line is easy to grasp with a single glance and still includes all the
@@ -60,9 +60,8 @@ Rails releases. That said, Lograge _should_ work with older releases.
 In your Gemfile
 
 ```ruby
-source 'https://rubygems.pkg.github.com/thrivadev' do
-  gem 'lograge'
-end
+# Specify the latest release tag
+gem 'lograge', git: 'https://github.com/thrivadev/lograge.git', tag: 'v1.0.0' 
 ```
 
 Enable it in an initializer or the relevant environment config:
