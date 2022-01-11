@@ -2,6 +2,7 @@
 
 require 'json'
 require 'action_pack'
+require 'active_support'
 require 'active_support/core_ext/class/attribute'
 require 'active_support/log_subscriber'
 require 'request_store'

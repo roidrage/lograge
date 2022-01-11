@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'active_support'
 require 'active_support/ordered_options'
 
 module Lograge
