@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+require 'active_support'
 require 'active_support/concern'
 require 'rails/rack/logger'
 
@@ -9,7 +12,7 @@ module Rails
     # that say:
     # Started GET / for 192.168.2.1...
     class Logger
-      # Overwrites Rails 3.2 code that logs new requests
+      # Overwrites Rails code that logs new requests
       def call_app(*args)
         env = args.last
         status, headers, body = @app.call(env)
@@ -20,8 +23,7 @@ module Rails
       end
 
       # Overwrites Rails 3.0/3.1 code that logs new requests
-      def before_dispatch(_env)
-      end
+      def before_dispatch(_env); end
     end
   end
 end

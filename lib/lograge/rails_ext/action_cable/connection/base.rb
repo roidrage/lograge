@@ -1,23 +1,21 @@
+# frozen_string_literal: true
+
 module ActionCable
   module Connection
     class Base
-      # rubocop:disable Metrics/MethodLength
       def handle_open
         ActiveSupport::Notifications.instrument('connect.action_cable', notification_payload('connect')) do
-          begin
-            @protocol = websocket.protocol
-            connect if respond_to?(:connect)
-            subscribe_to_internal_channel
-            send_welcome_message
+          @protocol = websocket.protocol
+          connect if respond_to?(:connect)
+          subscribe_to_internal_channel
+          send_welcome_message
 
-            message_buffer.process!
-            server.add_connection(self)
-          rescue ActionCable::Connection::Authorization::UnauthorizedError
-            respond_to_invalid_request
-          end
+          message_buffer.process!
+          server.add_connection(self)
+        rescue ActionCable::Connection::Authorization::UnauthorizedError
+          respond_to_invalid_request
         end
       end
-      # rubocop:enable Metrics/MethodLength
 
       def handle_close
         ActiveSupport::Notifications.instrument('disconnect.action_cable', notification_payload('disconnect')) do

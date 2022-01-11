@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require 'lograge/log_subscribers/action_controller'
+require 'active_support'
 require 'active_support/notifications'
 require 'active_support/core_ext/string'
 require 'logger'
@@ -47,7 +50,7 @@ describe Lograge::LogSubscribers::ActionCable do
     end
 
     it 'works when the method returns nil' do
-      Lograge.custom_options = ->(_event) { nil }
+      Lograge.custom_options = ->(_event) {}
 
       subscriber.perform_action(event)
       expect(log_output.string).to be_present
@@ -66,7 +69,7 @@ describe Lograge::LogSubscribers::ActionCable do
 
     it 'includes the duration' do
       subscriber.perform_action(event)
-      expect(log_output.string).to match(/duration=[\.0-9]{2,4}/)
+      expect(log_output.string).to match(/duration=[.0-9]{2,4}/)
     end
 
     context 'when an `ActiveRecord::RecordNotFound` is raised' do
@@ -118,7 +121,7 @@ describe Lograge::LogSubscribers::ActionCable do
       expect(log_output.string).to match(/ data=value/)
     end
     it 'works when the method returns nil' do
-      Lograge.custom_options = ->(_event) { nil }
+      Lograge.custom_options = ->(_event) {}
 
       subscriber.perform_action(event)
       expect(log_output.string).to be_present
@@ -160,7 +163,7 @@ describe Lograge::LogSubscribers::ActionCable do
       expect(log_output.string).to include('status=200')
     end
     it 'works if the method returns nil' do
-      Lograge.before_format = ->(_data, _payload) { nil }
+      Lograge.before_format = ->(_data, _payload) {}
 
       subscriber.perform_action(event)
       expect(log_output.string).to be_present
@@ -205,14 +208,14 @@ describe Lograge::LogSubscribers::ActionCable do
     end
 
     it 'does not log ignored events' do
-      Lograge.ignore(->(event) { 'pong' == event.payload[:action] })
+      Lograge.ignore(->(event) { event.payload[:action] == 'pong' })
 
       subscriber.perform_action(event)
       expect(log_output.string).to be_blank
     end
 
     it 'logs non-ignored events' do
-      Lograge.ignore(->(event) { 'foo' == event.payload[:action] })
+      Lograge.ignore(->(event) { event.payload[:action] == 'foo' })
 
       subscriber.perform_action(event)
       expect(log_output.string).not_to be_blank
@@ -232,7 +235,7 @@ describe Lograge::LogSubscribers::ActionCable do
   end
 
   describe 'other actions' do
-    %i(subscribe unsubscribe connect disconnect).each do |action_name|
+    %i[subscribe unsubscribe connect disconnect].each do |action_name|
       let(:event) do
         ActiveSupport::Notifications::Event.new(
           "#{action_name}.action_cable",

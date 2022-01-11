@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Lograge::Formatters::Graylog2 do
   let(:payload) do
     {

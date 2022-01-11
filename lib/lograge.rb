@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'lograge/version'
 require 'lograge/formatters/helpers/method_and_path'
 require 'lograge/formatters/cee'
@@ -14,10 +16,11 @@ require 'lograge/log_subscribers/action_cable'
 require 'lograge/log_subscribers/action_controller'
 require 'lograge/silent_logger'
 require 'lograge/ordered_options'
+require 'active_support'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
 
-# rubocop:disable ModuleLength
+# rubocop:disable Metrics/ModuleLength
 module Lograge
   module_function
 
@@ -117,9 +120,7 @@ module Lograge
     events = subscriber.public_methods(false).reject { |method| method.to_s == 'call' }
     events.each do |event|
       ActiveSupport::Notifications.notifier.listeners_for("#{event}.#{component}").each do |listener|
-        if listener.instance_variable_get('@delegate') == subscriber
-          ActiveSupport::Notifications.unsubscribe listener
-        end
+        ActiveSupport::Notifications.unsubscribe listener if listener.instance_variable_get('@delegate') == subscriber
       end
     end
   end
@@ -203,7 +204,7 @@ module Lograge
   end
 
   def rack_cache_hashlike?(app)
-    app.config.action_dispatch.rack_cache && app.config.action_dispatch.rack_cache.respond_to?(:[]=)
+    app.config.action_dispatch.rack_cache&.respond_to?(:[]=)
   end
   private_class_method :rack_cache_hashlike?
 
@@ -223,5 +224,6 @@ module Lograge
     application.config.lograge
   end
 end
+# rubocop:enable Metrics/ModuleLength
 
 require 'lograge/railtie' if defined?(Rails)

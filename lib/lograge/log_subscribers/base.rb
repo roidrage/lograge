@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'action_pack'
+require 'active_support'
 require 'active_support/core_ext/class/attribute'
 require 'active_support/log_subscriber'
 require 'request_store'
@@ -32,8 +35,8 @@ module Lograge
         data.merge!(custom_options(event))
       end
 
-      %i(initial_data extract_status extract_runtimes
-         extract_location extract_unpermitted_params).each do |method_name|
+      %i[initial_data extract_status extract_runtimes
+         extract_location extract_unpermitted_params].each do |method_name|
         define_method(method_name) { |*_arg| {} }
       end
 
@@ -52,9 +55,8 @@ module Lograge
         0
       end
 
-      def get_error_status_code(exception)
-        status = ActionDispatch::ExceptionWrapper.rescue_responses[exception]
-        Rack::Utils.status_code(status)
+      def get_error_status_code(exception_class_name)
+        ActionDispatch::ExceptionWrapper.status_code_for_exception(exception_class_name)
       end
 
       def custom_options(event)

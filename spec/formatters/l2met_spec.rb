@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Lograge::Formatters::L2met do
   let(:payload) do
     {

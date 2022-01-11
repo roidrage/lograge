@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples_for 'a key value formatter' do
   let(:payload) do
     {

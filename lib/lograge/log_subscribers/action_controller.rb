@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Lograge
   module LogSubscribers
     class ActionController < Base

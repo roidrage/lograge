@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require 'lograge/log_subscribers/action_controller'
+require 'active_support'
 require 'active_support/notifications'
 require 'active_support/core_ext/string'
 require 'logger'
@@ -53,7 +56,7 @@ describe Lograge::LogSubscribers::ActionController do
     end
 
     it 'works when the method returns nil' do
-      Lograge.custom_options = ->(_event) { nil }
+      Lograge.custom_options = ->(_event) {}
 
       subscriber.process_action(event)
       expect(log_output.string).to be_present
@@ -85,13 +88,13 @@ describe Lograge::LogSubscribers::ActionController do
         Time.now,
         Time.now,
         1,
-        keys: %w(foo bar)
+        keys: %w[foo bar]
       )
     end
 
     it 'stores the parameters in a thread local variable' do
       subscriber.unpermitted_parameters(unpermitted_parameters_event)
-      expect(RequestStore.store[:lograge_unpermitted_params]).to eq(%w(foo bar))
+      expect(RequestStore.store[:lograge_unpermitted_params]).to eq(%w[foo bar])
     end
   end
 
@@ -127,7 +130,7 @@ describe Lograge::LogSubscribers::ActionController do
 
     it 'includes the duration' do
       subscriber.process_action(event)
-      expect(log_output.string).to match(/duration=[\.0-9]{4,4} /)
+      expect(log_output.string).to match(/duration=[.0-9]{4,4} /)
     end
 
     it 'includes the view rendering time' do
@@ -188,7 +191,7 @@ describe Lograge::LogSubscribers::ActionController do
 
     context 'with unpermitted_parameters' do
       before do
-        RequestStore.store[:lograge_unpermitted_params] = %w(florb blarf)
+        RequestStore.store[:lograge_unpermitted_params] = %w[florb blarf]
       end
 
       it 'adds the unpermitted_params to the log line' do
@@ -226,7 +229,7 @@ describe Lograge::LogSubscribers::ActionController do
       expect(log_output.string).to match(/ data=value/)
     end
     it 'works when the method returns nil' do
-      Lograge.custom_options = ->(_event) { nil }
+      Lograge.custom_options = ->(_event) {}
 
       subscriber.process_action(event)
       expect(log_output.string).to be_present
@@ -268,7 +271,7 @@ describe Lograge::LogSubscribers::ActionController do
       expect(log_output.string).to include('status=200')
     end
     it 'works if the method returns nil' do
-      Lograge.before_format = ->(_data, _payload) { nil }
+      Lograge.before_format = ->(_data, _payload) {}
 
       subscriber.process_action(event)
       expect(log_output.string).to be_present
@@ -313,14 +316,14 @@ describe Lograge::LogSubscribers::ActionController do
     end
 
     it 'does not log ignored events' do
-      Lograge.ignore(->(event) { 'GET' == event.payload[:method] })
+      Lograge.ignore(->(event) { event.payload[:method] == 'GET' })
 
       subscriber.process_action(event)
       expect(log_output.string).to be_blank
     end
 
     it 'logs non-ignored events' do
-      Lograge.ignore(->(event) { 'foo' == event.payload[:method] })
+      Lograge.ignore(->(event) { event.payload[:method] == 'foo' })
 
       subscriber.process_action(event)
       expect(log_output.string).not_to be_blank
