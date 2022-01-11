@@ -16,6 +16,7 @@ require 'lograge/log_subscribers/action_cable'
 require 'lograge/log_subscribers/action_controller'
 require 'lograge/silent_logger'
 require 'lograge/ordered_options'
+require 'active_support'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
 

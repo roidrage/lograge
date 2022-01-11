@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'lograge/log_subscribers/action_controller'
+require 'active_support'
 require 'active_support/notifications'
 require 'active_support/core_ext/string'
 require 'logger'
