@@ -54,9 +54,8 @@ module Lograge
         0
       end
 
-      def get_error_status_code(exception)
-        status = ActionDispatch::ExceptionWrapper.rescue_responses[exception]
-        Rack::Utils.status_code(status)
+      def get_error_status_code(exception_class_name)
+        ActionDispatch::ExceptionWrapper.status_code_for_exception(exception_class_name)
       end
 
       def custom_options(event)
