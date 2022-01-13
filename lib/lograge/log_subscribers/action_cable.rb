@@ -13,9 +13,9 @@ module Lograge
 
       def initial_data(payload)
         {
-          method: {},
-          path: {},
-          format: {},
+          method: nil,
+          path: nil,
+          format: nil,
           params: payload[:data],
           controller: payload[:channel_class] || payload[:connection_class],
           action: payload[:action]
