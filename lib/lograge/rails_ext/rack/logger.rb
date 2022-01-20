@@ -17,7 +17,7 @@ module Rails
         env = args.last
         status, headers, body = @app.call(env)
         # needs to have same return type as the Rails builtins being overridden, see https://github.com/roidrage/lograge/pull/333
-        [status, headers, ::Rack::BodyProxy.new(body) {} ]
+        [status, headers, ::Rack::BodyProxy.new(body)]
       ensure
         ActiveSupport::LogSubscriber.flush_all!
       end
