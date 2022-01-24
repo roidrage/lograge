@@ -1,5 +1,9 @@
 # Change Log
 
+### Unreleased
+
+* Return a `Rack::BodyProxy` from the `Rails::Rack::Logger` monkey patch, this ensures the same return type as Rails [#333](https://github.com/roidrage/lograge/pull/333)
+
 ### 0.11.2
 
 * Resolve a bug with Action Cable registration [#286](https://github.com/roidrage/lograge/pull/286)
