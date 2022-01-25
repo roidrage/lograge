@@ -2,6 +2,8 @@
 
 ### Unreleased
 
+* Preserve original Action Cable functionality by using `prepend` instead of redefining methods [#310](https://github.com/roidrage/lograge/pull/310)
+
 * Return a `Rack::BodyProxy` from the `Rails::Rack::Logger` monkey patch, this ensures the same return type as Rails [#333](https://github.com/roidrage/lograge/pull/333)
 
 ### 0.11.2
