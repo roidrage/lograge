@@ -18,7 +18,7 @@ module Rails
         status, headers, body = @app.call(env)
         # needs to have same return type as the Rails builtins being overridden, see https://github.com/roidrage/lograge/pull/333
         # https://github.com/rails/rails/blob/be9d34b9bcb448b265114ebc28bef1a5b5e4c272/railties/lib/rails/rack/logger.rb#L37
-        [status, headers, ::Rack::BodyProxy.new(body)]
+        [status, headers, ::Rack::BodyProxy.new(body) {}] # rubocop:disable Lint/EmptyBlock
       ensure
         ActiveSupport::LogSubscriber.flush_all!
       end
