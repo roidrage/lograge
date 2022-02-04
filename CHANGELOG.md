@@ -6,6 +6,8 @@
 
 * Return a `Rack::BodyProxy` from the `Rails::Rack::Logger` monkey patch, this ensures the same return type as Rails [#333](https://github.com/roidrage/lograge/pull/333)
 
+* Add a new formatter `Lograge::Formatters::KeyValueDeep.new` to log object with nested key. [#282](https://github.com/roidrage/lograge/pull/282/files)
+
 ### 0.11.2
 
 * Resolve a bug with Action Cable registration [#286](https://github.com/roidrage/lograge/pull/286)
