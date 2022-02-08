@@ -28,14 +28,14 @@ module Lograge
         result
       end
 
-      def loop_on_object(data)
+      def loop_on_object(data, &block)
         if data.instance_of? Array
           data.each_with_index do |value, index|
             yield index, value
           end
           return
         end
-        data.each(&:block)
+        data.each(&block)
       end
     end
   end
