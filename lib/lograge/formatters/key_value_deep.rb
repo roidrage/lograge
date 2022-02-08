@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Lograge
   module Formatters
     class KeyValueDeep < KeyValue
@@ -27,15 +29,13 @@ module Lograge
       end
 
       def loop_on_object(data)
-        if data.class == Array
+        if data.instance_of? Array
           data.each_with_index do |value, index|
             yield index, value
           end
           return
         end
-        data.each do |key, value|
-          yield key, value
-        end
+        data.each(&:block)
       end
     end
   end
