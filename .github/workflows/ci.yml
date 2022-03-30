@@ -19,14 +19,14 @@ jobs:
           - "3.1.0"
           - "3.0"
           - "2.7"
+          - "3.0"
+          - "3.1"
 
           # JRuby
-          - jruby-head
           - jruby-9.3
           - jruby-9.2
 
           # TruffleRuby
-          - truffleruby-head
           - truffleruby-21.3
 
         gemfile:
