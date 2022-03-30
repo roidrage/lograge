@@ -5,14 +5,17 @@ require './lib/lograge/version'
 Gem::Specification.new do |s|
   s.name        = 'lograge'
   s.version     = Lograge::VERSION
-  s.authors     = ['Mathias Meyer', 'Ben Lovell']
-  s.email       = ['meyer@paperplanes.de', 'benjamin.lovell@gmail.com']
+  s.authors     = ['Mathias Meyer', 'Ben Lovell', 'Michael Bianco']
+  s.email       = ['meyer@paperplanes.de', 'benjamin.lovell@gmail.com', 'mike@mikebian.co']
   s.homepage    = 'https://github.com/roidrage/lograge'
   s.summary     = "Tame Rails' multi-line logging into a single line per request"
   s.description = "Tame Rails' multi-line logging into a single line per request"
   s.license     = 'MIT'
 
-  s.metadata = { 'rubygems_mfa_required' => 'true' }
+  s.metadata = {
+    'rubygems_mfa_required' => 'true',
+    'changelog_uri' => 'https://github.com/roidrage/lograge/blob/master/CHANGELOG.md'
+  }
 
   # NOTE(ivy): Ruby version 2.5 is the oldest syntax supported by Rubocop.
   s.required_ruby_version = '>= 2.5'
