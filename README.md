@@ -11,7 +11,7 @@ renders Rails logs useless to me.
 
 Lograge is a work in progress. I appreciate constructive feedback and criticism.
 My main goal is to improve Rails' logging and to show people that they don't
-need to stick with its defaults anymore if they don't want to. [`rails_semantic_logger` is a similar project with different functionality](https://logger.rocketjob.io/rails).
+need to stick with its defaults anymore if they don't want to.
 
 Instead of trying solving the problem of having multiple lines per request by
 switching Rails' logger for something that outputs syslog lines or adds a
@@ -362,6 +362,10 @@ end
 
 [#146](https://github.com/roidrage/lograge/issues/146)
 
+## Alternative & Related Projects
+
+* [`rails_semantic_logger` is a similar project with different functionality](https://logger.rocketjob.io/rails).
+* [`simple_structured_logger`](https://github.com/iloveitaly/simple_structured_logger) adds structured logging to the rest of your application
 
 ## Contributing ##
 
