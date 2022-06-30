@@ -224,7 +224,7 @@ describe Lograge::LogSubscribers::ActionController do
       it 'fails gracefully when allocations are unavailable' do
         event_without_allocations = event.dup
         if event_without_allocations.respond_to? :allocations
-          event_without_allocations.instance_eval('undef :allocations')
+          event_without_allocations.instance_eval('undef :allocations', __FILE__, __LINE__)
         end
 
         subscriber.process_action(event_without_allocations)
