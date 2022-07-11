@@ -32,6 +32,7 @@ jobs:
         gemfile:
           - Gemfile
           - gemfiles/rails_edge.gemfile # 7.1.0.alpha
+          - gemfiles/rails_6.1.gemfile
           - gemfiles/rails_6.0.gemfile
           - gemfiles/rails_5.2.gemfile
 
