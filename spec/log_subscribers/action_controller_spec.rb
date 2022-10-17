@@ -364,6 +364,15 @@ describe Lograge::LogSubscribers::ActionController do
     end
   end
 
+  context 'with a status code that is set in log_process_action (devise)' do
+    it 'returns the correct status code' do
+      allow(::ActionController::Base).to receive(:log_process_action) { |payload| payload[:status] = 401 }
+      event.payload[:status] = nil
+      subscriber.process_action(event)
+      expect(log_output.string).to match(/status=401 /)
+    end
+  end
+
   it "will fallback to ActiveSupport's logger if one isn't configured" do
     Lograge.formatter = Lograge::Formatters::KeyValue.new
     Lograge.logger = nil
