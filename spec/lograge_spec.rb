@@ -169,7 +169,7 @@ describe Lograge do
                 config.lograge.log_format = format
               end)
     end
-    before { ActiveSupport::Deprecation.silence { Lograge.setup(app_config) } }
+    before { Lograge.deprecator.silence { Lograge.setup(app_config) } }
     subject { Lograge.formatter }
 
     context ':cee' do
