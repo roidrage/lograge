@@ -376,6 +376,6 @@ See the CONTRIBUTING.md file for further information.
 
 MIT. Code extracted from [Travis CI](http://travis-ci.org).
 
-(c) 2014 Mathias Meyer
+(c) Mathias Meyer
 
 See `LICENSE.txt` for details.
