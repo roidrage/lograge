@@ -27,7 +27,7 @@ jobs:
           - jruby-9.2
 
           # TruffleRuby
-          - truffleruby-21.3
+          - truffleruby-23.0
 
         gemfile:
           - Gemfile
