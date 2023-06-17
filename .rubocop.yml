@@ -24,3 +24,6 @@ Style/BlockDelimiters:
 
 Style/Documentation:
   Enabled: false
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
