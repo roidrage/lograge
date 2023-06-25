@@ -24,7 +24,7 @@ jobs:
 
           # JRuby
           - jruby-9.3
-          - jruby-9.2
+          - jruby-9.4
 
           # TruffleRuby
           - truffleruby-23.0
