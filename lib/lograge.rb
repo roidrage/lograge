@@ -120,7 +120,7 @@ module Lograge
   def unsubscribe(component, subscriber)
     events = subscriber.public_methods(false).reject { |method| method.to_s == 'call' }
     events.each do |event|
-      ActiveSupport::Notifications.notifier.listeners_for("#{event}.#{component}").each do |listener|
+      Lograge.notification_listeners_for("#{event}.#{component}").each do |listener|
         ActiveSupport::Notifications.unsubscribe listener if listener.instance_variable_get('@delegate') == subscriber
       end
     end
@@ -223,6 +223,17 @@ module Lograge
 
   def lograge_config
     application.config.lograge
+  end
+
+  if ::ActiveSupport::VERSION::MAJOR >= 8 ||
+     (::ActiveSupport::VERSION::MAJOR >= 7 && ::ActiveSupport::VERSION::MINOR >= 1)
+    def notification_listeners_for(name)
+      ActiveSupport::Notifications.notifier.all_listeners_for(name)
+    end
+  else
+    def notification_listeners_for(name)
+      ActiveSupport::Notifications.notifier.listeners_for(name)
+    end
   end
 end
 # rubocop:enable Metrics/ModuleLength
