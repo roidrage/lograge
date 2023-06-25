@@ -117,6 +117,10 @@ describe Lograge do
         def current_user_id
           '24601'
         end
+
+        class << self
+          def logger; end
+        end
       end
     end
     let(:payload) { { timestamp: Date.parse('5-11-1955') } }
