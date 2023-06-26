@@ -5,6 +5,7 @@ require 'active_support/notifications'
 require 'active_support/core_ext/string'
 require 'active_support/deprecation'
 require 'active_support/log_subscriber'
+require 'action_controller'
 require 'action_controller/log_subscriber'
 require 'action_view/log_subscriber'
 
@@ -19,7 +20,7 @@ describe Lograge do
       expect do
         Lograge.remove_existing_log_subscriptions
       end.to change {
-        ActiveSupport::Notifications.notifier.listeners_for('process_action.action_controller')
+        Lograge.notification_listeners_for('process_action.action_controller')
       }
     end
 
@@ -27,7 +28,7 @@ describe Lograge do
       expect do
         Lograge.remove_existing_log_subscriptions
       end.to change {
-        ActiveSupport::Notifications.notifier.listeners_for('render_template.action_view')
+        Lograge.notification_listeners_for('render_template.action_view')
       }
     end
 
@@ -35,7 +36,7 @@ describe Lograge do
       blk = -> {}
       ActiveSupport::Notifications.subscribe('process_action.action_controller', &blk)
       Lograge.remove_existing_log_subscriptions
-      listeners = ActiveSupport::Notifications.notifier.listeners_for('process_action.action_controller')
+      listeners = Lograge.notification_listeners_for('process_action.action_controller')
       expect(listeners.size).to eq(1)
     end
   end
@@ -115,6 +116,10 @@ describe Lograge do
 
         def current_user_id
           '24601'
+        end
+
+        class << self
+          def logger; end
         end
       end
     end
