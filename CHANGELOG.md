@@ -2,6 +2,10 @@
 
 ### Unreleased
 
+### 0.13.0
+
+* Add Rails 6 memory allocations to default log [#355](https://github.com/roidrage/lograge/pull/355)
+
 ### 0.12.0
 
 * Preserve original Action Cable functionality by using `prepend` instead of redefining methods [#310](https://github.com/roidrage/lograge/pull/310)
