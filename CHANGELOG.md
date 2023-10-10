@@ -2,6 +2,10 @@
 
 ### Unreleased
 
+### 0.14.0
+
+* Add Rails 7.1 dedicated `ActiveSupport::Deprecation` [#365](https://github.com/roidrage/lograge/pull/365)
+
 ### 0.13.0
 
 * Add Rails 6 memory allocations to default log [#355](https://github.com/roidrage/lograge/pull/355)
