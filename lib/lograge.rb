@@ -216,13 +216,17 @@ module Lograge
 
     legacy_log_format = lograge_config.log_format
     warning = 'config.lograge.log_format is deprecated. Use config.lograge.formatter instead.'
-    ActiveSupport::Deprecation.warn(warning, caller)
+    deprecator.warn(warning, caller)
     legacy_log_format = :key_value if legacy_log_format == :lograge
     lograge_config.formatter = "Lograge::Formatters::#{legacy_log_format.to_s.classify}".constantize.new
   end
 
   def lograge_config
     application.config.lograge
+  end
+
+  def deprecator
+    @deprecator ||= ActiveSupport::Deprecation.new('1.0', 'Lograge')
   end
 
   if ::ActiveSupport::VERSION::MAJOR >= 8 ||
