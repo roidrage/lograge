@@ -30,7 +30,8 @@ jobs:
 
         gemfile:
           - Gemfile
-          - gemfiles/rails_edge.gemfile # 7.1.0.alpha
+          - gemfiles/rails_edge.gemfile # 7.2.0.alpha
+          - gemfiles/rails_7.1.gemfile
           - gemfiles/rails_7.0.gemfile
           - gemfiles/rails_6.1.gemfile
           - gemfiles/rails_6.0.gemfile
@@ -50,9 +51,13 @@ jobs:
           - ruby: jruby-9.3
             gemfile: gemfiles/rails_edge.gemfile
           - ruby: jruby-9.3
+            gemfile: gemfiles/rails_7.1.gemfile
+          - ruby: jruby-9.3
             gemfile: gemfiles/rails_7.0.gemfile
           - ruby: jruby-9.2
             gemfile: gemfiles/rails_edge.gemfile
+          - ruby: jruby-9.2
+            gemfile: gemfiles/rails_7.1.gemfile
           - ruby: jruby-9.2
             gemfile: gemfiles/rails_7.0.gemfile
 
