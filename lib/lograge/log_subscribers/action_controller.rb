@@ -22,7 +22,7 @@ module Lograge
         {
           method: payload[:method],
           path: extract_path(payload),
-          format: extract_format(payload),
+          format: payload[:format],
           controller: payload[:controller],
           action: payload[:action]
         }
@@ -36,16 +36,6 @@ module Lograge
       def strip_query_string(path)
         index = path.index('?')
         index ? path[0, index] : path
-      end
-
-      if ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR.zero?
-        def extract_format(payload)
-          payload[:formats].first
-        end
-      else
-        def extract_format(payload)
-          payload[:format]
-        end
       end
 
       def extract_runtimes(event, payload)
