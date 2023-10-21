@@ -189,7 +189,28 @@ describe Lograge::LogSubscribers::ActionController do
       expect(log_output.string).to_not include('location=')
     end
 
-    context 'with unpermitted_parameters' do
+    context 'with halted_callback' do
+      before do
+        RequestStore.store[:lograge_halted_callback] = 'user_authenticated'
+      end
+
+      it 'adds the halted_callback to the log line' do
+        subscriber.process_action(event)
+        expect(log_output.string).to include('halted_callback=user_authenticated')
+      end
+
+      it 'removes the thread local variable' do
+        subscriber.process_action(event)
+        expect(RequestStore.store[:lograge_halted_callback]).to be_nil
+      end
+    end
+
+    it 'does not include halted_callback by default' do
+      subscriber.process_action(event)
+      expect(log_output.string).to_not include('halted_callback=')
+    end
+
+    context 'with unpermitted_params' do
       before do
         RequestStore.store[:lograge_unpermitted_params] = %w[florb blarf]
       end
