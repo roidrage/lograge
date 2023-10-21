@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+require 'action_controller'
+
 module Lograge
   module LogSubscribers
     class ActionController < Base
       def process_action(event)
+        ::ActionController::Base.log_process_action(event.payload)
         process_main_event(event)
       end
 
