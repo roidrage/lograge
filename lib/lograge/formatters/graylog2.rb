@@ -13,7 +13,7 @@ module Lograge
       end
 
       def underscore_prefix(key)
-        "_#{key}".to_sym
+        :"_#{key}"
       end
 
       def short_message(data)

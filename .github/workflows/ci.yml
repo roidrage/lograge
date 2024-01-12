@@ -60,6 +60,11 @@ jobs:
             gemfile: gemfiles/rails_7.1.gemfile
           - ruby: jruby-9.2
             gemfile: gemfiles/rails_7.0.gemfile
+          # NOTE: Rails edge requires Ruby version >= 3.1
+          - ruby: "2.7"
+            gemfile: gemfiles/rails_edge.gemfile
+          - ruby: "3.0"
+            gemfile: gemfiles/rails_edge.gemfile
 
 
     env:
