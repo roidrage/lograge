@@ -61,7 +61,7 @@ module Lograge
       end
 
       def extract_allocations(event)
-        if (allocations = (event.respond_to?(:allocations) && event.allocations))
+        if (allocations = event.respond_to?(:allocations) && event.allocations)
           { allocations: allocations }
         else
           {}
