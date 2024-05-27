@@ -4,7 +4,7 @@ module Lograge
   module Formatters
     class KeyValueDeep < KeyValue
       def call(data)
-        super flatten_keys(data)
+        super(flatten_keys(data))
       end
 
       protected

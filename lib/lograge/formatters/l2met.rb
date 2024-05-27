@@ -40,7 +40,7 @@ module Lograge
       def format(key, value)
         key = "measure#page.#{key}" if value.is_a?(Float)
 
-        super(key, value)
+        super
       end
 
       def modify_payload(data)
