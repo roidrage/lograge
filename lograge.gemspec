@@ -22,12 +22,14 @@ Gem::Specification.new do |s|
 
   s.files = `git ls-files lib LICENSE.txt`.split("\n")
 
+  s.add_development_dependency 'base64'
+  s.add_development_dependency 'mutex_m'
   s.add_development_dependency 'rspec', '~> 3.1'
   s.add_development_dependency 'rubocop', '~> 1.23'
   s.add_development_dependency 'simplecov', '~> 0.21'
 
   s.add_runtime_dependency 'actionpack',    '>= 4'
   s.add_runtime_dependency 'activesupport', '>= 4'
-  s.add_runtime_dependency 'railties',      '>= 4'
+  s.add_runtime_dependency 'railties', '>= 4'
   s.add_runtime_dependency 'request_store', '~> 1.0'
 end
