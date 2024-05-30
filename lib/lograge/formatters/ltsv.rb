@@ -17,7 +17,7 @@ module Lograge
       def format(key, value)
         if key == :error
           # Exactly preserve the previous output
-          # Parsing this can be ambigious if the error messages contains
+          # Parsing this can be ambiguous if the error messages contains
           # a single quote
           value = "'#{escape value}'"
         elsif value.is_a? Float
