@@ -121,9 +121,16 @@ module Lograge
     events = subscriber.public_methods(false).reject { |method| method.to_s == 'call' }
     events.each do |event|
       Lograge.notification_listeners_for("#{event}.#{component}").each do |listener|
-        ActiveSupport::Notifications.unsubscribe listener if listener.instance_variable_get('@delegate') == subscriber
+        ActiveSupport::Notifications.unsubscribe listener if built_in_rails_listener?(listener, component)
       end
     end
+  end
+
+  def built_in_rails_listener?(listener, component)
+    delegate = listener.instance_variable_get('@delegate')
+
+    # Assume that anything nested under the component namespace is built in to Rails
+    delegate.class.name.start_with?("#{component.to_s.classify}::")
   end
 
   def setup(app)
