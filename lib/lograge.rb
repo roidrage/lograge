@@ -174,12 +174,30 @@ module Lograge
   end
 
   def extend_base_class(klass)
-    append_payload_method = klass.instance_method(:append_info_to_payload)
     custom_payload_method = lograge_config.custom_payload_method
+    define_append_info_to_payload_method(klass, custom_payload_method)
+    prepend_set_request_store_before_action(klass, custom_payload_method)
+  end
 
+  def define_append_info_to_payload_method(klass, custom_payload_method)
+    append_payload_method = klass.instance_method(:append_info_to_payload)
     klass.send(:define_method, :append_info_to_payload) do |payload|
       append_payload_method.bind(self).call(payload)
       payload[:custom_payload] = custom_payload_method.call(self)
+    end
+  end
+
+  def prepend_set_request_store_before_action(klass, custom_payload_method)
+    klass.class_eval do
+      prepend_before_action do |controller|
+        # TODO: it's not ideal that the user's custom_payload method would be called
+        # twice (below and in the append_info_to_payload).
+        # Would removing calling it in append_info_to_payload and accessing the
+        # payload via the request store in Lograge::LogSubscribers::Base#custom_options
+        # be okay? (i.e. modify the line
+        # `options.merge event.payload[:custom_payload] || {}` to read from request store)
+        RequestStore.store[:lograge_custom_payload] = custom_payload_method.call(controller)
+      end
     end
   end
 
