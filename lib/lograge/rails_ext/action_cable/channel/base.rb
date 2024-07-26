@@ -22,4 +22,7 @@ module Lograge
   end
 end
 
-ActionCable::Channel::Base.prepend(Lograge::ActionCable::ChannelInstrumentation)
+
+ActiveSupport.on_load(:action_cable_channel) do
+  ActionCable::Channel::Base.prepend(Lograge::ActionCable::ChannelInstrumentation)
+end
