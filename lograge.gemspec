@@ -28,8 +28,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop', '~> 1.23'
   s.add_development_dependency 'simplecov', '~> 0.21'
 
-  s.add_runtime_dependency 'actionpack',    '>= 4'
-  s.add_runtime_dependency 'activesupport', '>= 4'
-  s.add_runtime_dependency 'railties', '>= 4'
-  s.add_runtime_dependency 'request_store', '~> 1.0'
+  s.add_dependency 'actionpack',    '>= 4'
+  s.add_dependency 'activesupport', '>= 4'
+  s.add_dependency 'railties', '>= 4'
+  s.add_dependency 'request_store', '~> 1.0'
 end
