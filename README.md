@@ -49,7 +49,7 @@ default, instead it assumes you use a proper log formatter instead.
 Lograge is actively tested against current and officially supported Ruby and
 Rails releases. That said, Lograge _should_ work with older releases.
 
-- [Rails](https://endoflife.date/rails): Edge, 6.1, 6.0, 5.2
+- [Rails](https://endoflife.date/rails): Edge, 7.1, 7.0, 6.1, 6.0, 5.2
 - Rubies:
   - [MRI](https://endoflife.date/ruby): HEAD, 3.1.0-preview1, 3.0, 2.7, 2.6
   - JRuby: HEAD, 9.2, 9.1
