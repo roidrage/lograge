@@ -70,6 +70,14 @@ module Lograge
         RequestStore.store[:lograge_unpermitted_params] = nil
         { unpermitted_params: unpermitted_params }
       end
+
+      def extract_halted_callback
+        halted_callback = RequestStore.store[:lograge_halted_callback]
+        return {} unless halted_callback
+  
+        RequestStore.store[:lograge_halted_callback] = nil
+        { halted_callback: halted_callback }
+      end
     end
   end
 end
