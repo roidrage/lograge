@@ -21,6 +21,7 @@ jobs:
           - "3.1"
           - "3.2"
           - "3.3"
+          - "3.4"
 
           # JRuby
           - jruby-9.3
@@ -31,7 +32,9 @@ jobs:
 
         gemfile:
           - Gemfile
-          - gemfiles/rails_edge.gemfile # 7.2.0.alpha
+          - gemfiles/rails_edge.gemfile # 8.1
+          - gemfiles/rails_8.0.gemfile
+          - gemfiles/rails_7.2.gemfile
           - gemfiles/rails_7.1.gemfile
           - gemfiles/rails_7.0.gemfile
           - gemfiles/rails_6.1.gemfile
@@ -52,19 +55,45 @@ jobs:
           - ruby: jruby-9.3
             gemfile: gemfiles/rails_edge.gemfile
           - ruby: jruby-9.3
+            gemfile: gemfiles/rails_7.2.gemfile
+          - ruby: jruby-9.3
             gemfile: gemfiles/rails_7.1.gemfile
           - ruby: jruby-9.3
             gemfile: gemfiles/rails_7.0.gemfile
           - ruby: jruby-9.2
             gemfile: gemfiles/rails_edge.gemfile
           - ruby: jruby-9.2
+            gemfile: gemfiles/rails_7.2.gemfile
+          - ruby: jruby-9.2
             gemfile: gemfiles/rails_7.1.gemfile
           - ruby: jruby-9.2
             gemfile: gemfiles/rails_7.0.gemfile
-          # NOTE: Rails edge requires Ruby version >= 3.1
+          # NOTE: Rails 7.2 requires Ruby version >= 3.1
+          - ruby: "2.7"
+            gemfile: gemfiles/rails_7.2.gemfile
+          - ruby: "3.0"
+            gemfile: gemfiles/rails_7.2.gemfile
+          # NOTE: Rails 8.0 edge requires Ruby version >= 3.2
+          - ruby: "2.7"
+            gemfile: gemfiles/rails_8.0.gemfile
+          - ruby: "3.0"
+            gemfile: gemfiles/rails_8.0.gemfile
+          - ruby: "3.1"
+            gemfile: gemfiles/rails_8.0.gemfile
+          - ruby: jruby-9.3
+            gemfile: gemfiles/rails_8.0.gemfile
+          - ruby: jruby-9.4
+            gemfile: gemfiles/rails_8.0.gemfile
+          # NOTE: Rails edge requires Ruby version >= 3.2
           - ruby: "2.7"
             gemfile: gemfiles/rails_edge.gemfile
           - ruby: "3.0"
+            gemfile: gemfiles/rails_edge.gemfile
+          - ruby: "3.1"
+            gemfile: gemfiles/rails_edge.gemfile
+          - ruby: jruby-9.3
+            gemfile: gemfiles/rails_edge.gemfile
+          - ruby: jruby-9.4
             gemfile: gemfiles/rails_edge.gemfile
 
 
