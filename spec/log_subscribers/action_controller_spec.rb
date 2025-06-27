@@ -39,20 +39,20 @@ describe Lograge::LogSubscribers::ActionController do
 
   context 'with custom_options configured for cee output' do
     before do
-      Lograge.formatter = ->(data) { "My test: #{data}" }
+      Lograge.formatter = ->(data) { "My test: #{data.to_json}" }
     end
 
     it 'combines the hash properly for the output' do
       Lograge.custom_options = { data: 'value' }
       subscriber.process_action(event)
-      expect(log_output.string).to match(/^My test: {.*:data=>"value"/)
+      expect(log_output.string).to match(/^My test: {.*"data"\s*:\s*"value"/)
     end
 
     it 'combines the output of a lambda properly' do
       Lograge.custom_options = ->(_event) { { data: 'value' } }
 
       subscriber.process_action(event)
-      expect(log_output.string).to match(/^My test: {.*:data=>"value"/)
+      expect(log_output.string).to match(/^My test: {.*"data"\s*:\s*"value"/)
     end
 
     it 'works when the method returns nil' do
