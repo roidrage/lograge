@@ -18,4 +18,8 @@ group :test do
   gem 'jrjackson', '~> 0.2.9', platforms: :jruby
   gem 'lines'
   gem 'thread_safe'
+
+  # Since Ruby-3.4 vendored stdlib logger warns that it will be removed
+  # Since Ruby-3.5 logger is extracted into a standalone gem
+  gem 'logger'
 end
