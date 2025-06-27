@@ -84,6 +84,8 @@ jobs:
             gemfile: gemfiles/rails_8.0.gemfile
           - ruby: jruby-9.4
             gemfile: gemfiles/rails_8.0.gemfile
+          - ruby: truffleruby-23.0
+            gemfile: gemfiles/rails_8.0.gemfile
           # NOTE: Rails edge requires Ruby version >= 3.2
           - ruby: "2.7"
             gemfile: gemfiles/rails_edge.gemfile
@@ -94,6 +96,8 @@ jobs:
           - ruby: jruby-9.3
             gemfile: gemfiles/rails_edge.gemfile
           - ruby: jruby-9.4
+            gemfile: gemfiles/rails_edge.gemfile
+          - ruby: truffleruby-23.0
             gemfile: gemfiles/rails_edge.gemfile
 
 
