@@ -2,6 +2,13 @@
 
 ### Unreleased
 
+### 0.15.0
+
+* Test and support Rails 7.2, 8.0, and 8.1 [#399](https://github.com/roidrage/lograge/pull/399), [#400](https://github.com/roidrage/lograge/pull/400)
+* Test and support Ruby 3.4 and 4.0, JRuby 10.0, and TruffleRuby 34 [#399](https://github.com/roidrage/lograge/pull/399), [#400](https://github.com/roidrage/lograge/pull/400)
+* Explicitly `require 'logger'` to fix loading on Ruby 3.4+ where it is no longer autoloaded [#399](https://github.com/roidrage/lograge/pull/399)
+* Replace deprecated `add_runtime_dependency` with `add_dependency` in the gemspec [#399](https://github.com/roidrage/lograge/pull/399)
+
 ### 0.14.0
 
 * Add Rails 7.1 dedicated `ActiveSupport::Deprecation` [#365](https://github.com/roidrage/lograge/pull/365)
