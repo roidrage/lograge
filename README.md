@@ -51,9 +51,9 @@ Rails releases. That said, Lograge _should_ work with older releases.
 
 - [Rails](https://endoflife.date/rails): Edge, 8.0, 7.2, 7.1, 7.0, 6.1, 6.0, 5.2
 - Rubies:
-  - [MRI](https://endoflife.date/ruby): HEAD, 3.4, 3.3, 3.2 3.1, 3.0, 2.7, 2.6
-  - JRuby: HEAD, 9.2, 9.1
-  - TruffleRuby: HEAD, 21.3
+  - [MRI](https://endoflife.date/ruby): HEAD, 3.4, 3.3, 3.2, 3.1, 3.0, 2.7, 2.6
+  - JRuby: 9.4, 9.3
+  - TruffleRuby: 23.0
 
 ## Installation ##
 
