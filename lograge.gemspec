@@ -22,8 +22,15 @@ Gem::Specification.new do |s|
 
   s.files = `git ls-files lib LICENSE.txt`.split("\n")
 
+  # base64, bigdecimal and mutex_m were extracted from the default gems in
+  # Ruby 3.4; older Rails releases still `require` them, and JRuby (which
+  # targets Ruby 3.4) does not bundle them, so declare them explicitly.
   s.add_development_dependency 'base64'
+  s.add_development_dependency 'bigdecimal'
   s.add_development_dependency 'mutex_m'
+  # rdoc 8 depends on rbs, whose C extension cannot be built on JRuby. Keep
+  # rdoc on the pre-rbs line so the JRuby test matrix can bundle.
+  s.add_development_dependency 'rdoc', '< 8'
   s.add_development_dependency 'rspec', '~> 3.1'
   s.add_development_dependency 'rubocop', '~> 1.23'
   s.add_development_dependency 'simplecov', '~> 0.21'
