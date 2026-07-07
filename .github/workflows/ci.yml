@@ -12,6 +12,8 @@ jobs:
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.gemfile == 'gemfiles/rails_edge.gemfile' }}
 
     strategy:
+      # Don't let one leg's failure cancel the rest of the matrix.
+      fail-fast: false
       matrix:
         ruby:
           # MRI
@@ -24,15 +26,16 @@ jobs:
           - "3.4"
 
           # JRuby
-          - jruby-9.3
           - jruby-9.4
+          - jruby-10.0
 
           # TruffleRuby
-          - truffleruby-23.0
+          - truffleruby-34.0.1
 
         gemfile:
           - Gemfile
-          - gemfiles/rails_edge.gemfile # 8.1
+          - gemfiles/rails_edge.gemfile # 8.2
+          - gemfiles/rails_8.1.gemfile
           - gemfiles/rails_8.0.gemfile
           - gemfiles/rails_7.2.gemfile
           - gemfiles/rails_7.1.gemfile
@@ -43,61 +46,52 @@ jobs:
 
         # Include additional ruby/gemfile combinations:
         include:
-          # NOTE(ivy): Rails 7 requires Ruby version >= 2.7
+          # Older Rubies paired with the oldest supported Rails.
           - ruby: "2.6"
             gemfile: Gemfile
           - ruby: "2.6"
             gemfile: gemfiles/rails_6.0.gemfile
           - ruby: "2.6"
             gemfile: gemfiles/rails_5.2.gemfile
+          # Ruby 4.0 is only exercised against currently-supported Rails.
+          - ruby: "4.0"
+            gemfile: gemfiles/rails_8.1.gemfile
+          - ruby: "4.0"
+            gemfile: gemfiles/rails_8.0.gemfile
+          - ruby: "4.0"
+            gemfile: gemfiles/rails_edge.gemfile
         exclude:
-          # NOTE(ivy): Rails 7 requires Ruby version >= 2.7
-          - ruby: jruby-9.3
+          # JRuby 9.4 targets Ruby 3.1 — too old for Rails 8.0+ (needs >= 3.2).
+          - ruby: jruby-9.4
             gemfile: gemfiles/rails_edge.gemfile
-          - ruby: jruby-9.3
-            gemfile: gemfiles/rails_7.2.gemfile
-          - ruby: jruby-9.3
-            gemfile: gemfiles/rails_7.1.gemfile
-          - ruby: jruby-9.3
-            gemfile: gemfiles/rails_7.0.gemfile
-          - ruby: jruby-9.2
-            gemfile: gemfiles/rails_edge.gemfile
-          - ruby: jruby-9.2
-            gemfile: gemfiles/rails_7.2.gemfile
-          - ruby: jruby-9.2
-            gemfile: gemfiles/rails_7.1.gemfile
-          - ruby: jruby-9.2
-            gemfile: gemfiles/rails_7.0.gemfile
+          - ruby: jruby-9.4
+            gemfile: gemfiles/rails_8.1.gemfile
+          - ruby: jruby-9.4
+            gemfile: gemfiles/rails_8.0.gemfile
           # NOTE: Rails 7.2 requires Ruby version >= 3.1
           - ruby: "2.7"
             gemfile: gemfiles/rails_7.2.gemfile
           - ruby: "3.0"
             gemfile: gemfiles/rails_7.2.gemfile
-          # NOTE: Rails 8.0 edge requires Ruby version >= 3.2
+          # NOTE: Rails 8.0/8.1 require Ruby version >= 3.2
           - ruby: "2.7"
             gemfile: gemfiles/rails_8.0.gemfile
           - ruby: "3.0"
             gemfile: gemfiles/rails_8.0.gemfile
           - ruby: "3.1"
             gemfile: gemfiles/rails_8.0.gemfile
-          - ruby: jruby-9.3
-            gemfile: gemfiles/rails_8.0.gemfile
-          - ruby: jruby-9.4
-            gemfile: gemfiles/rails_8.0.gemfile
-          - ruby: truffleruby-23.0
-            gemfile: gemfiles/rails_8.0.gemfile
+          - ruby: "2.7"
+            gemfile: gemfiles/rails_8.1.gemfile
+          - ruby: "3.0"
+            gemfile: gemfiles/rails_8.1.gemfile
+          - ruby: "3.1"
+            gemfile: gemfiles/rails_8.1.gemfile
           # NOTE: Rails edge requires Ruby version >= 3.2
           - ruby: "2.7"
             gemfile: gemfiles/rails_edge.gemfile
           - ruby: "3.0"
             gemfile: gemfiles/rails_edge.gemfile
           - ruby: "3.1"
-            gemfile: gemfiles/rails_edge.gemfile
-          - ruby: jruby-9.3
-            gemfile: gemfiles/rails_edge.gemfile
-          - ruby: jruby-9.4
-            gemfile: gemfiles/rails_edge.gemfile
-          - ruby: truffleruby-23.0
             gemfile: gemfiles/rails_edge.gemfile
 
 
