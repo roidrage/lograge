@@ -17,7 +17,7 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
-    - spec/**/*_spec.rb
+    - spec/**/*.rb
 
 Style/BlockDelimiters:
   Enabled: false

@@ -25,6 +25,8 @@ module Lograge
         # a single quote
         return "'#{value}'" if key == :error
         return Kernel.format('%.2f', value) if value.is_a? Float
+        # Surround values with a space in them in quotes
+        return value.inspect if value.is_a?(String) && value.include?(' ')
 
         value
       end
