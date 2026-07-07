@@ -3,5 +3,6 @@
 Gemfile.lock
 coverage
 gemfiles/*.lock
+gemfiles/vendor
 pkg/*
 vendor/bundle
