@@ -118,6 +118,10 @@ describe Lograge do
           '24601'
         end
 
+        def self.prepend_before_action(&block)
+          block.call(new)
+        end
+
         class << self
           def logger; end
         end
