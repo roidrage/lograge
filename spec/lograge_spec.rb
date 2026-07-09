@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'support/custom_listener'
+
 require 'active_support'
 require 'active_support/notifications'
 require 'active_support/core_ext/string'
@@ -21,7 +23,7 @@ describe Lograge do
         Lograge.remove_existing_log_subscriptions
       end.to change {
         Lograge.notification_listeners_for('process_action.action_controller')
-      }
+      }.to([])
     end
 
     it 'removes subscribers for all events' do
@@ -29,16 +31,26 @@ describe Lograge do
         Lograge.remove_existing_log_subscriptions
       end.to change {
         Lograge.notification_listeners_for('render_template.action_view')
-      }
+      }.to([])
     end
 
-    it "does not remove subscribers that aren't from Rails" do
-      blk = -> {}
-      ActiveSupport::Notifications.subscribe('process_action.action_controller', &blk)
-      Lograge.remove_existing_log_subscriptions
-      listeners = Lograge.notification_listeners_for('process_action.action_controller')
-      expect(listeners.size).to eq(1)
+    shared_examples 'preserving non-Rails subscribers' do |event_name|
+      context "with event_name #{event_name}" do
+        it "does not remove subscribers that aren't from Rails" do
+          proc_subscriber = ActiveSupport::Notifications.subscribe(event_name, proc {})
+          custom_subscriber =
+            ActiveSupport::Notifications.subscribe(event_name, CustomListener.new)
+
+          Lograge.remove_existing_log_subscriptions
+
+          listeners = Lograge.notification_listeners_for(event_name)
+          expect(listeners).to contain_exactly(proc_subscriber, custom_subscriber)
+        end
+      end
     end
+
+    include_examples 'preserving non-Rails subscribers', 'render_template.action_view'
+    include_examples 'preserving non-Rails subscribers', 'process_action.action_controller'
   end
 
   describe 'keep_original_rails_log option' do
