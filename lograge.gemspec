@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
     'changelog_uri' => 'https://github.com/roidrage/lograge/blob/master/CHANGELOG.md'
   }
 
-  # NOTE(ivy): Ruby version 2.5 is the oldest syntax supported by Rubocop.
   s.required_ruby_version = '>= 2.5'
 
   s.files = `git ls-files lib LICENSE.txt`.split("\n")
