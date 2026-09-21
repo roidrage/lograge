@@ -33,7 +33,7 @@ describe Lograge::LogSubscribers::ActionCable do
 
   context 'with custom_options configured for cee output' do
     before do
-      Lograge.formatter = ->(data) { "My test: #{data.to_json}" }
+      Lograge.formatter = ->(data) { "My test: #{JSON.dump(data)}" }
     end
 
     it 'combines the hash properly for the output' do
