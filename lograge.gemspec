@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   # base64, benchmark, bigdecimal and mutex_m were extracted from the default
   # gems in Ruby 3.4/4.1; older Rails releases still `require` them, and JRuby
   # (which targets Ruby 3.4) does not bundle them, so declare them explicitly.
+  # See: https://stdgems.org
   s.add_development_dependency 'base64'
   s.add_development_dependency 'benchmark'
   s.add_development_dependency 'bigdecimal'
@@ -38,6 +39,10 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'actionpack',    '>= 4'
   s.add_dependency 'activesupport', '>= 4'
+  # logger was also extracted from the default gems (Ruby 3.5), but lograge
+  # `require`s it at runtime, so it is a runtime rather than a development
+  # dependency.
+  s.add_dependency 'logger'
   s.add_dependency 'railties', '>= 4'
   s.add_dependency 'request_store', '~> 1.0'
 end
