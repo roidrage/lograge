@@ -2,6 +2,11 @@
 
 ### Unreleased
 
+### 0.15.1
+
+* Fully suppress Rails' default Action View logs on Rails 7.1+ by also removing `ActionView::LogSubscriber::Start` [#386](https://github.com/roidrage/lograge/pull/386)
+* Declare `logger` as a runtime dependency in the gemspec, since it is no longer a default gem in newer Rubies [#401](https://github.com/roidrage/lograge/pull/401)
+
 ### 0.15.0
 
 * Test and support Rails 7.2, 8.0, and 8.1 [#399](https://github.com/roidrage/lograge/pull/399), [#400](https://github.com/roidrage/lograge/pull/400)
