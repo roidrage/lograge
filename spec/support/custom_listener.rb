@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CustomListener
   attr_reader :events
 

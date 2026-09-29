@@ -121,16 +121,18 @@ module Lograge
     events = subscriber.public_methods(false).reject { |method| method.to_s == 'call' }
     events.each do |event|
       Lograge.notification_listeners_for("#{event}.#{component}").each do |listener|
-        ActiveSupport::Notifications.unsubscribe listener if built_in_rails_listener?(listener, component)
+        ActiveSupport::Notifications.unsubscribe listener if rails_log_subscriber?(listener, subscriber)
       end
     end
   end
 
-  def built_in_rails_listener?(listener, component)
+  def rails_log_subscriber?(listener, subscriber)
     delegate = listener.instance_variable_get('@delegate')
+    return true if delegate == subscriber
 
-    # Assume that anything nested under the component namespace is built in to Rails
-    delegate.class.name.start_with?("#{component.to_s.classify}::")
+    # Rails 7.1+ attaches a separate ActionView::LogSubscriber::Start listener
+    # alongside ActionView::LogSubscriber to log the start of template rendering.
+    defined?(ActionView::LogSubscriber::Start) && delegate.is_a?(ActionView::LogSubscriber::Start)
   end
 
   def setup(app)

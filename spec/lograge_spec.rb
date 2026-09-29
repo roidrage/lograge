@@ -40,11 +40,13 @@ describe Lograge do
           proc_subscriber = ActiveSupport::Notifications.subscribe(event_name, proc {})
           custom_subscriber =
             ActiveSupport::Notifications.subscribe(event_name, CustomListener.new)
+          anonymous_subscriber =
+            ActiveSupport::Notifications.subscribe(event_name, Class.new(CustomListener).new)
 
           Lograge.remove_existing_log_subscriptions
 
           listeners = Lograge.notification_listeners_for(event_name)
-          expect(listeners).to contain_exactly(proc_subscriber, custom_subscriber)
+          expect(listeners).to contain_exactly(proc_subscriber, custom_subscriber, anonymous_subscriber)
         end
       end
     end
