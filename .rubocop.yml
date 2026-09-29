@@ -12,12 +12,27 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - spec/**/*_spec.rb
 
+# The no-op logger methods are intentionally empty. Configured here rather than
+# with an inline directive so the suppression is understood by every RuboCop
+# version in the CI matrix.
+Lint/EmptyBlock:
+  Exclude:
+    - lib/lograge/silent_logger.rb
+
 Metrics/AbcSize:
   Enabled: false
 
+# RuboCop excludes gemspecs from this cop by default, but a local Exclude
+# replaces the default list rather than extending it, so restate it here.
 Metrics/BlockLength:
   Exclude:
+    - '**/*.gemspec'
     - spec/**/*_spec.rb
+
+# Lograge's public API lives in a single module. See the note on Lint/EmptyBlock.
+Metrics/ModuleLength:
+  Exclude:
+    - lib/lograge.rb
 
 Style/BlockDelimiters:
   Enabled: false

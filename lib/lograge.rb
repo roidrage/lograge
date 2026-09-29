@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'lograge/version'
 require 'lograge/formatters/helpers/method_and_path'
 require 'lograge/formatters/cee'
@@ -21,7 +22,6 @@ require 'active_support'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
 
-# rubocop:disable Metrics/ModuleLength
 module Lograge
   module_function
 
@@ -247,6 +247,5 @@ module Lograge
     end
   end
 end
-# rubocop:enable Metrics/ModuleLength
 
 require 'lograge/railtie' if defined?(Rails)
