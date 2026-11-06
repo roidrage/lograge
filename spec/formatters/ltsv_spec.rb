@@ -30,4 +30,17 @@ describe Lograge::Formatters::LTSV do
   it 'is separated by hard tabs' do
     expect(subject.split("\t").count).to eq(payload.count)
   end
+
+  context 'when the error contains hard tabs, newlines or backslashes' do
+    let(:payload) do
+      {
+        status: 500,
+        error: "RuntimeError: broke\there\nand here\\"
+      }
+    end
+
+    it 'escapes them so the record stays a single field-separated line' do
+      expect(subject).to eq("status:500\terror:'RuntimeError: broke\\there\\nand here\\\\'")
+    end
+  end
 end
