@@ -3,6 +3,7 @@
 require 'logger'
 require 'lograge/version'
 require 'lograge/formatters/helpers/method_and_path'
+require 'lograge/formatters/helpers/safe_json'
 require 'lograge/formatters/cee'
 require 'lograge/formatters/json'
 require 'lograge/formatters/graylog2'
