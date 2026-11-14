@@ -130,12 +130,13 @@ module Lograge
   end
 
   def rails_event_reporter_log_subscriber_classes
-    return [] unless defined?(ActiveSupport::EventReporter::LogSubscriber) && ActiveSupport.respond_to?(:event_reporter)
+    return [] unless defined?(ActiveSupport::EventReporter::LogSubscriber)
 
     [ActionController::LogSubscriber, ActionView::LogSubscriber].select do |klass|
       klass < ActiveSupport::EventReporter::LogSubscriber
     end
   end
+  private_class_method :remove_event_reporter_log_subscriptions, :rails_event_reporter_log_subscriber_classes
 
   def unsubscribe(component, subscriber)
     events = subscriber.public_methods(false).reject { |method| method.to_s == 'call' }
