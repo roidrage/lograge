@@ -32,10 +32,10 @@ module Lograge
       def escape(string)
         value = string.is_a?(String) ? string.dup : string.to_s
 
-        value.gsub!('\\', '\\\\')
-        value.gsub!('\n', '\\n')
-        value.gsub!('\r', '\\r')
-        value.gsub!('\t', '\\t')
+        value.gsub!('\\') { '\\\\' }
+        value.gsub!("\n", '\\n')
+        value.gsub!("\r", '\\r')
+        value.gsub!("\t", '\\t')
 
         value
       end
