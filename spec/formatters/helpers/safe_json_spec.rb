@@ -24,6 +24,28 @@ describe Lograge::Formatters::Helpers::SafeJson do
       expect(JSON.parse(described_class.dump(:status => 200, 'status' => 'ok'))).to eq('status' => 'ok')
     end
 
+    it 'serializes exceptions whose message holds non-ASCII binary bytes' do
+      output = described_class.dump(exception_object: StandardError.new(binary_utf8))
+      expect(JSON.parse(output)).to eq('exception_object' => '不正な値です。')
+    end
+
+    it 'serializes symbols that hold non-ASCII binary bytes' do
+      expect(JSON.parse(described_class.dump(value: binary_utf8.to_sym))).to eq('value' => '不正な値です。')
+    end
+
+    it 'serializes strings in dummy encodings that have no converter' do
+      output = described_class.dump(value: '+ZeVnLIqe-'.dup.force_encoding(Encoding::UTF_7), bad: invalid_utf8)
+      expect(JSON.parse(output)).to eq('value' => '+ZeVnLIqe-', 'bad' => "abc#{replacement}def")
+    end
+
+    it 'raises with the original error as the cause if the retry also fails' do
+      allow(JSON).to receive(:dump).and_raise(JSON::GeneratorError, 'first')
+
+      expect { described_class.dump(status: 200) }.to raise_error(JSON::GeneratorError) { |error|
+        expect(error.cause).to be_a(JSON::GeneratorError)
+      }
+    end
+
     it 'does not modify the data it was given' do
       data = { error: binary_utf8, nested: [{ params: invalid_utf8 }] }
 
@@ -63,13 +85,22 @@ describe Lograge::Formatters::Helpers::SafeJson do
       expect(described_class.normalize("abc\xFF".dup.force_encoding(Encoding::US_ASCII))).to eq("abc#{replacement}")
     end
 
+    it 'keeps objects that can be serialized on their own' do
+      time = Time.at(0).utc
+      expect(described_class.normalize(time)).to equal(time)
+    end
+
+    it 'converts symbols to strings' do
+      expect(described_class.normalize(%i[a b])).to eq(%w[a b])
+    end
+
     it 'returns valid UTF-8 strings unchanged' do
       string = 'valid'
       expect(described_class.normalize(string)).to equal(string)
     end
 
-    it 'returns other objects unchanged' do
-      expect(described_class.normalize([1, 1.5, nil, true, :sym])).to eq([1, 1.5, nil, true, :sym])
+    it 'returns numbers, booleans and nil unchanged' do
+      expect(described_class.normalize([1, 1.5, nil, true, false])).to eq([1, 1.5, nil, true, false])
     end
   end
 end

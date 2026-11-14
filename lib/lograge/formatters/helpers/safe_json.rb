@@ -29,16 +29,24 @@ module Lograge
           ::JSON.dump(normalize(data))
         end
 
-        # Returns a copy of +value+ in which every hash key is a UTF-8 string
-        # (later keys win when two keys serialize to the same name) and every
-        # string is valid UTF-8. Bytes that cannot be converted are replaced
-        # with U+FFFD. Other objects are returned unchanged.
+        # Returns a copy of +value+ that the json gem can always generate:
+        #
+        # * every hash key is a UTF-8 string. When two keys serialize to the same
+        #   name, the first key keeps its position and the later value wins,
+        #   which matches how the log subscriber merges custom options.
+        # * every string and symbol becomes a valid UTF-8 string. Bytes that
+        #   cannot be converted are replaced with U+FFFD.
+        # * other objects are kept if they can be generated on their own, and
+        #   are otherwise replaced by their normalized +to_s+ (for example an
+        #   exception whose message holds binary bytes).
         def normalize(value)
           case value
           when Hash then normalize_hash(value)
           when Array then value.map { |element| normalize(element) }
           when String then to_utf8(value)
-          else value
+          when Symbol then to_utf8(value.to_s)
+          when Numeric, true, false, nil then value
+          else normalize_object(value)
           end
         end
 
@@ -48,13 +56,21 @@ module Lograge
           end
         end
 
+        def normalize_object(object)
+          ::JSON.dump(object)
+          object
+        rescue *GENERATION_ERRORS
+          to_utf8(object.to_s)
+        end
+
         def to_utf8(string)
-          case string.encoding
-          when Encoding::UTF_8
+          encoding = string.encoding
+          if encoding == Encoding::UTF_8
             string.valid_encoding? ? string : string.scrub
-          when Encoding::BINARY
-            # Binary strings carry no encoding information. Treat them as
-            # UTF-8 on a best-effort basis so valid multibyte sequences survive.
+          elsif encoding == Encoding::BINARY || encoding.dummy?
+            # Binary strings carry no encoding information, and dummy encodings
+            # (such as UTF-7) have no converter. Treat them as UTF-8 on a
+            # best-effort basis so valid multibyte sequences survive.
             string.dup.force_encoding(Encoding::UTF_8).scrub
           else
             string.encode(Encoding::UTF_8, invalid: :replace, undef: :replace)

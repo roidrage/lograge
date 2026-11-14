@@ -166,6 +166,12 @@ Rails.application.configure do
 end
 ```
 
+Keys returned by `custom_options` and `custom_payload` override Lograge's own
+keys of the same name (`custom_payload` wins over `custom_options`). String and
+Symbol keys with the same name are treated as the same key: the value is stored
+under the key that was already present, so overriding `'status'` updates
+`data[:status]` and the key is only logged once.
+
 To further clean up your logging, you can also tell Lograge to skip log messages
 meeting given criteria.  You can skip log messages generated from certain controller
 actions, or you can write a custom handler to skip messages based on data in the log event:
