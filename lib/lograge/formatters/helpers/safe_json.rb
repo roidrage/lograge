@@ -19,7 +19,12 @@ module Lograge
       # The data is only normalized after the first attempt fails, so well
       # formed events are serialized exactly as before and pay no extra cost.
       module SafeJson
-        GENERATION_ERRORS = [::JSON::GeneratorError, ::EncodingError].freeze
+        # ArgumentError is included because, on TruffleRuby, json 3's pure-Ruby
+        # generator serializes objects such as Symbols and Times through
+        # ActiveSupport's encoder, which before Rails 8.1 passes the
+        # +quirks_mode+ option that json 3 no longer accepts. Normalizing turns
+        # those objects into plain strings, which avoids that code path.
+        GENERATION_ERRORS = [::JSON::GeneratorError, ::EncodingError, ::ArgumentError].freeze
 
         module_function
 

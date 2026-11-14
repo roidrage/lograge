@@ -86,8 +86,30 @@ describe Lograge::Formatters::Helpers::SafeJson do
     end
 
     it 'keeps objects that can be serialized on their own' do
-      time = Time.at(0).utc
-      expect(described_class.normalize(time)).to equal(time)
+      object = Class.new {
+        def to_json(*)
+          '"custom"'
+        end
+      }.new
+
+      expect(described_class.normalize(object)).to equal(object)
+    end
+
+    it 'uses to_s for objects whose serialization raises ArgumentError' do
+      # Mirrors TruffleRuby with json 3 and ActiveSupport < 8.1, where generic
+      # objects are serialized with an option json 3 no longer accepts.
+      object = Class.new {
+        def to_json(*)
+          raise ArgumentError, 'unknown keyword: :quirks_mode'
+        end
+
+        def to_s
+          'fallback'
+        end
+      }.new
+
+      expect(described_class.normalize(object)).to eq('fallback')
+      expect(described_class.dump(value: object)).to eq('{"value":"fallback"}')
     end
 
     it 'converts symbols to strings' do
