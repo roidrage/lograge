@@ -4,7 +4,7 @@ module Lograge
   module Formatters
     class Cee
       def call(data)
-        "@cee: #{JSON.dump(data)}"
+        "@cee: #{Helpers::SafeJson.dump(data)}"
       end
     end
   end

@@ -3,6 +3,7 @@
 require 'logger'
 require 'lograge/version'
 require 'lograge/formatters/helpers/method_and_path'
+require 'lograge/formatters/helpers/safe_json'
 require 'lograge/formatters/cee'
 require 'lograge/formatters/json'
 require 'lograge/formatters/graylog2'
@@ -115,7 +116,27 @@ module Lograge
         unsubscribe(:action_controller, subscriber)
       end
     end
+
+    remove_event_reporter_log_subscriptions
   end
+
+  # Rails 8.2+ framework log subscribers inherit from
+  # ActiveSupport::EventReporter::LogSubscriber and are subscribed to
+  # ActiveSupport.event_reporter instead of ActiveSupport::Notifications.
+  def remove_event_reporter_log_subscriptions
+    rails_event_reporter_log_subscriber_classes.each do |klass|
+      ActiveSupport.event_reporter.unsubscribe(klass)
+    end
+  end
+
+  def rails_event_reporter_log_subscriber_classes
+    return [] unless defined?(ActiveSupport::EventReporter::LogSubscriber)
+
+    [ActionController::LogSubscriber, ActionView::LogSubscriber].select do |klass|
+      klass < ActiveSupport::EventReporter::LogSubscriber
+    end
+  end
+  private_class_method :remove_event_reporter_log_subscriptions, :rails_event_reporter_log_subscriber_classes
 
   def unsubscribe(component, subscriber)
     events = subscriber.public_methods(false).reject { |method| method.to_s == 'call' }

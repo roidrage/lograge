@@ -33,7 +33,7 @@ module Lograge
         data.merge!(extract_runtimes(event, payload))
         data.merge!(extract_location)
         data.merge!(extract_unpermitted_params)
-        data.merge!(custom_options(event))
+        merge_options(data, custom_options(event))
       end
 
       %i[initial_data extract_status extract_runtimes
@@ -70,7 +70,27 @@ module Lograge
 
       def custom_options(event)
         options = Lograge.custom_options(event) || {}
-        options.merge event.payload[:custom_payload] || {}
+        merge_options(options.dup, event.payload[:custom_payload] || {})
+      end
+
+      # Merges +options+ into +data+. A String key overrides an existing Symbol
+      # key of the same name (and vice versa) instead of being added alongside
+      # it, so the two never end up serialized as duplicate keys.
+      def merge_options(data, options)
+        options.each do |key, value|
+          data[existing_key(data, key)] = value
+        end
+        data
+      end
+
+      def existing_key(data, key)
+        return key if data.key?(key)
+
+        counterpart = case key
+                      when Symbol then key.to_s
+                      when String then key.to_sym
+                      end
+        counterpart && data.key?(counterpart) ? counterpart : key
       end
 
       def before_format(data, payload)
