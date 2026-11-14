@@ -75,8 +75,16 @@ describe Lograge::LogSubscribers::ActionCable do
     context 'when an `ActiveRecord::RecordNotFound` is raised' do
       let(:exception) { 'ActiveRecord::RecordNotFound' }
 
+      around do |example|
+        original_rescue_responses = ActionDispatch::ExceptionWrapper.rescue_responses
+        ActionDispatch::ExceptionWrapper.rescue_responses =
+          original_rescue_responses.merge(exception => :not_found)
+        example.run
+      ensure
+        ActionDispatch::ExceptionWrapper.rescue_responses = original_rescue_responses
+      end
+
       before do
-        ActionDispatch::ExceptionWrapper.rescue_responses[exception] = :not_found
         event.payload[:exception] = [exception, 'Record not found']
         event.payload[:status] = nil
       end
