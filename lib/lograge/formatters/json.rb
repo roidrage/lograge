@@ -5,7 +5,7 @@ module Lograge
   module Formatters
     class Json
       def call(data)
-        ::JSON.dump(data)
+        Helpers::SafeJson.dump(data)
       end
     end
   end

@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+* Keep logging when the JSON and Cee formatters receive data that the json gem refuses to generate, such as non-ASCII binary strings (rejected since json 3.1) or invalid UTF-8. Affected strings are converted to UTF-8, replacing invalid bytes, instead of the whole log line being lost [#409](https://github.com/roidrage/lograge/issues/409)
+* String keys from `custom_options` and `custom_payload` now override built-in Symbol keys of the same name (and vice versa) instead of being logged twice, which json 3.0 rejects as duplicate keys [#410](https://github.com/roidrage/lograge/issues/410)
+
 ### 0.15.1
 
 * Fully suppress Rails' default Action View logs on Rails 7.1+ by also removing `ActionView::LogSubscriber::Start` [#386](https://github.com/roidrage/lograge/pull/386)

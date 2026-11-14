@@ -278,6 +278,52 @@ describe Lograge::LogSubscribers::ActionController do
     end
   end
 
+  context 'when custom data uses String keys that match built-in Symbol keys' do
+    after { Lograge.custom_options = nil }
+
+    it 'overrides the built-in value instead of logging the key twice' do
+      Lograge.formatter = Lograge::Formatters::KeyValue.new
+      Lograge.custom_options = { 'controller' => 'home' }
+
+      subscriber.process_action(event)
+
+      expect(log_output.string).to include(' controller=home ')
+      expect(log_output.string.scan('controller=').size).to eq(1)
+    end
+
+    it 'produces JSON without duplicate keys' do
+      Lograge.formatter = Lograge::Formatters::Json.new
+      Lograge.custom_options = ->(_event) { { 'status' => 'ok' } }
+
+      subscriber.process_action(event)
+
+      expect(log_output.string.scan('"status"').size).to eq(1)
+      expect(JSON.parse(log_output.string)).to include('status' => 'ok', 'controller' => 'HomeController')
+    end
+
+    it 'lets custom_payload override custom_options regardless of key type' do
+      Lograge.formatter = Lograge::Formatters::KeyValue.new
+      Lograge.custom_options = { data: 'from_options' }
+      event.payload[:custom_payload] = { 'data' => 'from_payload' }
+
+      subscriber.process_action(event)
+
+      expect(log_output.string).to include('data=from_payload')
+      expect(log_output.string).not_to include('data=from_options')
+    end
+
+    it 'does not modify a custom_options Hash' do
+      Lograge.formatter = Lograge::Formatters::KeyValue.new
+      options = { data: 'value' }.freeze
+      Lograge.custom_options = options
+      event.payload[:custom_payload] = { 'data' => 'other' }
+
+      subscriber.process_action(event)
+
+      expect(options).to eq(data: 'value')
+    end
+  end
+
   context 'with before_format configured for lograge output' do
     before do
       Lograge.formatter = Lograge::Formatters::KeyValue.new
