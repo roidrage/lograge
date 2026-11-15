@@ -18,4 +18,6 @@ module Lograge
   end
 end
 
-ActionCable::Connection::Base.prepend(Lograge::ActionCable::ConnectionInstrumentation)
+ActiveSupport.on_load(:action_cable_connection) do
+  ActionCable::Connection::Base.prepend(Lograge::ActionCable::ConnectionInstrumentation)
+end
